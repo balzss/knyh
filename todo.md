@@ -1,0 +1,12 @@
+- [ ] create popover for filters
+- [ ] add layout selector for filter popover
+- [ ] create popover for user menu
+- [ ] create separate component for text input with icons
+- [ ] make it so the search input after clearing focuses the input
+- [ ] create separate pages for new recipe/settings/archive/etc
+- [ ] decouple the "content" part from the topnav
+- [ ] create "selection mode" for the topnav
+- [ ] add tooltips for recipe card bottom buttons
+- [ ] create better favicon
+- [ ] make tags on recipe cards clickable
+- [ ] deploy to gh pages
