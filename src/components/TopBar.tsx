@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-
+import { IconButton } from '@/components/IconButton'
 
 type TopBarProps = {
   onSidebarToggle: () => void
@@ -35,12 +35,10 @@ export function TopBar({
 
   return (
     <nav className="fixed top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2">
-      <Button variant="ghost" size="icon" onClick={onSidebarToggle}>
-        <Menu />
-      </Button>
+      <IconButton icon={<Menu/>} tooltip="Toggle Sidebar" size="normal" onClick={onSidebarToggle}/>
 
       {!isMobile && (
-        <Link className="text-2xl font-bold mx-12" href="/">
+        <Link className="text-2xl font-bold mx-12 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
           KONYHA
         </Link>
       )}
@@ -49,10 +47,12 @@ export function TopBar({
 
       <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
         <PopoverTrigger asChild>
-          <Avatar className="ml-auto mr-1 cursor-pointer">
-            <AvatarImage src="" alt="SB" />
-            <AvatarFallback>SB</AvatarFallback>
-          </Avatar>
+          <Button variant="ghost" size="icon" className="ml-auto mr-1 cursor-pointer rounded-full">
+            <Avatar>
+              <AvatarImage src="" alt="SB" />
+              <AvatarFallback>SB</AvatarFallback>
+            </Avatar>
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2 flex flex-col gap-3 font-bold">
           <span>

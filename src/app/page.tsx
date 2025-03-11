@@ -7,6 +7,7 @@ import { AppSidebar } from '@/components/AppSidebar'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TextInput } from '@/components/TextInput'
 import { Button } from '@/components/ui/button'
+import { Toggle } from '@/components/ui/toggle'
 import {
   Popover,
   PopoverContent,
@@ -120,6 +121,7 @@ export default function Home() {
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
+  const [isFilterOptionsOpen, setIsFilterOptionsOpen] = useState<boolean>(false)
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -146,11 +148,13 @@ export default function Home() {
           onChange={(_e, value) => setSearchQuery(value)}
         />
       </div>
-      <Popover>
+      <Popover open={isFilterOptionsOpen} onOpenChange={(newValue) => setIsFilterOptionsOpen(newValue)}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <SlidersHorizontal/>
-          </Button>
+          <div>
+            <Toggle pressed={isFilterOptionsOpen} onPressedChange={(newValue) => setIsFilterOptionsOpen(newValue)}>
+              <SlidersHorizontal/>
+            </Toggle>
+          </div>
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2">
           <div className="flex gap-8 items-center mb-4 justify-between">

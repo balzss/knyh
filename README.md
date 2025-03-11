@@ -29,10 +29,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add log out button for user avatar popup
 - [x] make brandname in topbar clickable (and navigate to home)
 - [x] add archive option for selection mode
-
-- [ ] make recipe cards focusable
-- [ ] make avatar icon focusable
-- [ ] make the filter button in the search bar a Toggle
+- [x] make avatar icon focusable
+- [x] make recipe cards focusable
+- [x] make the filter button in the search bar a Toggle
+- [x] create IconButton component with tooltip
+- [x] make the brand button/text focusring color primary
+- [ ] add tooltip for filter options (make it IconButton?)
+- [ ] make selection close button and icon button
+- [ ] add tooltip for search clear button
+- [ ] add tooltop for user avatar
 
 - [x] create archived route
 - [ ] add layout for archive page

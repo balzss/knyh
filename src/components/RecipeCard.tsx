@@ -21,12 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { IconButton } from '@/components/IconButton'
 
 type Tag = {
   id: string
@@ -50,9 +45,23 @@ export function RecipeCard({
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   return (
-    <Card onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className={`flex flex-col ${isSelected ? 'border-primary' : ''}`}>
+    <Card
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      // Set isHovered to true when the card gains focus, and only set it to false when focus moves completely outside the card
+      onFocus={() => setIsHovered(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setIsHovered(false);
+        }
+      }}
+      className={`focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
+      tabIndex={0}
+    >
       <CardHeader className="relative">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          {title}
+        </CardTitle>
         <CardDescription className="flex gap-3 items-center">
           <div className="flex gap-1 items-center">
             <Users size="1rem"/> 4 adag
@@ -62,11 +71,11 @@ export function RecipeCard({
           </div>
         </CardDescription>
         {(isSelected || isHovered || selectionMode) && (
-          <div className="absolute top-1 right-2">
+          <div className="absolute top-0 right-0">
             <Button
               variant="ghost"
               size="icon"
-              className={`h-8 w-8 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
+              className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
               onClick={() =>
               onSelect(!isSelected)}
             >
@@ -81,61 +90,14 @@ export function RecipeCard({
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
-            <Badge key={tag.id} onClick={() => console.log(tag.displayName)} className="cursor-pointer">{tag.displayName}</Badge>
+            <Badge tabIndex={0} key={tag.id} onClick={() => console.log(tag.displayName)} className="cursor-pointer">{tag.displayName}</Badge>
           ))}
         </div>
         <div className={`flex gap-4 ${(isHovered && !selectionMode) ? '' : 'invisible'}`}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Pencil/>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit recipe</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Share2/>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Share</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Archive/>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Archive</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <EllipsisVertical/>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>More options</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <IconButton icon={<Pencil/>} tooltip="Edit Recipe" size="small"/>
+          <IconButton icon={<Share2/>} tooltip="Share" size="small"/>
+          <IconButton icon={<Archive/>} tooltip="Archive" size="small"/>
+          <IconButton icon={<EllipsisVertical/>} tooltip="More Options" size="small"/>
         </div>
       </CardFooter>
     </Card>
