@@ -21,6 +21,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type Tag = {
   id: string
@@ -31,6 +37,7 @@ type RecipeCardProps = {
   title: string
   tags: Tag[]
   isSelected: boolean
+  selectionMode?: boolean
   onSelect: (isSelected: boolean) => void
 }
 
@@ -38,6 +45,7 @@ export function RecipeCard({
   title,
   tags,
   isSelected = true,
+  selectionMode = false,
   onSelect,
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -53,7 +61,7 @@ export function RecipeCard({
             <Timer size="1rem"/> 30 perc
           </div>
         </CardDescription>
-        {(isSelected || isHovered )&& (
+        {(isSelected || isHovered || selectionMode) && (
           <div className="absolute top-1 right-2">
             <Button
               variant="ghost"
@@ -73,25 +81,61 @@ export function RecipeCard({
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
-              <Badge key={tag.id}>{tag.displayName}</Badge>
+            <Badge key={tag.id} onClick={() => console.log(tag.displayName)} className="cursor-pointer">{tag.displayName}</Badge>
           ))}
         </div>
-        <div className={`flex gap-4 ${isHovered ? '' : 'invisible'}`}>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Pencil/>
-          </Button>
+        <div className={`flex gap-4 ${(isHovered && !selectionMode) ? '' : 'invisible'}`}>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Pencil/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit recipe</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Share2/>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Share2/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Share</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Archive/>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Archive/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Archive</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <EllipsisVertical/>
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <EllipsisVertical/>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>More options</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </CardFooter>
     </Card>
