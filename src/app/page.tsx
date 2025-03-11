@@ -21,7 +21,13 @@ import {
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { SlidersHorizontal, Search, X } from 'lucide-react'
+import { SlidersHorizontal, Search, X, Archive } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 const placeholderTags = {
   'magyar': {
@@ -146,7 +152,7 @@ export default function Home() {
             <SlidersHorizontal/>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 ">
+        <PopoverContent className="w-80 mx-2">
           <div className="flex gap-8 items-center mb-4 justify-between">
             <Label htmlFor="layoutSelect" className="font-bold">Layout</Label>
             <Select onValueChange={handleLayoutChange} defaultValue={selectedLayout}>
@@ -170,9 +176,21 @@ export default function Home() {
       <Button variant="ghost" size="icon" onClick={() => setSelectionList([])}>
         <X />
       </Button>
-      <span>
+      <span className="mr-4">
         {selectionList.length} selected
       </span>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Archive/>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Archive</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   )
 
