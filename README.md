@@ -44,9 +44,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add tooltip for search clear button
 - [x] create PageLayout component
 - [x] move search and select topbar content to separate components
+- [x] create settings screen
+- [x] add setting for dark/light mode
+- [x] create compose/edit page
+- [ ] add sidebar menuitem for main page (Recipes)
 
-- [ ] create settings screen
-- [ ] add setting for dark/light mode
+- [ ] basic layout for create page
 
 - [ ] deploy to gh pages
 - [ ] create better favicon

@@ -79,9 +79,11 @@ export function AppSidebar({
       <SidebarContent className={ isMobile ? '' : 'mt-16' }>
         <SidebarGroup>
         <div className="mb-4">
-          <Button variant="default" className="font-bold py-4 px-3">
-            <FilePlus/>
-            <span>Add Recipe</span>
+          <Button variant="default" className="font-bold py-4 px-3" asChild>
+            <Link href="/create">
+              <FilePlus/>
+              <span>Add Recipe</span>
+            </Link>
           </Button>
         </div>
           <SidebarGroupContent>
