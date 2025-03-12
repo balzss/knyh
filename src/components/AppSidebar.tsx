@@ -19,7 +19,16 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { Button } from '@/components/ui/button'
-import { X, Tag, ChevronRight, Settings, Archive, FilePlus, ShoppingCart } from 'lucide-react'
+import {
+  X,
+  Tag,
+  ChevronRight,
+  Settings,
+  Archive,
+  FilePlus,
+  ShoppingCart,
+  NotebookText,
+} from 'lucide-react'
 import { placeholderTags } from '@/lib/mock-data'
 
 type AppSidebarProps = {
@@ -27,6 +36,11 @@ type AppSidebarProps = {
 }
 
 const sidebarItems = [
+  {
+    displayName: 'Recipes',
+    icon: <NotebookText/>,
+    href: '/'
+  },
   {
     displayName: 'Tags',
     icon: <Tag/>,

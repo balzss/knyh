@@ -47,9 +47,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] create settings screen
 - [x] add setting for dark/light mode
 - [x] create compose/edit page
-- [ ] add sidebar menuitem for main page (Recipes)
-
-- [ ] basic layout for create page
+- [x] add sidebar menuitem for main page (Recipes)
+- [x] basic layout for create page
+- [x] improve sortable input component
+- [ ] always add empty bottom ingredient item with disable moving until it's filled out
+- [ ] make sortible input components removable
+- [ ] allow to create ingredients groups
 
 - [ ] deploy to gh pages
 - [ ] create better favicon
