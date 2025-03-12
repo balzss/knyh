@@ -12,6 +12,7 @@ type IconButtonProps = {
   variant?: 'default' | 'ghost' | 'secondary' | 'outline'
   onClick?: (e: React.SyntheticEvent) => void
   size?: 'normal' | 'small'
+  isActive?: boolean
 }
 
 export function IconButton({
@@ -19,13 +20,19 @@ export function IconButton({
   tooltip,
   variant = 'ghost',
   onClick,
-  size = 'normal'
+  size = 'normal',
+  isActive = false,
 }: IconButtonProps) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant={variant} size="icon" className={size === 'small' ? 'h-8 w-8' : ''} onClick={onClick}>
+          <Button
+            variant={variant}
+            size="icon"
+            className={`${size === 'small' ? 'h-8 w-8' : ''} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
+            onClick={onClick}
+          >
             {icon}
           </Button>
         </TooltipTrigger>

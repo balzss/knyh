@@ -34,16 +34,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] make the filter button in the search bar a Toggle
 - [x] create IconButton component with tooltip
 - [x] make the brand button/text focusring color primary
-- [ ] add tooltip for filter options (make it IconButton?)
-- [ ] make selection close button and icon button
-- [ ] add tooltip for search clear button
-- [ ] add tooltop for user avatar
-
+- [x] make selection close button and icon button
 - [x] create archived route
-- [ ] add layout for archive page
-- [ ] create unarchive option for the archive screen
-- [ ] modify recipecard so it can be used in the archive screen
-- [ ] indicate if the user is on the archive screen (title + highlight sidebar option)
+- [x] add layout for archive page
+- [x] create unarchive option for the archive screen
+- [x] modify recipecard so it can be used in the archive screen
+- [x] indicate if the user is on the archive screen (title + highlight sidebar option)
+- [x] add tooltip for filter options (make it IconButton?)
+- [x] add tooltip for search clear button
+- [x] create PageLayout component
+- [x] move search and select topbar content to separate components
 
 - [ ] create settings screen
 - [ ] add setting for dark/light mode

@@ -7,7 +7,9 @@ import {
   Circle,
   CircleCheckBig,
   Users,
-  Timer
+  Timer,
+  ArchiveRestore,
+  Trash2,
 } from 'lucide-react'
 import {
   Badge
@@ -34,6 +36,7 @@ type RecipeCardProps = {
   isSelected: boolean
   selectionMode?: boolean
   onSelect: (isSelected: boolean) => void
+  archivedMode?: boolean
 }
 
 export function RecipeCard({
@@ -42,6 +45,7 @@ export function RecipeCard({
   isSelected = true,
   selectionMode = false,
   onSelect,
+  archivedMode = false,
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   return (
@@ -90,14 +94,31 @@ export function RecipeCard({
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
-            <Badge tabIndex={0} key={tag.id} onClick={() => console.log(tag.displayName)} className="cursor-pointer">{tag.displayName}</Badge>
+            <Badge
+              key={tag.id}
+              tabIndex={archivedMode ? undefined : 0}
+              onClick={archivedMode ? undefined : () => console.log(tag.displayName)}
+              className={archivedMode ? '' : 'cursor-pointer'}
+              variant={archivedMode ? 'outline' : 'default'}
+            >
+              {tag.displayName}
+            </Badge>
           ))}
         </div>
         <div className={`flex gap-4 ${(isHovered && !selectionMode) ? '' : 'invisible'}`}>
-          <IconButton icon={<Pencil/>} tooltip="Edit Recipe" size="small"/>
-          <IconButton icon={<Share2/>} tooltip="Share" size="small"/>
-          <IconButton icon={<Archive/>} tooltip="Archive" size="small"/>
-          <IconButton icon={<EllipsisVertical/>} tooltip="More Options" size="small"/>
+          {archivedMode ? (
+            <>
+              <IconButton icon={<ArchiveRestore/>} tooltip="Restore" size="small"/>
+              <IconButton icon={<Trash2/>} tooltip="Delete" size="small"/>
+            </>
+          ) : (
+            <>
+              <IconButton icon={<Pencil/>} tooltip="Edit Recipe" size="small"/>
+              <IconButton icon={<Share2/>} tooltip="Share" size="small"/>
+              <IconButton icon={<Archive/>} tooltip="Archive" size="small"/>
+              <IconButton icon={<EllipsisVertical/>} tooltip="More Options" size="small"/>
+            </>
+          )}
         </div>
       </CardFooter>
     </Card>

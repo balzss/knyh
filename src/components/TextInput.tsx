@@ -1,6 +1,12 @@
 import { useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { X } from 'lucide-react'
 
 type TextInputProps = {
@@ -38,14 +44,23 @@ export function TextInput({
         onChange={(e) => onChange(e, e.target.value)}
       />
       {value && clearable && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 transform p-3 rounded-full"
-          onClick={handleClear}
-        >
-          <X/>
-        </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 transform p-3 rounded-full"
+            onClick={handleClear}
+          >
+            <X/>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Clear input field</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
       )}
     </div>
   )

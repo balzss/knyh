@@ -5,12 +5,12 @@ import { RecipeCard } from '@/components/RecipeCard'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar } from '@/components/AppSidebar'
 import { useSidebar } from '@/components/ui/sidebar'
-import { Archive } from 'lucide-react'
-import { placeholderData } from '@/lib/mock-data'
+import { ArchiveRestore, Trash2 } from 'lucide-react'
 import { PageLayout } from '@/components/PageLayout'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
+import { placeholderData } from '@/lib/mock-data'
 
-export default function Home() {
+export default function Archive() {
   const {
     toggleSidebar,
   } = useSidebar()
@@ -47,10 +47,15 @@ export default function Home() {
         selectionLength={selectionList.length}
         selectActions={[
           {
-            icon: <Archive/>,
-            tooltip: 'Archive',
-            onClick: () => console.log(selectionList.length + ' item archived...')
-          }
+            icon: <ArchiveRestore/>,
+            tooltip: 'Restore',
+            onClick: () => console.log(selectionList.length + ' item restored...')
+          },
+          {
+            icon: <Trash2/>,
+            tooltip: 'Delete',
+            onClick: () => console.log(selectionList.length + ' item deleted...')
+          },
         ]}
       />
     ),
@@ -63,9 +68,9 @@ export default function Home() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={topBarModeMap[topBarMode]}
       />
-      <AppSidebar/>
+      <AppSidebar path="/archive"/>
       <main className="w-full mt-14">
-        <PageLayout variant={selectedLayout}>
+        <PageLayout title="Archive" variant={selectedLayout}>
           {placeholderData.map((recipe) => (
             <RecipeCard
               key={recipe.id}
@@ -74,6 +79,7 @@ export default function Home() {
               tags={recipe.tags}
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+              archivedMode
             />
           ))}
         </PageLayout>
