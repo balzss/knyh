@@ -8,30 +8,30 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 98.46%;
-    --foreground: 252 0% 10%;
-    --muted: 0 0% 91.54%;
-    --muted-foreground: 0 0% 53.08%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 252 0% 0%;
-    --card: 0 0% 100%;
-    --card-foreground: 252 0% 30.77%;
-    --border: 0 0% 86.92%;
-    --input: 0 0% 74.62%;
-    --primary: 27.06 92.51% 79.46%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 164.12 70.54% 73.89%;
-    --secondary-foreground: 0 0% 0%;
-    --accent: 27.06 0% 93.85%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 65.31% 66.73%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 27.06 1.79% 32.5%;
-    --chart-1: 27.06 92.51% 79.46%;
-    --chart-2: 164.12 70.54% 73.89%;
-    --chart-3: 27.06 0% 93.85%;
-    --chart-4: 164.12 70.54% 76.89%;
-    --chart-5: 27.06 95.51% 79.46%;
+    --background: 229 57% 100%;
+    --foreground: 229 63% 4%;
+    --muted: 229 12% 86%;
+    --muted-foreground: 229 10% 37%;
+    --popover: 0 0% 99%;
+    --popover-foreground: 229 63% 3%;
+    --card: 0 0% 99%;
+    --card-foreground: 229 63% 3%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --primary: 229 100% 62%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 229 20% 90%;
+    --secondary-foreground: 229 20% 30%;
+    --accent: 229 28% 85%;
+    --accent-foreground: 229 28% 25%;
+    --destructive: 3 100% 50%;
+    --destructive-foreground: 3 0% 100%;
+    --ring: 229 100% 62%;
+    --chart-1: 229 100% 62%;
+    --chart-2: 229 20% 90%;
+    --chart-3: 229 28% 85%;
+    --chart-4: 229 20% 93%;
+    --chart-5: 229 103% 62%;
     --radius: 0.5rem;
 
     --sidebar-background: var(--popover);

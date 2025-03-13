@@ -55,7 +55,7 @@ export function TopBarSearch({
           </span>
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2">
-          <div className="flex gap-8 items-center mb-4 justify-between">
+          <div className="flex items-center justify-between">
             <Label htmlFor="layoutSelect" className="font-bold">Layout</Label>
             <Select onValueChange={onLayoutChange} defaultValue={selectedLayout}>
               <SelectTrigger className="w-[180px]" id="layoutSelect">

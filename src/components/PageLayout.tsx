@@ -15,7 +15,7 @@ export function PageLayout({
   children
 }: PageLayoutProps) {
   return (
-    <div className={`gap-4 p-4 w-full mx-auto grid grid-cols-1 ${layouts[variant]}`}>
+    <div className={`gap-3 p-3 w-full mx-auto grid grid-cols-1 ${layouts[variant]}`}>
       {title && (
         <h1 className="col-span-full scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           {title}

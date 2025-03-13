@@ -58,7 +58,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] make ingredient list items and title input the same height
 - [x] add animation when deleting ingredients
 - [x] sidebar on mobile opens when changing page
-- [ ] tooltips on mobile are acting weird
+
+- [ ] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
 
 - [ ] allow to create ingredient groups
 

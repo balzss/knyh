@@ -126,7 +126,7 @@ export default function Create() {
         }
       />
       <AppSidebar />
-      <main className="w-full mt-14 mx-auto">
+      <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="grid w-full items-center gap-2 mb-4">
             <Label htmlFor="recipe-title" className="font-bold">Recipe title</Label>

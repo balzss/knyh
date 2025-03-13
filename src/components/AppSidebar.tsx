@@ -81,7 +81,7 @@ export function AppSidebar({
       {isMobile && (
         <SidebarHeader className="p-3">
           <div className="flex justify-between items-center">
-            <Link className="text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
+            <Link className="text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/" onClick={() => setOpenMobile(false)}>
               KONYHA
             </Link>
             <Button variant="ghost" size="icon" onClick={() => setOpenMobile(false)}>

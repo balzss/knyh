@@ -42,9 +42,9 @@ export default function Settings() {
         }
       />
       <AppSidebar path="/settings"/>
-      <main className="w-full mt-14 mx-auto">
+      <main className="w-full mt-16 mx-auto">
         <PageLayout>
-          <div className="flex items-center justify-between border p-4 rounded-md">
+          <div className="flex items-center justify-between border p-3 rounded-md">
             <Label htmlFor="darkModeSwitch" className="font-bold">Dark mode</Label>
             <Switch
               id="darkModeSwitch"
