@@ -63,7 +63,7 @@ export default function Home() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={topBarModeMap[topBarMode]}
       />
-      <AppSidebar/>
+      <AppSidebar path="/"/>
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
           {placeholderData.map((recipe) => (

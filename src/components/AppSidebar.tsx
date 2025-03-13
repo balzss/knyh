@@ -27,7 +27,7 @@ import {
   Archive,
   FilePlus,
   ShoppingCart,
-  NotebookText,
+  BookOpenText,
 } from 'lucide-react'
 import { placeholderTags } from '@/lib/mock-data'
 
@@ -38,7 +38,7 @@ type AppSidebarProps = {
 const sidebarItems = [
   {
     displayName: 'Recipes',
-    icon: <NotebookText/>,
+    icon: <BookOpenText/>,
     href: '/'
   },
   {
@@ -73,18 +73,18 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const {
     isMobile,
-    toggleSidebar,
+    setOpenMobile,
   } = useSidebar()
 
   return (
-    <Sidebar className="fixed">
+    <Sidebar>
       {isMobile && (
-        <SidebarHeader className="p-2">
+        <SidebarHeader className="p-3">
           <div className="flex justify-between items-center">
-            <Link className="text-2xl font-bold mx-4 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
+            <Link className="text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
               KONYHA
             </Link>
-            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+            <Button variant="ghost" size="icon" onClick={() => setOpenMobile(false)}>
               <X />
             </Button>
           </div>
@@ -94,7 +94,7 @@ export function AppSidebar({
         <SidebarGroup>
         <div className="mb-4">
           <Button variant="default" className="font-bold py-4 px-3" asChild>
-            <Link href="/create">
+            <Link href="/create" onClick={() => setOpenMobile(false)}>
               <FilePlus/>
               <span>Add Recipe</span>
             </Link>
@@ -124,26 +124,26 @@ export function AppSidebar({
                                 {item.subItems.map((subItem) => (
                                   <SidebarMenuSubItem key={subItem.displayName}>
                                     <SidebarMenuSubButton asChild>
-                                      <a href={subItem.href}>
+                                      <Link href={subItem.href} onClick={() => setOpenMobile(false)}>
                                         <span>{subItem.displayName}</span>
-                                      </a>
+                                      </Link>
                                     </SidebarMenuSubButton>
                                   </SidebarMenuSubItem>
                                 ))}
                             </SidebarMenuSub>
                           </CollapsibleContent>
                         </SidebarMenuItem>
-                      </Collapsible>       
+                      </Collapsible>
                     )
                   }
 
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton asChild isActive={path === item.href}>
-                        <a href={item.href}>
+                        <Link href={item.href} onClick={() => setOpenMobile(false)}>
                           {item.icon}
                           <span>{item.displayName}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )

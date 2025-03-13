@@ -50,9 +50,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add sidebar menuitem for main page (Recipes)
 - [x] basic layout for create page
 - [x] improve sortable input component
-- [ ] always add empty bottom ingredient item with disable moving until it's filled out
-- [ ] make sortible input components removable
-- [ ] allow to create ingredients groups
+- [x] always add empty bottom ingredient item with disable moving until it's filled out
+- [x] make new bottom ingredient item sortable after adding value
+- [x] make sortible input components removable (with X btn or backspace when empty)
+- [x] after removing an item, jump focus to prev? (maybe only when removing with backspace)
+- [x] after pressing enter, jump to next ingredient item
+- [x] make ingredient list items and title input the same height
+- [x] add animation when deleting ingredients
+- [x] sidebar on mobile opens when changing page
+- [ ] tooltips on mobile are acting weird
+
+- [ ] allow to create ingredient groups
 
 - [ ] deploy to gh pages
 - [ ] create better favicon

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useSidebar } from '@/components/ui/sidebar'
 import {
   Avatar,
   AvatarFallback,
@@ -25,9 +24,6 @@ export function TopBar({
   customTopbarContent = <></>,
 }: TopBarProps) {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState<boolean>(false)
-  const {
-    isMobile,
-  } = useSidebar()
 
   const handleUserPopupOpen = (shouldOpen: boolean) => {
     setIsUserPopupOpen(shouldOpen)
@@ -37,11 +33,9 @@ export function TopBar({
     <nav className="fixed top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2">
       <IconButton icon={<Menu/>} tooltip="Toggle Sidebar" size="normal" onClick={onSidebarToggle}/>
 
-      {!isMobile && (
-        <Link className="text-2xl font-bold mx-12 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
-          KONYHA
-        </Link>
-      )}
+      <Link className="hidden sm:block text-2xl font-bold mx-12 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md" href="/">
+        KONYHA
+      </Link>
 
       {customTopbarContent}
 

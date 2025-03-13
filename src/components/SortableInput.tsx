@@ -1,19 +1,25 @@
+import { motion } from 'motion/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
 import { IconButton } from '@/components/IconButton'
-import { X, GripVertical } from 'lucide-react'
+import { X, GripVertical, Plus } from 'lucide-react'
 
-type SortableInputProps = {
+interface SortableInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string,
-  value?: string
-  onChange?: (event: React.SyntheticEvent | undefined, newValue: string) => void
+  newItemMode?: boolean
+  onRemoveSelf?: () => void
+  inputRef?: (el: HTMLInputElement) => void
+  noAnimate?: boolean
 }
 
 export function SortableInput({
   id,
-  value,
-  onChange,
+  newItemMode = false,
+  onRemoveSelf,
+  inputRef,
+  noAnimate = false,
+  ...rest
 }: SortableInputProps) {
     const {
     attributes,
@@ -29,16 +35,50 @@ export function SortableInput({
   }
 
   return (
-    <li className="relative flex items-center max-w-2xl ml-1 w-full" ref={setNodeRef} style={style} {...attributes}>
-      <span className="left-2 absolute" {...listeners}>
-        <IconButton size="small" variant="ghost" icon={<GripVertical/>} tooltip="Drag item"/>
+    <motion.li
+      {...(noAnimate ? {} : {
+        initial: { height: 0, opacity: 0 },
+        animate:{ height: 'auto', opacity: 1 },
+        exit:{ height: 0, opacity: 0 },
+        transition:{ duration: 0.2, ease: 'easeOut' }
+      })}
+      ref={setNodeRef}
+      style={style} {...(!newItemMode && attributes)}
+    >
+      <motion.div
+        className="relative flex items-center max-w-2xl w-full"
+        {...(noAnimate ? {} : {
+          initial:{ opacity: 0, y: -8, },
+          animate:{ opacity: 1, y: 0, },
+          exit:{ opacity: 0, y: 8, }
+        })}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
+      >
+      <span className="left-2 absolute touch-none" {...(!newItemMode && listeners)}>
+        {newItemMode ? (
+          <Plus size={16} className="w-6"/>
+        ) : (
+          <GripVertical size={16} className="w-6 cursor-move"/>
+        )}
       </span>
       <Input
-        className="px-12 py-6"
+        {...rest}
+        className="px-10 py-2"
+        placeholder={newItemMode ? 'New ingredient' : ''}
+        ref={inputRef}
       />
-      <span className="right-2 absolute">
-        <IconButton size="small" variant="ghost" icon={<X/>} tooltip="Remove item" onClick={() => console.log('clear?')}/>
-      </span>
-    </li>
+      {!newItemMode && (
+        <span className="right-2 absolute">
+          <IconButton
+            size="small"
+            variant="ghost"
+            icon={<X/>}
+            tooltip="Remove item"
+            onClick={onRemoveSelf}
+          />
+        </span>
+      )}
+      </motion.div>
+    </motion.li>
   )
 }
