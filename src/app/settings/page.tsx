@@ -10,9 +10,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { PageLayout } from '@/components/PageLayout'
 
 export default function Settings() {
-  const {
-    toggleSidebar,
-  } = useSidebar()
+  const { toggleSidebar } = useSidebar()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [darkMode, setDarkMode] = useState(theme === 'dark')
@@ -27,7 +25,7 @@ export default function Settings() {
     setMounted(true)
   }, [])
 
-  if(!mounted) return null
+  if (!mounted) return null
 
   return (
     <div className="flex w-full">
@@ -35,17 +33,17 @@ export default function Settings() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
-            <span className="mr-4 font-bold ">
-              Settings
-            </span>
+            <span className="mr-4 font-bold ">Settings</span>
           </div>
         }
       />
-      <AppSidebar path="/settings"/>
+      <AppSidebar path="/settings" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="flex items-center justify-between border p-3 rounded-md">
-            <Label htmlFor="darkModeSwitch" className="font-bold">Dark mode</Label>
+            <Label htmlFor="darkModeSwitch" className="font-bold">
+              Dark mode
+            </Label>
             <Switch
               id="darkModeSwitch"
               checked={darkMode}
@@ -55,5 +53,5 @@ export default function Settings() {
         </PageLayout>
       </main>
     </div>
-  );
+  )
 }

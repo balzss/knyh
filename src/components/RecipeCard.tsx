@@ -11,9 +11,7 @@ import {
   ArchiveRestore,
   Trash2,
 } from 'lucide-react'
-import {
-  Badge
-} from '@/components/ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -56,22 +54,20 @@ export function RecipeCard({
       onFocus={() => setIsHovered(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          setIsHovered(false);
+          setIsHovered(false)
         }
       }}
       className={`focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
       tabIndex={0}
     >
       <CardHeader className="relative">
-        <CardTitle>
-          {title}
-        </CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardDescription className="flex gap-3 items-center">
           <div className="flex gap-1 items-center">
-            <Users size="1rem"/> 4 adag
+            <Users size="1rem" /> 4 adag
           </div>
           <div className="flex gap-1 items-center">
-            <Timer size="1rem"/> 30 perc
+            <Timer size="1rem" /> 30 perc
           </div>
         </CardDescription>
         {(isSelected || isHovered || selectionMode) && (
@@ -80,24 +76,23 @@ export function RecipeCard({
               variant="ghost"
               size="icon"
               className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
-              onClick={() =>
-              onSelect(!isSelected)}
+              onClick={() => onSelect(!isSelected)}
             >
-              {isSelected ? <CircleCheckBig/> : <Circle/>}
+              {isSelected ? <CircleCheckBig /> : <Circle />}
             </Button>
           </div>
         )}
       </CardHeader>
-      <CardContent className="flex-grow">
-        card content
-      </CardContent>
+      <CardContent className="flex-grow">card content</CardContent>
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
             <Badge
               key={tag.id}
               tabIndex={archivedMode ? undefined : 0}
-              onClick={archivedMode ? undefined : () => console.log(tag.displayName)}
+              onClick={
+                archivedMode ? undefined : () => console.log(tag.displayName)
+              }
               className={archivedMode ? '' : 'cursor-pointer'}
               variant={archivedMode ? 'outline' : 'default'}
             >
@@ -105,18 +100,32 @@ export function RecipeCard({
             </Badge>
           ))}
         </div>
-        <div className={`flex gap-4 ${(isHovered && !selectionMode) ? '' : 'invisible'}`}>
+        <div
+          className={`flex gap-4 ${isHovered && !selectionMode ? '' : 'invisible'}`}
+        >
           {archivedMode ? (
             <>
-              <IconButton icon={<ArchiveRestore/>} tooltip="Restore" size="small"/>
-              <IconButton icon={<Trash2/>} tooltip="Delete" size="small"/>
+              <IconButton
+                icon={<ArchiveRestore />}
+                tooltip="Restore"
+                size="small"
+              />
+              <IconButton icon={<Trash2 />} tooltip="Delete" size="small" />
             </>
           ) : (
             <>
-              <IconButton icon={<Pencil/>} tooltip="Edit Recipe" size="small"/>
-              <IconButton icon={<Share2/>} tooltip="Share" size="small"/>
-              <IconButton icon={<Archive/>} tooltip="Archive" size="small"/>
-              <IconButton icon={<EllipsisVertical/>} tooltip="More Options" size="small"/>
+              <IconButton
+                icon={<Pencil />}
+                tooltip="Edit Recipe"
+                size="small"
+              />
+              <IconButton icon={<Share2 />} tooltip="Share" size="small" />
+              <IconButton icon={<Archive />} tooltip="Archive" size="small" />
+              <IconButton
+                icon={<EllipsisVertical />}
+                tooltip="More Options"
+                size="small"
+              />
             </>
           )}
         </div>

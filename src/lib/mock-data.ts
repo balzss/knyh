@@ -1,31 +1,31 @@
 export const placeholderTags = {
-  'magyar': {
+  magyar: {
     displayName: 'magyar',
-    id: '0'
+    id: '0',
   },
-  'alaprecept': {
+  alaprecept: {
     displayName: 'alaprecept',
-    id: '1'
+    id: '1',
   },
-  'főzelék': {
+  főzelék: {
     displayName: 'főzelék',
-    id: '2'
+    id: '2',
   },
-  'desszert': {
+  desszert: {
     displayName: 'desszert',
-    id: '3'
+    id: '3',
   },
-  'tészta': {
+  tészta: {
     displayName: 'tészta',
-    id: '4'
+    id: '4',
   },
-  'olasz': {
+  olasz: {
     displayName: 'olasz',
-    id: '5'
+    id: '5',
   },
-  'leves': {
+  leves: {
     displayName: 'leves',
-    id: '6'
+    id: '6',
   },
 }
 
@@ -33,47 +33,50 @@ export const placeholderData = [
   {
     id: '1',
     title: 'Palacsinta alaprecept',
-    tags: [placeholderTags['alaprecept'], placeholderTags['magyar'], placeholderTags['desszert']]
+    tags: [
+      placeholderTags['alaprecept'],
+      placeholderTags['magyar'],
+      placeholderTags['desszert'],
+    ],
   },
   {
     id: '2',
     title: 'Somlói galuska',
-    tags: [placeholderTags['desszert'], placeholderTags['magyar']]
+    tags: [placeholderTags['desszert'], placeholderTags['magyar']],
   },
   {
     id: '3',
     title: 'Krumplifőzelék',
-    tags: [placeholderTags['főzelék'], placeholderTags['magyar']]
+    tags: [placeholderTags['főzelék'], placeholderTags['magyar']],
   },
   {
     id: '4',
     title: 'Kocsonya',
-    tags: [placeholderTags['magyar']]
+    tags: [placeholderTags['magyar']],
   },
   {
     id: '5',
     title: 'Betyárleves',
-    tags: [placeholderTags['magyar'], placeholderTags['leves']]
+    tags: [placeholderTags['magyar'], placeholderTags['leves']],
   },
   {
     id: '6',
     title: 'Fasírt',
-    tags: [placeholderTags['magyar']]
+    tags: [placeholderTags['magyar']],
   },
   {
     id: '7',
     title: 'Carbonara',
-    tags: [placeholderTags['olasz'], placeholderTags['tészta']]
+    tags: [placeholderTags['olasz'], placeholderTags['tészta']],
   },
   {
     id: '8',
     title: 'Lecsó',
-    tags: [placeholderTags['magyar']]
+    tags: [placeholderTags['magyar']],
   },
   {
     id: '9',
     title: 'Rizottó',
-    tags: [placeholderTags['olasz']]
+    tags: [placeholderTags['olasz']],
   },
 ]
-

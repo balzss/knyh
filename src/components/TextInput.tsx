@@ -34,7 +34,7 @@ export function TextInput({
   return (
     <div className="relative flex items-center max-w-2xl ml-1 w-full">
       {Icon && (
-        <Icon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform"/>
+        <Icon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform" />
       )}
       <Input
         ref={inputRef}
@@ -44,23 +44,23 @@ export function TextInput({
         onChange={(e) => onChange(e, e.target.value)}
       />
       {value && clearable && (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 transform p-3 rounded-full"
-            onClick={handleClear}
-          >
-            <X/>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Clear input field</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 transform p-3 rounded-full"
+                onClick={handleClear}
+              >
+                <X />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Clear input field</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
     </div>
   )

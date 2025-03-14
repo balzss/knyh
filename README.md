@@ -60,9 +60,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] sidebar on mobile opens when changing page
 - [x] deploy to gh pages
 - [x] configure eslint and prettier
+- [x] fix gh pages deployment
+- [x] fine tune prettier/eslint rules
 
-- [ ] fix gh pages deployment
-- [ ] fine tune prettier/eslint rules
 - [ ] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
 - [ ] create better favicon
 

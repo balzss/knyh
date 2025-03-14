@@ -41,25 +41,33 @@ export function TopBarSearch({
           onChange={(_e, value) => onSearchQueryChange(value)}
         />
       </div>
-      <Popover open={isFilterOptionsOpen} onOpenChange={(newValue) => setIsFilterOptionsOpen(newValue)}>
+      <Popover
+        open={isFilterOptionsOpen}
+        onOpenChange={(newValue) => setIsFilterOptionsOpen(newValue)}
+      >
         <PopoverTrigger asChild>
           <span>
             <IconButton
               size="normal"
               variant="ghost"
-              icon={<SlidersHorizontal/>}
+              icon={<SlidersHorizontal />}
               tooltip="Filter and view options"
               isActive={isFilterOptionsOpen}
-              onClick={() => setIsFilterOptionsOpen(oldValue => !oldValue)}
+              onClick={() => setIsFilterOptionsOpen((oldValue) => !oldValue)}
             />
           </span>
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="layoutSelect" className="font-bold">Layout</Label>
-            <Select onValueChange={onLayoutChange} defaultValue={selectedLayout}>
+            <Label htmlFor="layoutSelect" className="font-bold">
+              Layout
+            </Label>
+            <Select
+              onValueChange={onLayoutChange}
+              defaultValue={selectedLayout}
+            >
               <SelectTrigger className="w-[180px]" id="layoutSelect">
-                <SelectValue/>
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="list">List</SelectItem>
