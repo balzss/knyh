@@ -59,9 +59,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add animation when deleting ingredients
 - [x] sidebar on mobile opens when changing page
 
+- [ ] deploy to gh pages
+- [ ] create better favicon
+- [ ] configure eslint and prettier
+
 - [ ] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
 
 - [ ] allow to create ingredient groups
-
-- [ ] deploy to gh pages
-- [ ] create better favicon
