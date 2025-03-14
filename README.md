@@ -58,11 +58,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] make ingredient list items and title input the same height
 - [x] add animation when deleting ingredients
 - [x] sidebar on mobile opens when changing page
+- [x] deploy to gh pages
+- [x] configure eslint and prettier
 
-- [ ] deploy to gh pages
-- [ ] create better favicon
-- [ ] configure eslint and prettier
-
+- [ ] fix gh pages deployment
+- [ ] fine tune prettier/eslint rules
 - [ ] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
+- [ ] create better favicon
 
 - [ ] allow to create ingredient groups

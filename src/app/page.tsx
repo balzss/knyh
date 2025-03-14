@@ -11,9 +11,7 @@ import { PageLayout } from '@/components/PageLayout'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 
 export default function Home() {
-  const {
-    toggleSidebar,
-  } = useSidebar()
+  const { toggleSidebar } = useSidebar()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -33,7 +31,7 @@ export default function Home() {
   }
 
   const topBarModeMap = {
-    'search' : (
+    search: (
       <TopBarSearch
         searchQuery={searchQuery}
         onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
@@ -41,16 +39,17 @@ export default function Home() {
         onLayoutChange={handleLayoutChange}
       />
     ),
-    'select' : (
+    select: (
       <TopBarSelect
         onClearSelection={() => setSelectionList([])}
         selectionLength={selectionList.length}
         selectActions={[
           {
-            icon: <Archive/>,
+            icon: <Archive />,
             tooltip: 'Archive',
-            onClick: () => console.log(selectionList.length + ' item archived...')
-          }
+            onClick: () =>
+              console.log(selectionList.length + ' item archived...'),
+          },
         ]}
       />
     ),
@@ -63,7 +62,7 @@ export default function Home() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={topBarModeMap[topBarMode]}
       />
-      <AppSidebar path="/"/>
+      <AppSidebar path="/" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
           {placeholderData.map((recipe) => (
@@ -79,5 +78,5 @@ export default function Home() {
         </PageLayout>
       </main>
     </div>
-  );
+  )
 }

@@ -11,9 +11,7 @@ import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { placeholderData } from '@/lib/mock-data'
 
 export default function Archive() {
-  const {
-    toggleSidebar,
-  } = useSidebar()
+  const { toggleSidebar } = useSidebar()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -33,7 +31,7 @@ export default function Archive() {
   }
 
   const topBarModeMap = {
-    'search' : (
+    search: (
       <TopBarSearch
         searchQuery={searchQuery}
         onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
@@ -41,20 +39,22 @@ export default function Archive() {
         onLayoutChange={handleLayoutChange}
       />
     ),
-    'select' : (
+    select: (
       <TopBarSelect
         onClearSelection={() => setSelectionList([])}
         selectionLength={selectionList.length}
         selectActions={[
           {
-            icon: <ArchiveRestore/>,
+            icon: <ArchiveRestore />,
             tooltip: 'Restore',
-            onClick: () => console.log(selectionList.length + ' item restored...')
+            onClick: () =>
+              console.log(selectionList.length + ' item restored...'),
           },
           {
-            icon: <Trash2/>,
+            icon: <Trash2 />,
             tooltip: 'Delete',
-            onClick: () => console.log(selectionList.length + ' item deleted...')
+            onClick: () =>
+              console.log(selectionList.length + ' item deleted...'),
           },
         ]}
       />
@@ -68,7 +68,7 @@ export default function Archive() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={topBarModeMap[topBarMode]}
       />
-      <AppSidebar path="/archive"/>
+      <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout title="Archive" variant={selectedLayout}>
           {placeholderData.map((recipe) => (
@@ -85,5 +85,5 @@ export default function Archive() {
         </PageLayout>
       </main>
     </div>
-  );
+  )
 }
