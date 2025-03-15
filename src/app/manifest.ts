@@ -7,18 +7,19 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'KONYHA Recipe Manager',
     short_name: 'KONYHA',
     description: 'Create and manage your recipes with ease',
-    start_url: '/',
+    start_url: '/knyh',
+    scope: '/knyh',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#000000',
     icons: [
       {
-        src: '/icon-192x192.png',
+        src: '/recipe-book.png',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/icon-512x512.png',
+        src: '/recipe-book.png',
         sizes: '512x512',
         type: 'image/png',
       },
