@@ -65,10 +65,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] create better favicon
 - [x] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
 - [x] create subfolder for my custom components
-- [ ] extract sortable list to separate component
-
-- [ ] rename create route to `add`
-- [ ] `add` route on mobile should have a "close" btn instead of the sidebar toggle (or "back", on desktop the sidebar should stay)
+- [x] extract sortable list to separate component
+- [x] rename create route to `add`
+- [x] `add` route on mobile should have a "close" btn instead of the sidebar toggle (or "back", on desktop the sidebar should stay)
 
 - [ ] add animations for recipe card buttons (fade in/out)
 - [ ] add animation when changing search bar content (search -> selection)

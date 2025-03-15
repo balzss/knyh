@@ -97,7 +97,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
         <SidebarGroup>
           <div className="mb-4">
             <Button variant="default" className="font-bold py-4 px-3" asChild>
-              <Link href="/create" onClick={() => setOpenMobile(false)}>
+              <Link href="/add" onClick={() => setOpenMobile(false)}>
                 <FilePlus />
                 <span>Add Recipe</span>
               </Link>

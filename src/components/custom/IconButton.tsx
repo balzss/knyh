@@ -13,6 +13,7 @@ type IconButtonProps = {
   onClick?: (e: React.SyntheticEvent) => void
   size?: 'normal' | 'small'
   isActive?: boolean
+  className?: string
 }
 
 export function IconButton({
@@ -22,6 +23,7 @@ export function IconButton({
   onClick,
   size = 'normal',
   isActive = false,
+  className = '',
 }: IconButtonProps) {
   const isTouchDevice =
     typeof window !== 'undefined' &&
@@ -34,7 +36,7 @@ export function IconButton({
           <Button
             variant={variant}
             size="icon"
-            className={`${size === 'small' ? 'h-8 w-8' : ''} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
+            className={`${className} ${size === 'small' ? 'h-8 w-8' : ''} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
             onClick={onClick}
           >
             {icon}

@@ -13,11 +13,13 @@ import { IconButton } from '@/components/custom'
 type TopBarProps = {
   onSidebarToggle: () => void
   customTopbarContent: React.ReactNode
+  hideSidebarToggleMobile?: boolean
 }
 
 export function TopBar({
   onSidebarToggle = () => {},
   customTopbarContent = <></>,
+  hideSidebarToggleMobile = false,
 }: TopBarProps) {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState<boolean>(false)
 
@@ -28,6 +30,7 @@ export function TopBar({
   return (
     <nav className="fixed top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2">
       <IconButton
+        className={hideSidebarToggleMobile ? 'hidden sm:block' : ''}
         icon={<Menu />}
         tooltip="Toggle Sidebar"
         size="normal"
