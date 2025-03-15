@@ -5,7 +5,7 @@ import { AppSidebar } from '@/components/AppSidebar'
 import { useSidebar } from '@/components/ui/sidebar'
 import { PageLayout } from '@/components/PageLayout'
 
-export default function Settings() {
+export default function ShoppingList() {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -18,7 +18,7 @@ export default function Settings() {
           </div>
         }
       />
-      <AppSidebar path="/settings" />
+      <AppSidebar path="/shopping-list" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div>shopping list will be here...</div>
