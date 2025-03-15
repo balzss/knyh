@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { IconButton } from '@/components/IconButton'
+import { IconButton } from '@/components/custom'
 
 type Tag = {
   id: string

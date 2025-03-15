@@ -23,6 +23,10 @@ export function IconButton({
   size = 'normal',
   isActive = false,
 }: IconButtonProps) {
+  const isTouchDevice =
+    typeof window !== 'undefined' &&
+    window?.matchMedia('(pointer: coarse)').matches
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -36,7 +40,7 @@ export function IconButton({
             {icon}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className={isTouchDevice ? 'hidden' : ''}>
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>

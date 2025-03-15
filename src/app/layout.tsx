@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
 
 import './globals.css'
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'KONYHA',
   description: 'Recipe Manager',
   icons: {
-    icon: '/recipe-book.png',
+    icon: '/knyh/cooking-pot.png',
   },
 }
 

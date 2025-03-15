@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { TextInput } from '@/components/TextInput'
+import { SlidersHorizontal, Search } from 'lucide-react'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { IconButton } from '@/components/IconButton'
 import {
   Select,
   SelectContent,
@@ -14,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { SlidersHorizontal, Search } from 'lucide-react'
+import { TextInput, IconButton } from '@/components/custom'
 
 type TopBarSearchProps = {
   searchQuery: string

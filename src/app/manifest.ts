@@ -8,19 +8,13 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: 'KONYHA',
     description: 'Create and manage your recipes with ease',
     start_url: '/knyh',
-    scope: '/knyh',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#000000',
+    background_color: '#101010',
+    theme_color: '#101010',
     icons: [
       {
-        src: '/recipe-book.png',
+        src: '/knyh/cooking-pot-192.png',
         sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        src: '/recipe-book.png',
-        sizes: '512x512',
         type: 'image/png',
       },
     ],

@@ -1,4 +1,4 @@
-import { IconButton } from '@/components/IconButton'
+import { IconButton } from '@/components/custom'
 import { X } from 'lucide-react'
 
 type SelectAction = {

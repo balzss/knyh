@@ -1,9 +1,8 @@
 'use client'
 
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar } from '@/components/AppSidebar'
 import { useSidebar } from '@/components/ui/sidebar'
-import { PageLayout } from '@/components/PageLayout'
+import { TopBar } from '@/components/TopBar'
+import { AppSidebar, PageLayout } from '@/components/custom'
 
 export default function ShoppingList() {
   const { toggleSidebar } = useSidebar()

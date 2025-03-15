@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { IconButton } from '@/components/IconButton'
+import { IconButton } from '@/components/custom'
 
 type TopBarProps = {
   onSidebarToggle: () => void
@@ -35,7 +35,7 @@ export function TopBar({
       />
 
       <Link
-        className="hidden sm:block text-2xl font-bold mx-12 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md"
+        className="hidden sm:flex text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md w-48 mr-1 items-center justify-center"
         href="/"
       >
         KONYHA

@@ -62,8 +62,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] configure eslint and prettier
 - [x] fix gh pages deployment
 - [x] fine tune prettier/eslint rules
+- [x] create better favicon
+- [x] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
+- [x] create subfolder for my custom components
+- [ ] extract sortable list to separate component
 
-- [ ] tooltips on mobile are acting weird -> https://github.com/shadcn-ui/ui/issues/86
-- [ ] create better favicon
+- [ ] rename create route to `add`
+- [ ] `add` route on mobile should have a "close" btn instead of the sidebar toggle (or "back", on desktop the sidebar should stay)
 
+- [ ] add animations for recipe card buttons (fade in/out)
+- [ ] add animation when changing search bar content (search -> selection)
+- [ ] hide layout select on mobile
+- [ ] make theme switch a select
 - [ ] allow to create ingredient groups
+- [ ] change manifest theme color on light/dark mode switch

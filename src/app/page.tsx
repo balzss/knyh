@@ -1,14 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { RecipeCard } from '@/components/RecipeCard'
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar } from '@/components/AppSidebar'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Archive } from 'lucide-react'
-import { placeholderData } from '@/lib/mock-data'
-import { PageLayout } from '@/components/PageLayout'
+import { AppSidebar, RecipeCard, PageLayout } from '@/components/custom'
+import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
+
+import { placeholderData } from '@/lib/mock-data'
 
 export default function Home() {
   const { toggleSidebar } = useSidebar()

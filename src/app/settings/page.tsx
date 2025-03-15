@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
+import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar } from '@/components/AppSidebar'
-import { useSidebar } from '@/components/ui/sidebar'
-import { PageLayout } from '@/components/PageLayout'
+import { AppSidebar, PageLayout } from '@/components/custom'
 
 export default function Settings() {
   const { toggleSidebar } = useSidebar()

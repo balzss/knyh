@@ -1,13 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { RecipeCard } from '@/components/RecipeCard'
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar } from '@/components/AppSidebar'
-import { useSidebar } from '@/components/ui/sidebar'
 import { ArchiveRestore, Trash2 } from 'lucide-react'
-import { PageLayout } from '@/components/PageLayout'
+import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
+import { TopBar } from '@/components/TopBar'
+import { AppSidebar, PageLayout, RecipeCard } from '@/components/custom'
+
 import { placeholderData } from '@/lib/mock-data'
 
 export default function Archive() {

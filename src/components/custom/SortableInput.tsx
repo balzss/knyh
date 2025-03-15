@@ -1,9 +1,9 @@
+import { X, GripVertical, Plus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
-import { IconButton } from '@/components/IconButton'
-import { X, GripVertical, Plus } from 'lucide-react'
+import { IconButton } from '@/components/custom'
 
 interface SortableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
