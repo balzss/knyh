@@ -3,11 +3,7 @@ import Link from 'next/link'
 import { Menu, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { IconButton } from '@/components/custom'
 
 type TopBarProps = {
@@ -33,7 +29,7 @@ export function TopBar({
         className={hideSidebarToggleMobile ? 'hidden sm:block' : ''}
         icon={<Menu />}
         tooltip="Toggle Sidebar"
-        size="normal"
+        iconSize="normal"
         onClick={onSidebarToggle}
       />
 
@@ -50,11 +46,7 @@ export function TopBar({
 
       <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto mr-1 cursor-pointer rounded-full"
-          >
+          <Button variant="ghost" size="icon" className="ml-auto mr-1 cursor-pointer rounded-full">
             <Avatar>
               <AvatarImage src="" alt="SB" />
               <AvatarFallback>SB</AvatarFallback>

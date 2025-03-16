@@ -100,9 +100,7 @@ export function RecipeCard({
             <Badge
               key={tag.id}
               tabIndex={archivedMode ? undefined : 0}
-              onClick={
-                archivedMode ? undefined : () => console.log(tag.displayName)
-              }
+              onClick={archivedMode ? undefined : () => console.log(tag.displayName)}
               className={archivedMode ? '' : 'cursor-pointer'}
               variant={archivedMode ? 'outline' : 'default'}
             >
@@ -116,27 +114,15 @@ export function RecipeCard({
         >
           {archivedMode ? (
             <>
-              <IconButton
-                icon={<ArchiveRestore />}
-                tooltip="Restore"
-                size="small"
-              />
-              <IconButton icon={<Trash2 />} tooltip="Delete" size="small" />
+              <IconButton icon={<ArchiveRestore />} tooltip="Restore" iconSize="small" />
+              <IconButton icon={<Trash2 />} tooltip="Delete" iconSize="small" />
             </>
           ) : (
             <>
-              <IconButton
-                icon={<Pencil />}
-                tooltip="Edit Recipe"
-                size="small"
-              />
-              <IconButton icon={<Share2 />} tooltip="Share" size="small" />
-              <IconButton icon={<Archive />} tooltip="Archive" size="small" />
-              <IconButton
-                icon={<EllipsisVertical />}
-                tooltip="More Options"
-                size="small"
-              />
+              <IconButton icon={<Pencil />} tooltip="Edit Recipe" iconSize="small" />
+              <IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />
+              <IconButton icon={<Archive />} tooltip="Archive" iconSize="small" />
+              <IconButton icon={<EllipsisVertical />} tooltip="More Options" iconSize="small" />
             </>
           )}
         </div>

@@ -55,8 +55,7 @@ export default function Home() {
                   {
                     icon: <Archive />,
                     tooltip: 'Archive',
-                    onClick: () =>
-                      console.log(selectionList.length + ' item archived...'),
+                    onClick: () => console.log(selectionList.length + ' item archived...'),
                   },
                 ]}
               />

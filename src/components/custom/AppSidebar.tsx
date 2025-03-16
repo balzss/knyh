@@ -13,11 +13,7 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from '@/components/ui/sidebar'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Button } from '@/components/ui/button'
 import {
   X,
@@ -83,11 +79,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
             >
               KONYHA
             </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setOpenMobile(false)}
-            >
+            <Button variant="ghost" size="icon" onClick={() => setOpenMobile(false)}>
               <X />
             </Button>
           </div>
@@ -127,10 +119,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                             {item.subItems.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.displayName}>
                                 <SidebarMenuSubButton asChild>
-                                  <Link
-                                    href={subItem.href}
-                                    onClick={() => setOpenMobile(false)}
-                                  >
+                                  <Link href={subItem.href} onClick={() => setOpenMobile(false)}>
                                     <span>{subItem.displayName}</span>
                                   </Link>
                                 </SidebarMenuSubButton>
@@ -146,10 +135,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild isActive={path === item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setOpenMobile(false)}
-                      >
+                      <Link href={item.href} onClick={() => setOpenMobile(false)}>
                         {item.icon}
                         <span>{item.displayName}</span>
                       </Link>

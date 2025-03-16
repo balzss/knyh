@@ -46,14 +46,12 @@ export default function Archive() {
           {
             icon: <ArchiveRestore />,
             tooltip: 'Restore',
-            onClick: () =>
-              console.log(selectionList.length + ' item restored...'),
+            onClick: () => console.log(selectionList.length + ' item restored...'),
           },
           {
             icon: <Trash2 />,
             tooltip: 'Delete',
-            onClick: () =>
-              console.log(selectionList.length + ' item deleted...'),
+            onClick: () => console.log(selectionList.length + ' item deleted...'),
           },
         ]}
       />
@@ -63,10 +61,7 @@ export default function Archive() {
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <div className="flex w-full">
-      <TopBar
-        onSidebarToggle={toggleSidebar}
-        customTopbarContent={topBarModeMap[topBarMode]}
-      />
+      <TopBar onSidebarToggle={toggleSidebar} customTopbarContent={topBarModeMap[topBarMode]} />
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout title="Archive" variant={selectedLayout}>

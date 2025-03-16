@@ -34,7 +34,7 @@ export function TopBarSelect({
         transition={{ duration: 0.15 }}
       >
         <IconButton
-          size="normal"
+          iconSize="normal"
           variant="ghost"
           icon={<X />}
           tooltip="Clear selection"
@@ -44,7 +44,7 @@ export function TopBarSelect({
         {selectActions.map(({ icon, tooltip, onClick }, index) => (
           <IconButton
             key={index}
-            size="normal"
+            iconSize="normal"
             variant="ghost"
             icon={icon}
             tooltip={tooltip}

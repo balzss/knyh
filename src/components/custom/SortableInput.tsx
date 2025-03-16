@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { X, GripVertical, Plus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useSortable } from '@dnd-kit/sortable'
@@ -5,8 +6,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
 import { IconButton } from '@/components/custom'
 
-interface SortableInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SortableInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string
   newItemMode?: boolean
   onRemoveSelf?: () => void
@@ -22,16 +22,25 @@ export function SortableInput({
   noAnimate = false,
   ...rest
 }: SortableInputProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id })
+  const [hovered, setHovered] = useState<boolean>(false)
+  const [focused, setFocused] = useState<boolean>(false)
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   }
 
+  const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
+    if (!e.currentTarget.parentNode?.contains(e.relatedTarget)) {
+      setFocused(false)
+    }
+  }
+
   return (
     <motion.li
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       {...(noAnimate
         ? {}
         : {
@@ -55,10 +64,7 @@ export function SortableInput({
             })}
         transition={{ duration: 0.15, ease: 'easeOut' }}
       >
-        <span
-          className="left-2 absolute touch-none"
-          {...(!newItemMode && listeners)}
-        >
+        <span className="left-2 absolute touch-none" {...(!newItemMode && listeners)}>
           {newItemMode ? (
             <Plus size={16} className="w-6" />
           ) : (
@@ -67,18 +73,22 @@ export function SortableInput({
         </span>
         <Input
           {...rest}
+          // Set isHovered to true when the input gains focus, and only set it to false when focus moves completely outside the
+          onFocus={() => setFocused(true)}
+          onBlur={handleBlur}
           className="px-10 py-2"
           placeholder={newItemMode ? 'New ingredient' : ''}
           ref={inputRef}
         />
-        {!newItemMode && (
+        {!newItemMode && (focused || hovered) && (
           <span className="right-2 absolute">
             <IconButton
-              size="small"
+              iconSize="small"
               variant="ghost"
               icon={<X />}
               tooltip="Remove item"
               onClick={onRemoveSelf}
+              onBlur={handleBlur}
             />
           </span>
         )}

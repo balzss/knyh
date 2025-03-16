@@ -1,17 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { X } from 'lucide-react'
+import { X, ListPlus } from 'lucide-react'
+import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { useSidebar } from '@/components/ui/sidebar'
+import { Button } from '@/components/ui/button'
 import { TopBar } from '@/components/TopBar'
-import {
-  AppSidebar,
-  PageLayout,
-  SortableList,
-  IconButton,
-} from '@/components/custom'
+import { AppSidebar, PageLayout, SortableList, IconButton } from '@/components/custom'
 
 export default function Add() {
   const { toggleSidebar } = useSidebar()
@@ -33,7 +29,7 @@ export default function Add() {
         customTopbarContent={
           <div className="flex items-center gap-2">
             <IconButton
-              size="normal"
+              iconSize="normal"
               variant="ghost"
               icon={<X />}
               tooltip="Clear selection"
@@ -58,6 +54,13 @@ export default function Add() {
             initialItems={['1 tbsp of salt', '3 drops of water']}
             onItemsChange={(newItems) => console.log({ newItems })}
           />
+
+          <div>
+            <Button variant="outline">
+              <ListPlus />
+              Create new ingredient group
+            </Button>
+          </div>
         </PageLayout>
       </main>
     </div>

@@ -33,11 +33,7 @@ export const placeholderData = [
   {
     id: '1',
     title: 'Palacsinta alaprecept',
-    tags: [
-      placeholderTags['alaprecept'],
-      placeholderTags['magyar'],
-      placeholderTags['desszert'],
-    ],
+    tags: [placeholderTags['alaprecept'], placeholderTags['magyar'], placeholderTags['desszert']],
   },
   {
     id: '2',

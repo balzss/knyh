@@ -70,7 +70,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] `add` route on mobile should have a "close" btn instead of the sidebar toggle (or "back", on desktop the sidebar should stay)
 - [x] add animations for recipe card buttons (fade in/out)
 - [x] hide layout select on mobile
-- [ ] add animation when changing search bar content (search -> selection)
+- [x] add animation when changing search bar content (search -> selection)
+- [x] make theme switch a select
+- [x] only show sortable item "X" button on hover or focus
 
-- [ ] make theme switch a select
 - [ ] allow to create ingredient groups
+- [ ] jump with up/down arrows between ingredient inputs
+- [ ] make sortable drag and drop work with keyboard

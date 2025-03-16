@@ -3,11 +3,7 @@ import { AnimatePresence } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { Label } from '@/components/ui/label'
 import { DndContext, DragEndEvent, Modifier } from '@dnd-kit/core'
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { SortableInput } from '@/components/custom'
 
 type IngredientItem = {
@@ -38,10 +34,7 @@ const restrictToParentElementCustom: Modifier = ({
   const bottomOffset = draggingNodeRect.height + ingredientListGapPx
   if (containerNodeRect.top > draggingNodeRect.top + transform.y) {
     y = containerNodeRect.top - draggingNodeRect.top
-  } else if (
-    containerNodeRect.bottom - bottomOffset <
-    draggingNodeRect.bottom + transform.y
-  ) {
+  } else if (containerNodeRect.bottom - bottomOffset < draggingNodeRect.bottom + transform.y) {
     y = containerNodeRect.bottom - draggingNodeRect.bottom - bottomOffset
   }
   return {
@@ -51,11 +44,7 @@ const restrictToParentElementCustom: Modifier = ({
   }
 }
 
-export function SortableList({
-  label,
-  initialItems,
-  onItemsChange,
-}: SortableListProps) {
+export function SortableList({ label, initialItems, onItemsChange }: SortableListProps) {
   const [noAnimate, setNoAnimate] = useState<boolean>(true)
   const [internalItems, setInternalItems] = useState<IngredientItem[]>([
     ...initialItems.map((item) => ({
@@ -79,10 +68,7 @@ export function SortableList({
 
   useEffect(() => {
     // keep focus when typing into the bottom item and a new one is being created
-    if (
-      focusedIngredientId !== null &&
-      ingredientInputRefs.current[focusedIngredientId]
-    ) {
+    if (focusedIngredientId !== null && ingredientInputRefs.current[focusedIngredientId]) {
       ingredientInputRefs.current[focusedIngredientId]?.focus()
     }
   }, [focusedIngredientId])
@@ -105,17 +91,12 @@ export function SortableList({
   ) => {
     const { value } = changeEvent.target
     const lastItem =
-      internalItems.findIndex((item) => item.id === itemId) ===
-      internalItems.length - 1
+      internalItems.findIndex((item) => item.id === itemId) === internalItems.length - 1
     setInternalItems((prevItems) => {
       const updatedValues = prevItems.map((item) =>
-        item.id === itemId
-          ? { ...item, value, autoFocus: false, noAnimate: false }
-          : item
+        item.id === itemId ? { ...item, value, autoFocus: false, noAnimate: false } : item
       )
-      return lastItem
-        ? [...updatedValues, { id: nanoid(), value: '' }]
-        : updatedValues
+      return lastItem ? [...updatedValues, { id: nanoid(), value: '' }] : updatedValues
     })
     if (lastItem) {
       ingredientInputRefs.current[focusedIngredientId]?.focus()
@@ -146,9 +127,7 @@ export function SortableList({
           return prevItems
         }
         if (currentIndex === prevItems.length - 2) {
-          ingredientInputRefs.current[
-            internalItems[currentIndex + 1].id
-          ]?.focus()
+          ingredientInputRefs.current[internalItems[currentIndex + 1].id]?.focus()
           return prevItems
         }
         return [
@@ -161,9 +140,7 @@ export function SortableList({
   }
 
   const handleRemoveIngredient = (itemId: string) => {
-    setInternalItems((prevItems) =>
-      prevItems.filter((item) => item.id !== itemId)
-    )
+    setInternalItems((prevItems) => prevItems.filter((item) => item.id !== itemId))
   }
 
   return (
@@ -175,10 +152,7 @@ export function SortableList({
         id="dnd-context"
       >
         <ul className={`grid gap-[0.5rem]`}>
-          <SortableContext
-            items={internalItems}
-            strategy={verticalListSortingStrategy}
-          >
+          <SortableContext items={internalItems} strategy={verticalListSortingStrategy}>
             <AnimatePresence>
               {internalItems.map(({ value, id, autoFocus }, index) => (
                 <SortableInput

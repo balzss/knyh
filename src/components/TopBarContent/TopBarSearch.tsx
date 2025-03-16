@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { SlidersHorizontal, Search } from 'lucide-react'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -61,7 +57,7 @@ export function TopBarSearch({
           <PopoverTrigger asChild>
             <span>
               <IconButton
-                size="normal"
+                iconSize="normal"
                 variant="ghost"
                 icon={<SlidersHorizontal />}
                 tooltip="Filter and view options"
@@ -75,10 +71,7 @@ export function TopBarSearch({
               <Label htmlFor="layoutSelect" className="font-bold">
                 Layout
               </Label>
-              <Select
-                onValueChange={onLayoutChange}
-                defaultValue={selectedLayout}
-              >
+              <Select onValueChange={onLayoutChange} defaultValue={selectedLayout}>
                 <SelectTrigger className="w-[180px]" id="layoutSelect">
                   <SelectValue />
                 </SelectTrigger>
