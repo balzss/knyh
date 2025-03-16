@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Archive } from 'lucide-react'
-import { AppSidebar, RecipeCard, PageLayout } from '@/components/custom'
 import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
+import { AppSidebar, RecipeCard, PageLayout, myToast } from '@/components/custom'
 
 import { placeholderData } from '@/lib/mock-data'
 
@@ -55,7 +55,11 @@ export default function Home() {
                   {
                     icon: <Archive />,
                     tooltip: 'Archive',
-                    onClick: () => console.log(selectionList.length + ' item archived...'),
+                    onClick: () =>
+                      myToast({
+                        message: `${selectionList.length} item${selectionList.length > 1 ? 's' : ''} archived`,
+                        action: { label: 'Undo', onClick: () => {} },
+                      }),
                   },
                 ]}
               />

@@ -136,6 +136,13 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
           ...prevItems.slice(currentIndex + 1),
         ]
       })
+    } else if (e.key === 'ArrowDown') {
+      if (currentIndex >= internalItems.length - 1) return
+      ingredientInputRefs.current[internalItems[currentIndex + 1].id]?.focus()
+    } else if (e.key === 'ArrowUp') {
+      if (currentIndex <= 0) return
+      ingredientInputRefs.current[internalItems[currentIndex - 1].id]?.focus()
+      e.preventDefault()
     }
   }
 

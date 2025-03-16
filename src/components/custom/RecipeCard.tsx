@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { IconButton } from '@/components/custom'
+import { IconButton, myToast } from '@/components/custom'
 
 type Tag = {
   id: string
@@ -121,7 +121,17 @@ export function RecipeCard({
             <>
               <IconButton icon={<Pencil />} tooltip="Edit Recipe" iconSize="small" />
               <IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />
-              <IconButton icon={<Archive />} tooltip="Archive" iconSize="small" />
+              <IconButton
+                icon={<Archive />}
+                tooltip="Archive"
+                iconSize="small"
+                onClick={() =>
+                  myToast({
+                    message: 'Recipe archived',
+                    action: { label: 'Undo', onClick: () => {} },
+                  })
+                }
+              />
               <IconButton icon={<EllipsisVertical />} tooltip="More Options" iconSize="small" />
             </>
           )}

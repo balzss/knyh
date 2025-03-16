@@ -73,7 +73,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add animation when changing search bar content (search -> selection)
 - [x] make theme switch a select
 - [x] only show sortable item "X" button on hover or focus
+- [x] dont animate search bar
+- [x] add sonner for archive action
+- [x] jump with up/down arrows between ingredient inputs
 
 - [ ] allow to create ingredient groups
-- [ ] jump with up/down arrows between ingredient inputs
+- [ ] add menu for extra options for recipe card
+- [ ] create share modal
 - [ ] make sortable drag and drop work with keyboard
