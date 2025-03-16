@@ -44,7 +44,9 @@ export function TopBar({
         KONYHA
       </Link>
 
-      {customTopbarContent}
+      <div className="flex-1" style={{ overflow: 'hidden', height: '40px' }}>
+        {customTopbarContent}
+      </div>
 
       <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
         <PopoverTrigger asChild>

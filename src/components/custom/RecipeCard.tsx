@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import {
   Archive,
@@ -48,9 +48,6 @@ export function RecipeCard({
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
 
-  useEffect(() => {
-    console.log('recipecard mount')
-  }, [])
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}

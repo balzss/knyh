@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Archive } from 'lucide-react'
 import { AppSidebar, RecipeCard, PageLayout } from '@/components/custom'
@@ -29,37 +30,39 @@ export default function Home() {
     setSelectedLayout(selectedValue)
   }
 
-  const topBarModeMap = {
-    search: (
-      <TopBarSearch
-        searchQuery={searchQuery}
-        onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-        selectedLayout={selectedLayout}
-        onLayoutChange={handleLayoutChange}
-      />
-    ),
-    select: (
-      <TopBarSelect
-        onClearSelection={() => setSelectionList([])}
-        selectionLength={selectionList.length}
-        selectActions={[
-          {
-            icon: <Archive />,
-            tooltip: 'Archive',
-            onClick: () =>
-              console.log(selectionList.length + ' item archived...'),
-          },
-        ]}
-      />
-    ),
-  }
-
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <div className="flex w-full">
       <TopBar
         onSidebarToggle={toggleSidebar}
-        customTopbarContent={topBarModeMap[topBarMode]}
+        customTopbarContent={
+          <AnimatePresence>
+            {topBarMode === 'search' && (
+              <TopBarSearch
+                key="search"
+                searchQuery={searchQuery}
+                onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
+                selectedLayout={selectedLayout}
+                onLayoutChange={handleLayoutChange}
+              />
+            )}
+            {topBarMode === 'select' && (
+              <TopBarSelect
+                key="select"
+                onClearSelection={() => setSelectionList([])}
+                selectionLength={selectionList.length}
+                selectActions={[
+                  {
+                    icon: <Archive />,
+                    tooltip: 'Archive',
+                    onClick: () =>
+                      console.log(selectionList.length + ' item archived...'),
+                  },
+                ]}
+              />
+            )}
+          </AnimatePresence>
+        }
       />
       <AppSidebar path="/" />
       <main className="w-full mt-14">
