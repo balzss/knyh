@@ -76,8 +76,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] dont animate search bar
 - [x] add sonner for archive action
 - [x] jump with up/down arrows between ingredient inputs
+- [x] allow to create ingredient groups
+- [x] redesign ingredient group label and aditing option (inplace label edit + move up/down btns + remove group btn)
+- [x] hide ingredient group actions unless focused, hovered or in mobile view
+- [x] hoverable icons (e.g. recipecard) should always be shown in mobiel view
 
-- [ ] allow to create ingredient groups
+- [ ] after adding ingredient group, the focus should be on the new name, the value should be "New Component" and the whole text should be editable and selected
+
 - [ ] add menu for extra options for recipe card
 - [ ] create share modal
 - [ ] make sortable drag and drop work with keyboard

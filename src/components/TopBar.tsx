@@ -26,7 +26,7 @@ export function TopBar({
   return (
     <nav className="fixed top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2">
       <IconButton
-        className={hideSidebarToggleMobile ? 'hidden sm:block' : ''}
+        className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}
         tooltip="Toggle Sidebar"
         iconSize="normal"

@@ -1,24 +1,29 @@
 'use client'
 
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, ListPlus } from 'lucide-react'
+import { X, ListPlus, CircleChevronUp, CircleChevronDown, ListX } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, SortableList, IconButton } from '@/components/custom'
-
-type IngredientGroup = {
-  label: string
-  ingredients: string[]
-}
+import {
+  AppSidebar,
+  PageLayout,
+  SortableList,
+  IconButton,
+  GroupLabelEdit,
+} from '@/components/custom'
 
 export default function Add() {
-  const [ingredientGroups, setIngredientGroups] = useState<IngredientGroup[]>([
-    { label: '', ingredients: [] },
+  const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([
+    'Garlic button',
+    'Naan bread',
   ])
+  const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
+  const ingredientLists = useRef([['']])
+
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
 
@@ -31,25 +36,21 @@ export default function Add() {
   }
 
   const handleIngredientGroupLabelChange = (groupIndex: number, newValue: string) => {
-    setIngredientGroups((prevItems) =>
-      prevItems.map((item, i) => (i === groupIndex ? { ...item, label: newValue } : item))
+    setIngredientGroupLabels((prevItems) =>
+      prevItems.map((item, i) => (i === groupIndex ? newValue : item))
     )
   }
 
   const handleAddIngredientGroup = () => {
-    setIngredientGroups((prevItems) => [...prevItems, { label: '', ingredients: [] }])
+    setIngredientGroupLabels((prevItems) => [...prevItems, 'New component'])
   }
 
-  // const handleIngredientsChange = (groupIndex: number, newIngredients: string[]) => {
-  //   setIngredientGroups((prevItems) =>
-  //     prevItems.map((item, i) =>
-  //       i === groupIndex ? { ...item, ingredients: newIngredients } : item
-  //     )
-  //   )
-  // }
-
-  const disableAddIngredientGroupBtn =
-    ingredientGroups.length === 1 && ingredientGroups[0].ingredients.length === 0
+  const handleIngredientsChange = (groupIndex: number, newIngredients: string[]) => {
+    ingredientLists.current[groupIndex] = newIngredients
+    setDisableAddIngredientGroupBtn(
+      ingredientLists.current.length === 1 && ingredientLists.current[0].length === 0
+    )
+  }
 
   return (
     <div className="flex w-full">
@@ -79,19 +80,25 @@ export default function Add() {
             <Input type="text" id="recipe-title" autoFocus />
           </div>
 
-          {ingredientGroups.map(({ label }, index) => {
+          {ingredientGroupLabels.map((label, index) => {
             return (
-              <Fragment key={label}>
-                {ingredientGroups.length > 1 && (
-                  <Input
-                    value={label}
-                    onChange={(e) => handleIngredientGroupLabelChange(index, e.target.value)}
+              <Fragment key={index}>
+                {ingredientGroupLabels.length > 1 && (
+                  <GroupLabelEdit
+                    isInEditMode={true}
+                    label={label}
+                    onLabelChange={(newValue) => handleIngredientGroupLabelChange(index, newValue)}
+                    actions={[
+                      { tooltip: 'Move group up', icon: <CircleChevronUp /> },
+                      { tooltip: 'Move group down', icon: <CircleChevronDown /> },
+                      { tooltip: 'Remove group', icon: <ListX /> },
+                    ]}
                   />
                 )}
                 <SortableList
-                  label={ingredientGroups.length > 1 ? `${label} ingredients` : 'Ingredients'}
+                  label="Ingredients"
                   initialItems={[]}
-                  onItemsChange={(newItems) => console.log({ newItems })}
+                  onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
                 />
               </Fragment>
             )
