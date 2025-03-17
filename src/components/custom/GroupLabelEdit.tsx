@@ -4,8 +4,9 @@ import { IconButton, myToast } from '@/components/custom'
 
 type Action = {
   icon: React.ReactNode
-  onClick?: (e: React.SyntheticEvent) => void
   tooltip: string
+  onClick?: (e: React.SyntheticEvent) => void
+  disabled?: boolean
 }
 
 type GroupLabelEditProps = {
@@ -70,6 +71,12 @@ export function GroupLabelEdit({
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === 'Enter' || e.key === 'Escape') {
+      labelRef.current?.blur()
+    }
+  }
+
   return (
     <div
       className="flex items-center min-h-10 gap-2 text-muted-foreground relative"
@@ -80,6 +87,7 @@ export function GroupLabelEdit({
         className={`transition-[padding] transition-100 min-w-[1rem] text-xl sm:mr-0 mr-auto focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:rounded-md py-1 ${focused ? 'p-1' : ''} ${isInErrorState ? 'focus:ring-destructive' : 'focus:ring-primary'}`}
         contentEditable={isInEditMode}
         onInput={handleInput}
+        onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={labelRef}
@@ -95,7 +103,7 @@ export function GroupLabelEdit({
         iconSize="small"
         className={focused || hovered ? '' : 'sm:hidden'}
       />
-      {actions.map(({ icon, onClick, tooltip }) => (
+      {actions.map(({ icon, onClick, tooltip, disabled }) => (
         <IconButton
           key={tooltip}
           icon={icon}
@@ -104,6 +112,7 @@ export function GroupLabelEdit({
           variant="ghost"
           iconSize="small"
           className={!focused && hovered ? '' : 'sm:hidden'}
+          disabled={!!disabled}
         />
       ))}
     </div>

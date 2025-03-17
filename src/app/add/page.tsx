@@ -2,7 +2,7 @@
 
 import { useState, Fragment, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, ListPlus, CircleChevronUp, CircleChevronDown, ListX } from 'lucide-react'
+import { X, ListPlus, ChevronsUp, ChevronsDown, ListX } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -19,7 +19,7 @@ import {
 export default function Add() {
   const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([''])
   const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
-  const ingredientLists = useRef([['']])
+  const ingredientLists = useRef<string[][]>([[]])
   const ingredientsRef = useRef<HTMLDivElement>(null)
 
   const { toggleSidebar } = useSidebar()
@@ -40,6 +40,8 @@ export default function Add() {
   }
 
   const handleAddIngredientGroup = () => {
+    ingredientLists.current.push([])
+
     setIngredientGroupLabels((prevItems) => {
       const isFirstGroup = prevItems.length === 1 && prevItems[0] === ''
       return [...(isFirstGroup ? ['First component'] : prevItems), 'New component']
@@ -63,6 +65,24 @@ export default function Add() {
     )
   }
 
+  const handleChangeIngredientGroupOrder = (currentIndex: number, newIndex: number) => {
+    setIngredientGroupLabels((prevItems) => {
+      ingredientLists.current = ingredientLists.current.map((item, index) =>
+        index === currentIndex
+          ? ingredientLists.current[newIndex]
+          : index === newIndex
+            ? ingredientLists.current[currentIndex]
+            : item
+      )
+      return prevItems.map((item, index) =>
+        index === currentIndex
+          ? prevItems[newIndex]
+          : index === newIndex
+            ? prevItems[currentIndex]
+            : item
+      )
+    })
+  }
   return (
     <div className="flex w-full">
       <TopBar
@@ -77,7 +97,7 @@ export default function Add() {
               tooltip="Clear selection"
               onClick={handleClosePage}
             />
-            <span className="mr-4 font-bold">Add Recipe</span>
+            <span className="mr-4 font-bold">New recipe</span>
           </div>
         }
       />
@@ -103,15 +123,25 @@ export default function Add() {
                         handleIngredientGroupLabelChange(index, newValue)
                       }
                       actions={[
-                        { tooltip: 'Move group up', icon: <CircleChevronUp /> },
-                        { tooltip: 'Move group down', icon: <CircleChevronDown /> },
+                        {
+                          tooltip: 'Move group up',
+                          icon: <ChevronsUp />,
+                          disabled: index === 0,
+                          onClick: () => handleChangeIngredientGroupOrder(index, index - 1),
+                        },
+                        {
+                          tooltip: 'Move group down',
+                          icon: <ChevronsDown />,
+                          disabled: index === ingredientGroupLabels.length - 1,
+                          onClick: () => handleChangeIngredientGroupOrder(index, index + 1),
+                        },
                         { tooltip: 'Remove group', icon: <ListX /> },
                       ]}
                     />
                   )}
                   <SortableList
                     label="Ingredients"
-                    initialItems={[]}
+                    initialItems={ingredientLists.current[index]}
                     onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
                   />
                 </Fragment>

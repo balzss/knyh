@@ -80,8 +80,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] redesign ingredient group label and aditing option (inplace label edit + move up/down btns + remove group btn)
 - [x] hide ingredient group actions unless focused, hovered or in mobile view
 - [x] hoverable icons (e.g. recipecard) should always be shown in mobiel view
+- [x] after adding ingredient group, the focus should be on the new name, the value should be "New Component" and the whole text should be editable and selected
+- [x] disable move up/down arrows for groups on start and end of list
 
-- [ ] after adding ingredient group, the focus should be on the new name, the value should be "New Component" and the whole text should be editable and selected
+- [ ] implement ingredient group moving up/down
 
 - [ ] add menu for extra options for recipe card
 - [ ] create share modal

@@ -67,6 +67,10 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   }, [])
 
   useEffect(() => {
+    console.log('initial items changed')
+  }, [initialItems])
+
+  useEffect(() => {
     // keep focus when typing into the bottom item and a new one is being created
     if (focusedIngredientId !== null && ingredientInputRefs.current[focusedIngredientId]) {
       ingredientInputRefs.current[focusedIngredientId]?.focus()
