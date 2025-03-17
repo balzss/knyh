@@ -82,9 +82,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] hoverable icons (e.g. recipecard) should always be shown in mobiel view
 - [x] after adding ingredient group, the focus should be on the new name, the value should be "New Component" and the whole text should be editable and selected
 - [x] disable move up/down arrows for groups on start and end of list
+- [x] create share modal
 
 - [ ] implement ingredient group moving up/down
+- [ ] add instructions section to new recipe page
 
-- [ ] add menu for extra options for recipe card
-- [ ] create share modal
 - [ ] make sortable drag and drop work with keyboard

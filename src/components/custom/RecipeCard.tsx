@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { IconButton, myToast } from '@/components/custom'
+import { IconButton, myToast, ShareDialog } from '@/components/custom'
 
 type Tag = {
   id: string
@@ -120,7 +120,10 @@ export function RecipeCard({
           ) : (
             <>
               <IconButton icon={<Pencil />} tooltip="Edit Recipe" iconSize="small" />
-              <IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />
+              <ShareDialog
+                recipeId={title.replace(' ', '-').toLowerCase()}
+                trigger={<IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />}
+              />
               <IconButton
                 icon={<Archive />}
                 tooltip="Archive"

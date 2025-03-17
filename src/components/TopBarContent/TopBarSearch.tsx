@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { SlidersHorizontal, Search } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
@@ -26,7 +27,12 @@ export function TopBarSearch({
 }: TopBarSearchProps) {
   const [isFilterOptionsOpen, setIsFilterOptionsOpen] = useState<boolean>(false)
   return (
-    <div className="flex-1 flex gap-2">
+    <motion.div
+      className="flex gap-2"
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -8, opacity: 0 }}
+      transition={{ duration: 0.15 }}
+    >
       <div className="flex-1 relative flex items-center max-w-2xl ml-1">
         <TextInput
           placeholder="Search"
@@ -69,6 +75,6 @@ export function TopBarSearch({
           </div>
         </PopoverContent>
       </Popover>
-    </div>
+    </motion.div>
   )
 }
