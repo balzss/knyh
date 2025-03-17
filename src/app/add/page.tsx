@@ -17,12 +17,10 @@ import {
 } from '@/components/custom'
 
 export default function Add() {
-  const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([
-    'Garlic button',
-    'Naan bread',
-  ])
+  const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([''])
   const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
   const ingredientLists = useRef([['']])
+  const ingredientsRef = useRef<HTMLDivElement>(null)
 
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
@@ -42,13 +40,26 @@ export default function Add() {
   }
 
   const handleAddIngredientGroup = () => {
-    setIngredientGroupLabels((prevItems) => [...prevItems, 'New component'])
+    setIngredientGroupLabels((prevItems) => {
+      const isFirstGroup = prevItems.length === 1 && prevItems[0] === ''
+      return [...(isFirstGroup ? ['First component'] : prevItems), 'New component']
+    })
+
+    // wait one tick to ensure the new group is included in the ref and can be focued
+    setTimeout(() => {
+      focusLastGroupLabel()
+    }, 0)
+  }
+
+  const focusLastGroupLabel = () => {
+    const ingredientsChildren = ingredientsRef.current?.children
+    ;(ingredientsChildren?.[ingredientsChildren?.length - 2].firstChild as HTMLSpanElement)?.focus()
   }
 
   const handleIngredientsChange = (groupIndex: number, newIngredients: string[]) => {
     ingredientLists.current[groupIndex] = newIngredients
     setDisableAddIngredientGroupBtn(
-      ingredientLists.current.length === 1 && ingredientLists.current[0].length === 0
+      ingredientLists.current[ingredientLists.current.length - 1].length === 0
     )
   }
 
@@ -80,29 +91,33 @@ export default function Add() {
             <Input type="text" id="recipe-title" autoFocus />
           </div>
 
-          {ingredientGroupLabels.map((label, index) => {
-            return (
-              <Fragment key={index}>
-                {ingredientGroupLabels.length > 1 && (
-                  <GroupLabelEdit
-                    isInEditMode={true}
-                    label={label}
-                    onLabelChange={(newValue) => handleIngredientGroupLabelChange(index, newValue)}
-                    actions={[
-                      { tooltip: 'Move group up', icon: <CircleChevronUp /> },
-                      { tooltip: 'Move group down', icon: <CircleChevronDown /> },
-                      { tooltip: 'Remove group', icon: <ListX /> },
-                    ]}
+          <div className="flex gap-3 flex-col" ref={ingredientsRef}>
+            {ingredientGroupLabels.map((label, index) => {
+              return (
+                <Fragment key={index}>
+                  {ingredientGroupLabels.length > 1 && (
+                    <GroupLabelEdit
+                      isInEditMode={true}
+                      label={label}
+                      onLabelChange={(newValue) =>
+                        handleIngredientGroupLabelChange(index, newValue)
+                      }
+                      actions={[
+                        { tooltip: 'Move group up', icon: <CircleChevronUp /> },
+                        { tooltip: 'Move group down', icon: <CircleChevronDown /> },
+                        { tooltip: 'Remove group', icon: <ListX /> },
+                      ]}
+                    />
+                  )}
+                  <SortableList
+                    label="Ingredients"
+                    initialItems={[]}
+                    onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
                   />
-                )}
-                <SortableList
-                  label="Ingredients"
-                  initialItems={[]}
-                  onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
-                />
-              </Fragment>
-            )
-          })}
+                </Fragment>
+              )
+            })}
+          </div>
 
           <div>
             <Button

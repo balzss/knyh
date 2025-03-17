@@ -26,6 +26,18 @@ export function GroupLabelEdit({
   const [hovered, setHovered] = useState<boolean>(false)
   const labelRef = useRef<HTMLSpanElement>(null)
 
+  const handleFocus = () => {
+    setFocused(true)
+
+    if (!labelRef.current) return
+
+    const range = document.createRange()
+    const selection = window.getSelection()
+    range.selectNodeContents(labelRef.current)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+  }
+
   const handleBlur = (e: React.FocusEvent<HTMLSpanElement>) => {
     if (e.currentTarget.parentNode?.contains(e.relatedTarget)) {
       labelRef.current?.focus()
@@ -39,6 +51,8 @@ export function GroupLabelEdit({
       return
     }
     setFocused(false)
+    const selection = window.getSelection()
+    selection?.removeAllRanges()
     onLabelChange(labelRef.current?.textContent as string)
   }
 
@@ -66,7 +80,7 @@ export function GroupLabelEdit({
         className={`transition-[padding] transition-100 min-w-[1rem] text-xl sm:mr-0 mr-auto focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:rounded-md py-1 ${focused ? 'p-1' : ''} ${isInErrorState ? 'focus:ring-destructive' : 'focus:ring-primary'}`}
         contentEditable={isInEditMode}
         onInput={handleInput}
-        onFocus={() => setFocused(true)}
+        onFocus={handleFocus}
         onBlur={handleBlur}
         ref={labelRef}
         suppressContentEditableWarning
