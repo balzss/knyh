@@ -88,8 +88,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] add instructions section to new recipe page
 - [x] fix instructions multiline mode
 - [x] create separate placeholder for adding first and consecutive items to sortable list
-
-- [ ] create login/signup page
+- [x] create login/signup page
 
 - [ ] implement ingredient group moving up/down
 - [ ] create tag filter on main page
