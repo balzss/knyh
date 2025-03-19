@@ -44,7 +44,11 @@ export function TopBar({
 
       <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="ml-auto mr-1 cursor-pointer rounded-full">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`ml-auto mr-1 cursor-pointer rounded-full ${hideSidebarToggleMobile ? 'hidden sm:flex' : ''}`}
+          >
             <Avatar>
               <AvatarImage src="" alt="SB" />
               <AvatarFallback>SB</AvatarFallback>

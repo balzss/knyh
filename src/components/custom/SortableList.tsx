@@ -15,8 +15,11 @@ type IngredientItem = {
 
 type SortableListProps = {
   label: string
+  newItemPlaceholder?: string[]
   initialItems: string[]
   onItemsChange: (newItems: string[]) => void
+  className?: string
+  multiLine?: boolean
 }
 
 const ingredientListGapPx = 8 // TODO
@@ -44,7 +47,14 @@ const restrictToParentElementCustom: Modifier = ({
   }
 }
 
-export function SortableList({ label, initialItems, onItemsChange }: SortableListProps) {
+export function SortableList({
+  label,
+  newItemPlaceholder,
+  initialItems,
+  onItemsChange,
+  className,
+  multiLine,
+}: SortableListProps) {
   const [noAnimate, setNoAnimate] = useState<boolean>(true)
   const [internalItems, setInternalItems] = useState<IngredientItem[]>([
     ...initialItems.map((item) => ({
@@ -55,7 +65,7 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   ])
   const [focusedIngredientId, setFocusedIngredientId] = useState<string>('')
   const ingredientInputRefs = useRef<{
-    [key: string]: HTMLInputElement | null
+    [key: string]: HTMLInputElement | HTMLTextAreaElement | null
   }>({})
 
   useEffect(() => {
@@ -65,10 +75,6 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   useEffect(() => {
     setNoAnimate(false)
   }, [])
-
-  useEffect(() => {
-    console.log('initial items changed')
-  }, [initialItems])
 
   useEffect(() => {
     // keep focus when typing into the bottom item and a new one is being created
@@ -90,7 +96,7 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   }
 
   const handleIngredientItemChange = (
-    changeEvent: React.ChangeEvent<HTMLInputElement>,
+    changeEvent: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     itemId: string
   ) => {
     const { value } = changeEvent.target
@@ -108,7 +114,7 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   }
 
   const handleIngredientItemKeydown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
     itemId: string
   ) => {
     const currentIndex = internalItems.findIndex((item) => item.id === itemId)
@@ -125,7 +131,7 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
       )
       ingredientInputRefs.current[internalItems[currentIndex - 1].id]?.focus()
       e.preventDefault()
-    } else if (e.key === 'Enter') {
+    } else if (e.key === 'Enter' && !multiLine) {
       setInternalItems((prevItems) => {
         if (currentIndex === prevItems.length - 1) {
           return prevItems
@@ -155,7 +161,7 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
   }
 
   return (
-    <div className="grid w-full items-center gap-2 mb-4">
+    <div className={`grid w-full items-center gap-2 mb-4 ${className}`}>
       <Label className="font-bold">{label}</Label>
       <DndContext
         onDragEnd={handleDragEnd}
@@ -178,6 +184,8 @@ export function SortableList({ label, initialItems, onItemsChange }: SortableLis
                   onKeyDown={(e) => handleIngredientItemKeydown(e, id)}
                   autoFocus={autoFocus}
                   noAnimate={noAnimate}
+                  placeholder={newItemPlaceholder?.[index ? newItemPlaceholder?.length - 1 : 0]}
+                  multiLine={multiLine}
                 />
               ))}
             </AnimatePresence>

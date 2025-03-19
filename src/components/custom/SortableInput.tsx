@@ -4,14 +4,17 @@ import { motion } from 'motion/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { IconButton } from '@/components/custom'
 
-interface SortableInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SortableInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   id: string
   newItemMode?: boolean
   onRemoveSelf?: () => void
-  inputRef?: (el: HTMLInputElement) => void
+  inputRef?: (el: HTMLInputElement | HTMLTextAreaElement | null) => void
   noAnimate?: boolean
+  multiLine?: boolean
 }
 
 export function SortableInput({
@@ -20,8 +23,11 @@ export function SortableInput({
   onRemoveSelf,
   inputRef,
   noAnimate = false,
+  placeholder,
+  multiLine,
   ...rest
 }: SortableInputProps) {
+  const [multiHeight, setMultiHeight] = useState<number>(1)
   const [hovered, setHovered] = useState<boolean>(false)
   const [focused, setFocused] = useState<boolean>(false)
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
@@ -64,22 +70,42 @@ export function SortableInput({
             })}
         transition={{ duration: 0.15, ease: 'easeOut' }}
       >
-        <span className="left-2 absolute touch-none" {...(!newItemMode && listeners)}>
+        <span
+          className={`p-2 absolute touch-none flex items-center ${!newItemMode ? 'cursor-move' : ''}`}
+          {...(!newItemMode && listeners)}
+        >
           {newItemMode ? (
             <Plus size={16} className="w-6" />
           ) : (
-            <GripVertical size={16} className="w-6 cursor-move" />
+            <GripVertical size={16} className="w-6" />
           )}
         </span>
-        <Input
-          {...rest}
-          // Set isHovered to true when the input gains focus, and only set it to false when focus moves completely outside the
-          onFocus={() => setFocused(true)}
-          onBlur={handleBlur}
-          className="px-10 py-2"
-          placeholder={newItemMode ? 'New ingredient' : ''}
-          ref={inputRef}
-        />
+        {multiLine ? (
+          <Textarea
+            {...rest}
+            onFocus={() => setFocused(true)}
+            onBlur={handleBlur}
+            className="px-10 py-2 resize-none h-auto min-h-10"
+            rows={multiHeight}
+            onChange={(e) => {
+              setMultiHeight(e.target.value.split('\n').length)
+              rest.onChange?.(e)
+            }}
+            placeholder={newItemMode ? placeholder : ''}
+            ref={inputRef}
+          />
+        ) : (
+          <Input
+            {...rest}
+            autoComplete="off"
+            // Set isHovered to true when the input gains focus, and only set it to false when focus moves completely outside the
+            onFocus={() => setFocused(true)}
+            onBlur={handleBlur}
+            className="px-10 py-2"
+            placeholder={newItemMode ? placeholder : ''}
+            ref={inputRef}
+          />
+        )}
         {!newItemMode && (focused || hovered) && (
           <span className="right-2 absolute">
             <IconButton

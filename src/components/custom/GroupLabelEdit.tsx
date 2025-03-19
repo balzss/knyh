@@ -111,7 +111,7 @@ export function GroupLabelEdit({
           tooltip={tooltip}
           variant="ghost"
           iconSize="small"
-          className={!focused && hovered ? '' : 'sm:hidden'}
+          className={`${hovered ? '' : 'sm:hidden'} ${focused ? 'hidden' : ''}`}
           disabled={!!disabled}
         />
       ))}

@@ -19,7 +19,7 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
   const recipeUrl = `https://example.cooking/${recipeId}`
 
   const handleCopyUrl = () => {
-    myToast({ message: 'Url copied to clipboard' })
+    myToast({ message: 'URL copied to clipboard' })
     navigator.clipboard.writeText(recipeUrl)
   }
 
@@ -27,8 +27,7 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
     if (navigator.share) {
       navigator
         .share({
-          title: 'Share Title',
-          text: 'Check out this content!',
+          title: recipeId,
           url: 'https://example.com',
         })
         .catch((error) => console.error('Error sharing:', error))
@@ -40,22 +39,24 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="w-11/12 sm:max-w-lg">
+      <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
           <DialogTitle>Share recipe</DialogTitle>
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
             <Input value={recipeUrl} readOnly />
+          </div>
+          <div className="flex gap-3 justify-end">
             <Button variant="outline" className="font-bold" onClick={handleCopyUrl}>
               <Clipboard />
               Copy
             </Button>
+            <Button onClick={handleShare} className="font-bold" size="sm" variant="outline">
+              <Share />
+              Share via device
+            </Button>
           </div>
-          <Button onClick={handleShare} className="font-bold" size="sm">
-            <Share />
-            Share via device
-          </Button>
         </div>
       </DialogContent>
     </Dialog>

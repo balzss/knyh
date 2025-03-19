@@ -83,8 +83,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] after adding ingredient group, the focus should be on the new name, the value should be "New Component" and the whole text should be editable and selected
 - [x] disable move up/down arrows for groups on start and end of list
 - [x] create share modal
+- [x] share modal rounded
+- [x] share modal btn rearrange
+- [x] add instructions section to new recipe page
+- [x] fix instructions multiline mode
+- [x] create separate placeholder for adding first and consecutive items to sortable list
+
+- [ ] create login/signup page
 
 - [ ] implement ingredient group moving up/down
-- [ ] add instructions section to new recipe page
+- [ ] create tag filter on main page
 
 - [ ] make sortable drag and drop work with keyboard

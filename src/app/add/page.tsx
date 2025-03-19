@@ -2,7 +2,7 @@
 
 import { useState, Fragment, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, ListPlus, ChevronsUp, ChevronsDown, ListX } from 'lucide-react'
+import { X, ListPlus, ChevronsUp, ChevronsDown, ListX, Save } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -101,14 +101,14 @@ export default function Add() {
           </div>
         }
       />
-      <AppSidebar />
+      <AppSidebar path="/add" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="grid w-full items-center gap-2 mb-4">
             <Label htmlFor="recipe-title" className="font-bold">
               Recipe title
             </Label>
-            <Input type="text" id="recipe-title" autoFocus />
+            <Input type="text" id="recipe-title" autoFocus autoComplete="off" />
           </div>
 
           <div className="flex gap-3 flex-col" ref={ingredientsRef}>
@@ -141,6 +141,7 @@ export default function Add() {
                   )}
                   <SortableList
                     label="Ingredients"
+                    newItemPlaceholder={['New ingredient']}
                     initialItems={ingredientLists.current[index]}
                     onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
                   />
@@ -149,7 +150,7 @@ export default function Add() {
             })}
           </div>
 
-          <div>
+          <div className="mb-4">
             <Button
               variant="outline"
               onClick={handleAddIngredientGroup}
@@ -157,6 +158,22 @@ export default function Add() {
             >
               <ListPlus />
               Add ingredient group
+            </Button>
+          </div>
+
+          <SortableList
+            className="mb-4"
+            newItemPlaceholder={['First step', 'Next step']}
+            label="Instructions"
+            initialItems={[]}
+            onItemsChange={() => {}}
+            multiLine
+          />
+
+          <div className="mb-4">
+            <Button onClick={() => {}} disabled={true} className="font-bold">
+              <Save />
+              Save recipe
             </Button>
           </div>
         </PageLayout>
