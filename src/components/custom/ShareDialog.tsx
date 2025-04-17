@@ -36,6 +36,10 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
     }
   }
 
+  const handleUrlFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select()
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -45,10 +49,10 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
-            <Input value={recipeUrl} readOnly />
+            <Input defaultValue={recipeUrl} readOnly onFocus={handleUrlFocus} inputMode="none" />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button variant="outline" className="font-bold" onClick={handleCopyUrl}>
+            <Button variant="outline" className="font-bold" onClick={handleCopyUrl} size="sm">
               <Clipboard />
               Copy
             </Button>

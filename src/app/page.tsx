@@ -35,6 +35,7 @@ export default function Home() {
     <div className="flex w-full">
       <TopBar
         onSidebarToggle={toggleSidebar}
+        hideSidebarToggleMobile={topBarMode === 'select'}
         customTopbarContent={
           <AnimatePresence>
             {topBarMode === 'search' && (

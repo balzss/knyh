@@ -26,6 +26,7 @@ export function TopBarSelect({
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 8, opacity: 0 }}
       transition={{ duration: 0.15 }}
+      layout
     >
       <IconButton
         iconSize="normal"
@@ -34,7 +35,7 @@ export function TopBarSelect({
         tooltip="Clear selection"
         onClick={onClearSelection}
       />
-      <span className="mr-4 font-bold ">{selectionLength} selected</span>
+      <span className="mr-auto sm:mr-4 font-bold">{selectionLength} selected</span>
       {selectActions.map(({ icon, tooltip, onClick }, index) => (
         <IconButton
           key={index}

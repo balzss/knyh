@@ -90,6 +90,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [x] create separate placeholder for adding first and consecutive items to sortable list
 - [x] create login/signup page
 
+- [ ] make dragged items visually larger
+- [ ] implement ingredient group removal
 - [ ] implement ingredient group moving up/down
 - [ ] create tag filter on main page
 

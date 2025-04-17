@@ -109,7 +109,7 @@ export function RecipeCard({
           ))}
         </div>
         <div
-          className={`flex gap-4 ${isHovered && !selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'}`}
+          className={`flex gap-4 ${!isHovered || selectionMode ? 'sm:opacity-0 sm:invisible' : 'opacity-100'}`}
           style={{ transition: 'visibility 0.1s linear, opacity 0.1s linear' }}
         >
           {archivedMode ? (

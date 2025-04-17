@@ -30,16 +30,17 @@ export function TopBarSearch({
     <motion.div
       className="flex gap-2"
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -8, opacity: 0 }}
       transition={{ duration: 0.15 }}
+      layout
     >
       <div className="flex-1 relative flex items-center max-w-2xl ml-1">
         <TextInput
           placeholder="Search"
           clearable
-          Icon={Search}
+          icon={Search}
           value={searchQuery}
-          onChange={(_e, value) => onSearchQueryChange(value)}
+          onValueChange={(_e, value) => onSearchQueryChange(value)}
+          type="search"
         />
       </div>
       <Popover

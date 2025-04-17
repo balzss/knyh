@@ -108,7 +108,7 @@ export default function Add() {
             <Label htmlFor="recipe-title" className="font-bold">
               Recipe title
             </Label>
-            <Input type="text" id="recipe-title" autoFocus autoComplete="off" />
+            <Input type="text" id="recipe-title" autoComplete="off" />
           </div>
 
           <div className="flex gap-3 flex-col" ref={ingredientsRef}>

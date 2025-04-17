@@ -4,25 +4,26 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { X } from 'lucide-react'
 
-type TextInputProps = {
+interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string
-  onChange: (event: React.SyntheticEvent | undefined, newValue: string) => void
+  onValueChange: (event: React.SyntheticEvent | undefined, newValue: string) => void
   clearable?: boolean
-  Icon?: React.ComponentType<{ className?: string }>
+  icon?: React.ComponentType<{ className?: string }>
   placeholder?: string
 }
 
 export function TextInput({
   value,
-  onChange,
+  onValueChange,
   clearable = false,
   placeholder,
-  Icon,
+  icon: Icon,
+  ...rest
 }: TextInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleClear = () => {
-    onChange(undefined, '')
+    onValueChange(undefined, '')
     inputRef.current?.focus()
   }
 
@@ -34,7 +35,9 @@ export function TextInput({
         placeholder={placeholder}
         className="px-8"
         value={value}
-        onChange={(e) => onChange(e, e.target.value)}
+        onChange={(e) => onValueChange(e, e.target.value)}
+        autoComplete="off"
+        {...rest}
       />
       {value && clearable && (
         <TooltipProvider>
