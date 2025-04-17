@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
 import {
   Archive,
   Share2,
@@ -72,26 +71,18 @@ export function RecipeCard({
             <Timer size="1rem" /> 30 perc
           </div>
         </CardDescription>
-        <AnimatePresence>
-          {(isSelected || isHovered || selectionMode) && (
-            <motion.div
-              className="absolute top-0 right-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, translateX: 2 }}
-              transition={{ duration: 0.1 }}
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
-                onClick={() => onSelect(!isSelected)}
-              >
-                {isSelected ? <CircleCheckBig /> : <Circle />}
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div
+          className={`absolute top-0 right-0 ${isHovered || selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-150 ease-in-out`}
+        >
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
+            onClick={() => onSelect(!isSelected)}
+          >
+            {isSelected ? <CircleCheckBig /> : <Circle />}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="flex-grow">card content</CardContent>
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
@@ -109,8 +100,7 @@ export function RecipeCard({
           ))}
         </div>
         <div
-          className={`flex gap-4 ${!isHovered || selectionMode ? 'sm:opacity-0 sm:invisible' : 'opacity-100'}`}
-          style={{ transition: 'visibility 0.1s linear, opacity 0.1s linear' }}
+          className={`flex gap-4 ${isHovered ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-150 ease-in-out`}
         >
           {archivedMode ? (
             <>

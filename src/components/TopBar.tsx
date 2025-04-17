@@ -24,7 +24,7 @@ export function TopBar({
   }
 
   return (
-    <nav className="fixed top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2">
+    <nav className="fixed max-h-14 top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2 overflow-hidden">
       <IconButton
         className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}
@@ -40,7 +40,7 @@ export function TopBar({
         KONYHA
       </Link>
 
-      <div className="flex-1 max-h-10 overflow-hidden items-center">{customTopbarContent}</div>
+      <div className="flex-1 overflow-hidden items-center">{customTopbarContent}</div>
 
       <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
         <PopoverTrigger asChild>
