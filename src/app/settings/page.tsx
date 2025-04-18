@@ -56,6 +56,19 @@ export default function Settings() {
               </SelectContent>
             </Select>
           </div>
+
+          <div className="flex items-center justify-between border p-3 rounded-md">
+            <Label className="font-bold">Language</Label>
+            <Select onValueChange={handleThemeSelect} defaultValue={theme}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dark">English</SelectItem>
+                <SelectItem value="light">Hungarian</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </PageLayout>
       </main>
     </div>

@@ -60,7 +60,7 @@ export default function Add() {
 
     setIngredientGroupLabels((prevItems) => {
       const isFirstGroup = prevItems.length === 1 && prevItems[0] === ''
-      return [...(isFirstGroup ? ['First component'] : prevItems), 'New component']
+      return [...(isFirstGroup ? ['First group'] : prevItems), 'New group']
     })
 
     // wait one tick to ensure the new group is included in the ref and can be focued
