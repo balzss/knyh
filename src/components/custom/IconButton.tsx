@@ -8,7 +8,6 @@ interface IconButtonProps extends ButtonProps {
   onClick?: (e: React.SyntheticEvent) => void
   iconSize?: 'normal' | 'small'
   isActive?: boolean
-  className?: string
 }
 
 export function IconButton({

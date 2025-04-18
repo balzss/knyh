@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Archive,
   Share2,
@@ -13,14 +14,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 
 type Tag = {
@@ -62,7 +56,11 @@ export function RecipeCard({
       tabIndex={0}
     >
       <CardHeader className="relative">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <Link href="#" className="hover:underline">
+            {title}
+          </Link>
+        </CardTitle>
         <CardDescription className="flex gap-3 items-center">
           <div className="flex gap-1 items-center">
             <Users size="1rem" /> 4 adag
@@ -84,7 +82,6 @@ export function RecipeCard({
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow">card content</CardContent>
       <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (

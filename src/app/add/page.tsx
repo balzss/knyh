@@ -2,7 +2,17 @@
 
 import { useState, Fragment, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, ListPlus, ChevronsUp, ChevronsDown, ListX, Save } from 'lucide-react'
+import {
+  X,
+  ListPlus,
+  ChevronsUp,
+  ChevronsDown,
+  ListX,
+  Save,
+  Timer,
+  Users,
+  Ellipsis,
+} from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -14,10 +24,12 @@ import {
   SortableList,
   IconButton,
   GroupLabelEdit,
+  TagEditor,
 } from '@/components/custom'
 
 export default function Add() {
   const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([''])
+  const [tags, setTags] = useState<string[]>([])
   const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
   const ingredientLists = useRef<string[][]>([[]])
   const ingredientsRef = useRef<HTMLDivElement>(null)
@@ -97,7 +109,14 @@ export default function Add() {
               tooltip="Clear selection"
               onClick={handleClosePage}
             />
-            <span className="mr-4 font-bold">New recipe</span>
+            <span className="mr-auto sm:mr-4 font-bold">New recipe</span>
+            <IconButton
+              iconSize="normal"
+              variant="ghost"
+              icon={<Ellipsis />}
+              tooltip="More options"
+              onClick={() => {}}
+            />
           </div>
         }
       />
@@ -169,6 +188,21 @@ export default function Add() {
             onItemsChange={() => {}}
             multiLine
           />
+
+          <div className="mb-4">
+            <TagEditor tags={tags} onTagChange={(newTags) => setTags(newTags)} />
+          </div>
+
+          <div className="mb-8 flex gap-2">
+            <Button onClick={() => {}} className="font-bold" variant="outline">
+              <Users />
+              Set yield
+            </Button>
+            <Button onClick={() => {}} className="font-bold" variant="outline">
+              <Timer />
+              Add total time
+            </Button>
+          </div>
 
           <div className="mb-4">
             <Button onClick={() => {}} disabled={true} className="font-bold">

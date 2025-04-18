@@ -17,7 +17,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Button } from '@/components/ui/button'
 import {
   X,
-  Tag,
+  Tags,
   ChevronRight,
   Settings,
   Archive,
@@ -39,7 +39,7 @@ const sidebarItems = [
   },
   {
     displayName: 'Tags',
-    icon: <Tag />,
+    icon: <Tags />,
     subItems: Object.values(placeholderTags).map(({ displayName }) => {
       return {
         displayName,
