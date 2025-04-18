@@ -28,12 +28,12 @@ export function TextInput({
   }
 
   return (
-    <div className="relative flex items-center max-w-2xl ml-1 w-full">
+    <div className="relative flex items-center max-w-2xl w-full">
       {Icon && <Icon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform" />}
       <Input
         ref={inputRef}
         placeholder={placeholder}
-        className="px-8"
+        className={`${Icon ? 'px-8' : ''}`}
         value={value}
         onChange={(e) => onValueChange(e, e.target.value)}
         autoComplete="off"

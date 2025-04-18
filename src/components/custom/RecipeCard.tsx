@@ -70,7 +70,7 @@ export function RecipeCard({
           </div>
         </CardDescription>
         <div
-          className={`absolute top-0 right-0 ${isHovered || selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-150 ease-in-out`}
+          className={`text-muted-foreground absolute top-0 right-0 ${isHovered || selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-150 ease-in-out`}
         >
           <Button
             variant="ghost"

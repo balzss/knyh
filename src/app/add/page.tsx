@@ -25,11 +25,15 @@ import {
   IconButton,
   GroupLabelEdit,
   TagEditor,
+  YieldDialog,
+  TotalTimeDialog,
 } from '@/components/custom'
 
 export default function Add() {
   const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([''])
   const [tags, setTags] = useState<string[]>([])
+  const [yieldValue, setYieldValue] = useState<string>('')
+  const [totalTime, setTotalTime] = useState<string>('')
   const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
   const ingredientLists = useRef<string[][]>([[]])
   const ingredientsRef = useRef<HTMLDivElement>(null)
@@ -94,6 +98,15 @@ export default function Add() {
             : item
       )
     })
+  }
+
+  const formatTotalTime = (time: string) => {
+    const splitTime = time.split(':')
+    const hours = Number(splitTime[0])
+    const minutes = Number(splitTime[1])
+    const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
+    const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
+    return [formattedHours, formattedMinutes].join(' ')
   }
   return (
     <div className="flex w-full">
@@ -194,14 +207,38 @@ export default function Add() {
           </div>
 
           <div className="mb-8 flex gap-2">
-            <Button onClick={() => {}} className="font-bold" variant="outline">
-              <Users />
-              Set yield
-            </Button>
-            <Button onClick={() => {}} className="font-bold" variant="outline">
-              <Timer />
-              Add total time
-            </Button>
+            <YieldDialog
+              trigger={
+                <Button className="font-bold" variant="outline">
+                  <Users />
+                  {yieldValue ? (
+                    <>
+                      Yield: <span className="font-normal">{yieldValue}</span>
+                    </>
+                  ) : (
+                    'Set yield'
+                  )}
+                </Button>
+              }
+              yieldValue={yieldValue}
+              onYieldValueChange={(newValue) => setYieldValue(newValue)}
+            />
+            <TotalTimeDialog
+              trigger={
+                <Button onClick={() => {}} className="font-bold" variant="outline">
+                  <Timer />
+                  {totalTime ? (
+                    <>
+                      Total time: <span className="font-normal">{formatTotalTime(totalTime)}</span>
+                    </>
+                  ) : (
+                    'Add total time'
+                  )}
+                </Button>
+              }
+              totalTimeValue={totalTime}
+              onTotalTimeValueChange={(newValue) => setTotalTime(newValue)}
+            />
           </div>
 
           <div className="mb-4">
