@@ -12,7 +12,7 @@ export default function LoginPage() {
     <div className="flex w-full items-center justify-center m-3">
       <Card className="max-w-sm w-full flex flex-col items-center">
         <CardHeader className="flex flex-col items-center">
-          <CardTitle>Sign in</CardTitle>
+          <CardTitle>Create an account</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow w-full gap-4 flex flex-col">
           <div>
@@ -23,7 +23,7 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" />
           </div>
-          <Button className="font-bold">Sign in</Button>
+          <Button className="font-bold">Continue</Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t"></span>
@@ -43,9 +43,9 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter>
           <span className="text-muted-foreground ">
-            Don&apos;t have an account yet?{' '}
-            <Link href="/signup" className="underline hover:text-foreground">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="underline hover:text-foreground">
+              Log in
             </Link>
           </span>
         </CardFooter>
