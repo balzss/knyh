@@ -16,30 +16,28 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
-
-type Tag = {
-  id: string
-  displayName: string
-}
+import type { Recipe, Tag } from '@/lib/data'
 
 type RecipeCardProps = {
-  title: string
   tags: Tag[]
   isSelected: boolean
   selectionMode?: boolean
   onSelect: (isSelected: boolean) => void
   archivedMode?: boolean
+  recipeData: Recipe
 }
 
 export function RecipeCard({
-  title,
   tags,
   isSelected = true,
   selectionMode = false,
   onSelect,
   archivedMode = false,
+  recipeData,
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
+
+  const { title, metadata } = recipeData
 
   return (
     <Card
@@ -63,10 +61,10 @@ export function RecipeCard({
         </CardTitle>
         <CardDescription className="flex gap-3 items-center">
           <div className="flex gap-1 items-center">
-            <Users size="1rem" /> 4 adag
+            <Users size="1rem" /> {metadata?.yield}
           </div>
           <div className="flex gap-1 items-center">
-            <Timer size="1rem" /> 30 perc
+            <Timer size="1rem" /> {metadata?.totalTime}
           </div>
         </CardDescription>
         <div

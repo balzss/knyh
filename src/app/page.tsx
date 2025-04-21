@@ -7,11 +7,14 @@ import { Archive } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { AppSidebar, RecipeCard, PageLayout, myToast } from '@/components/custom'
+import { useRecipes, useTags } from '@/hooks'
 
 import { placeholderData } from '@/lib/mock-data'
 
 export default function Home() {
   const { toggleSidebar } = useSidebar()
+  const { recipes } = useRecipes()
+  const { tags } = useTags()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -71,11 +74,24 @@ export default function Home() {
       <AppSidebar path="/" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
+          {recipes?.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              selectionMode={selectionList.length > 0}
+              tags={recipe.tags
+                .map((tagId) => tags?.find((tag) => tag.id === tagId))
+                .filter((t) => !!t)}
+              recipeData={recipe}
+              isSelected={selectionList.includes(recipe.id)}
+              onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+            />
+          ))}
           {placeholderData.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               selectionMode={selectionList.length > 0}
-              title={recipe.title}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              recipeData={recipe as any}
               tags={recipe.tags}
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
