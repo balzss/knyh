@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { Label } from '@/components/ui/label'
@@ -55,13 +55,13 @@ export function SortableList({
   className,
   multiLine,
 }: SortableListProps) {
-  const [noAnimate, setNoAnimate] = useState<boolean>(true)
+  const isInitialMount = useRef(true)
   const [internalItems, setInternalItems] = useState<IngredientItem[]>([
     ...initialItems.map((item) => ({
       value: item,
       id: nanoid(),
     })),
-    { value: '', id: nanoid() },
+    { value: '', id: nanoid(), noAnimate: true },
   ])
   const [focusedIngredientId, setFocusedIngredientId] = useState<string>('')
   const ingredientInputRefs = useRef<{
@@ -69,19 +69,25 @@ export function SortableList({
   }>({})
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    const sameValues = initialItems.every((item, index) => item === internalItems[index].value)
+    if (initialItems.length && !sameValues) {
+      setInternalItems([
+        ...initialItems.map((item) => ({
+          value: item,
+          id: nanoid(),
+        })),
+        { value: '', id: nanoid(), noAnimate: true },
+      ])
+    }
+  }, [initialItems])
+
+  useEffect(() => {
     onItemsChange(internalItems.map((item) => item.value).slice(0, -1))
   }, [internalItems, onItemsChange])
-
-  useEffect(() => {
-    setNoAnimate(false)
-  }, [])
-
-  useEffect(() => {
-    // keep focus when typing into the bottom item and a new one is being created
-    if (focusedIngredientId !== null && ingredientInputRefs.current[focusedIngredientId]) {
-      ingredientInputRefs.current[focusedIngredientId]?.focus()
-    }
-  }, [focusedIngredientId])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -92,10 +98,11 @@ export function SortableList({
         const newIndex = prevItems.findIndex((item) => item.id === over?.id)
         return arrayMove(prevItems, oldIndex, newIndex)
       })
+      onItemsChange(internalItems.map((item) => item.value).slice(0, -1))
     }
   }
 
-  const handleIngredientItemChange = (
+  const handleItemChange = (
     changeEvent: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     itemId: string
   ) => {
@@ -104,16 +111,19 @@ export function SortableList({
       internalItems.findIndex((item) => item.id === itemId) === internalItems.length - 1
     setInternalItems((prevItems) => {
       const updatedValues = prevItems.map((item) =>
-        item.id === itemId ? { ...item, value, autoFocus: false, noAnimate: false } : item
+        item.id === itemId ? { ...item, value, autoFocus: false, noAnimate: true } : item
       )
-      return lastItem ? [...updatedValues, { id: nanoid(), value: '' }] : updatedValues
+      if (lastItem) {
+        return [...updatedValues, { id: nanoid(), value: '' }]
+      }
+      return updatedValues
     })
     if (lastItem) {
       ingredientInputRefs.current[focusedIngredientId]?.focus()
     }
   }
 
-  const handleIngredientItemKeydown = (
+  const handleKeydown = (
     e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
     itemId: string
   ) => {
@@ -121,8 +131,9 @@ export function SortableList({
 
     if (
       e.key === 'Backspace' &&
-      internalItems.find((item) => item.id === itemId)?.value === '' &&
-      currentIndex > 0
+      currentIndex > 0 &&
+      currentIndex < internalItems.length - 1 &&
+      internalItems.find((item) => item.id === itemId)?.value === ''
     ) {
       setInternalItems((prevItems) =>
         prevItems.filter((item) => {
@@ -156,7 +167,7 @@ export function SortableList({
     }
   }
 
-  const handleRemoveIngredient = (itemId: string) => {
+  const handleRemoveItem = (itemId: string) => {
     setInternalItems((prevItems) => prevItems.filter((item) => item.id !== itemId))
   }
 
@@ -171,21 +182,21 @@ export function SortableList({
         <ul className={`grid gap-[0.5rem]`}>
           <SortableContext items={internalItems} strategy={verticalListSortingStrategy}>
             <AnimatePresence>
-              {internalItems.map(({ value, id, autoFocus }, index) => (
+              {internalItems.map(({ value, id, autoFocus, noAnimate }, index) => (
                 <SortableInput
                   key={id}
                   id={id}
                   value={value}
                   inputRef={(el) => (ingredientInputRefs.current[id] = el)}
-                  onChange={(e) => handleIngredientItemChange(e, id)}
-                  onRemoveSelf={() => handleRemoveIngredient(id)}
+                  onChange={(e) => handleItemChange(e, id)}
+                  onRemoveSelf={() => handleRemoveItem(id)}
                   newItemMode={index === internalItems.length - 1}
+                  onKeyDown={(e) => handleKeydown(e, id)}
                   onFocus={() => setFocusedIngredientId(id)}
-                  onKeyDown={(e) => handleIngredientItemKeydown(e, id)}
                   autoFocus={autoFocus}
-                  noAnimate={noAnimate}
                   placeholder={newItemPlaceholder?.[index ? newItemPlaceholder?.length - 1 : 0]}
                   multiLine={multiLine}
+                  noAnimate={true}
                 />
               ))}
             </AnimatePresence>

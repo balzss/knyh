@@ -1,18 +1,8 @@
 'use client'
 
-import { useState, Fragment, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  X,
-  ListPlus,
-  ChevronsUp,
-  ChevronsDown,
-  ListX,
-  Save,
-  Timer,
-  Users,
-  Ellipsis,
-} from 'lucide-react'
+import { X, Save, Timer, Users, Ellipsis } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -23,23 +13,30 @@ import {
   PageLayout,
   SortableList,
   IconButton,
-  GroupLabelEdit,
   TagEditor,
   YieldDialog,
   TotalTimeDialog,
+  SortableGroup,
+  type GroupData,
 } from '@/components/custom'
 
 export default function Add() {
-  const [ingredientGroupLabels, setIngredientGroupLabels] = useState<string[]>([''])
+  const [recipeTitle, setRecipeTitle] = useState<string>('')
+  const ingredientGroups = useRef<GroupData[]>([])
+
+  const instructionList = useRef<string[]>([])
+
   const [tags, setTags] = useState<string[]>([])
   const [yieldValue, setYieldValue] = useState<string>('')
   const [totalTime, setTotalTime] = useState<string>('')
-  const [disableAddIngredientGroupBtn, setDisableAddIngredientGroupBtn] = useState<boolean>(true)
-  const ingredientLists = useRef<string[][]>([[]])
-  const ingredientsRef = useRef<HTMLDivElement>(null)
+  const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
 
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
+
+  useEffect(() => {
+    setSubmitDisabled(recipeTitle.length > 0)
+  }, [recipeTitle])
 
   const handleClosePage = () => {
     if (document.referrer.startsWith('https://balzss.github.io/knyh/')) {
@@ -47,57 +44,6 @@ export default function Add() {
     } else {
       router.replace('/')
     }
-  }
-
-  const handleIngredientGroupLabelChange = (groupIndex: number, newValue: string) => {
-    setIngredientGroupLabels((prevItems) =>
-      prevItems.map((item, i) => (i === groupIndex ? newValue : item))
-    )
-  }
-
-  const handleAddIngredientGroup = () => {
-    ingredientLists.current.push([])
-
-    setIngredientGroupLabels((prevItems) => {
-      const isFirstGroup = prevItems.length === 1 && prevItems[0] === ''
-      return [...(isFirstGroup ? ['First group'] : prevItems), 'New group']
-    })
-
-    // wait one tick to ensure the new group is included in the ref and can be focued
-    setTimeout(() => {
-      focusLastGroupLabel()
-    }, 0)
-  }
-
-  const focusLastGroupLabel = () => {
-    const ingredientsChildren = ingredientsRef.current?.children
-    ;(ingredientsChildren?.[ingredientsChildren?.length - 2].firstChild as HTMLSpanElement)?.focus()
-  }
-
-  const handleIngredientsChange = (groupIndex: number, newIngredients: string[]) => {
-    ingredientLists.current[groupIndex] = newIngredients
-    setDisableAddIngredientGroupBtn(
-      ingredientLists.current[ingredientLists.current.length - 1].length === 0
-    )
-  }
-
-  const handleChangeIngredientGroupOrder = (currentIndex: number, newIndex: number) => {
-    setIngredientGroupLabels((prevItems) => {
-      ingredientLists.current = ingredientLists.current.map((item, index) =>
-        index === currentIndex
-          ? ingredientLists.current[newIndex]
-          : index === newIndex
-            ? ingredientLists.current[currentIndex]
-            : item
-      )
-      return prevItems.map((item, index) =>
-        index === currentIndex
-          ? prevItems[newIndex]
-          : index === newIndex
-            ? prevItems[currentIndex]
-            : item
-      )
-    })
   }
 
   const formatTotalTime = (time: string) => {
@@ -108,6 +54,7 @@ export default function Add() {
     const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
     return [formattedHours, formattedMinutes].join(' ')
   }
+
   return (
     <div className="flex w-full">
       <TopBar
@@ -140,67 +87,30 @@ export default function Add() {
             <Label htmlFor="recipe-title" className="font-bold">
               Recipe title
             </Label>
-            <Input type="text" id="recipe-title" autoComplete="off" />
+            <Input
+              type="text"
+              id="recipe-title"
+              autoComplete="off"
+              value={recipeTitle}
+              onChange={(e) => setRecipeTitle(e.target.value)}
+            />
           </div>
 
-          <div className="flex gap-3 flex-col" ref={ingredientsRef}>
-            {ingredientGroupLabels.map((label, index) => {
-              return (
-                <Fragment key={index}>
-                  {ingredientGroupLabels.length > 1 && (
-                    <GroupLabelEdit
-                      isInEditMode={true}
-                      label={label}
-                      onLabelChange={(newValue) =>
-                        handleIngredientGroupLabelChange(index, newValue)
-                      }
-                      actions={[
-                        {
-                          tooltip: 'Move group up',
-                          icon: <ChevronsUp />,
-                          disabled: index === 0,
-                          onClick: () => handleChangeIngredientGroupOrder(index, index - 1),
-                        },
-                        {
-                          tooltip: 'Move group down',
-                          icon: <ChevronsDown />,
-                          disabled: index === ingredientGroupLabels.length - 1,
-                          onClick: () => handleChangeIngredientGroupOrder(index, index + 1),
-                        },
-                        { tooltip: 'Remove group', icon: <ListX /> },
-                      ]}
-                    />
-                  )}
-                  <SortableList
-                    label="Ingredients"
-                    newItemPlaceholder={['New ingredient']}
-                    initialItems={ingredientLists.current[index]}
-                    onItemsChange={(newItems) => handleIngredientsChange(index, newItems)}
-                  />
-                </Fragment>
-              )
-            })}
-          </div>
+          <SortableGroup
+            onDataChange={(newData) => (ingredientGroups.current = newData)}
+            initialData={[]}
+          />
 
-          <div className="mb-4">
-            <Button
-              variant="outline"
-              onClick={handleAddIngredientGroup}
-              disabled={disableAddIngredientGroupBtn}
-            >
-              <ListPlus />
-              Add ingredient group
-            </Button>
-          </div>
-
+          {/*
           <SortableList
             className="mb-4"
             newItemPlaceholder={['First step', 'Next step']}
             label="Instructions"
             initialItems={[]}
-            onItemsChange={() => {}}
+            onItemsChange={(newItems) => (instructionList.current = newItems)}
             multiLine
           />
+          */}
 
           <div className="mb-4">
             <TagEditor tags={tags} onTagChange={(newTags) => setTags(newTags)} />
@@ -242,7 +152,7 @@ export default function Add() {
           </div>
 
           <div className="mb-4">
-            <Button onClick={() => {}} disabled={true} className="font-bold">
+            <Button onClick={() => {}} disabled={submitDisabled} className="font-bold">
               <Save />
               Save recipe
             </Button>

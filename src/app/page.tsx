@@ -40,7 +40,7 @@ export default function Home() {
         onSidebarToggle={toggleSidebar}
         hideSidebarToggleMobile={topBarMode === 'select'}
         customTopbarContent={
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {topBarMode === 'search' && (
               <TopBarSearch
                 key="search"
