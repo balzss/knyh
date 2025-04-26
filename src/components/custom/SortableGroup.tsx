@@ -58,6 +58,12 @@ export function SortableGroup({ initialData, onDataChange }: SortableGroupProps)
     setUpdateTrigger((p) => p + 1)
   }
 
+  const handleRemoveGroup = (index: number) => {
+    groupData.current.splice(index, 1)
+    onDataChange?.(groupData.current)
+    setUpdateTrigger((p) => p + 1)
+  }
+
   return (
     <Fragment>
       <div className="flex gap-3 flex-col">
@@ -82,7 +88,11 @@ export function SortableGroup({ initialData, onDataChange }: SortableGroupProps)
                       disabled: index === groupData.current.length - 1,
                       onClick: () => handleMoveGroup(index, index + 1),
                     },
-                    { tooltip: 'Remove group', icon: <ListX /> },
+                    {
+                      tooltip: 'Remove group',
+                      icon: <ListX />,
+                      onClick: () => handleRemoveGroup(index),
+                    },
                   ]}
                 />
               )}

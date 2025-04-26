@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Tag, X, Plus } from 'lucide-react'
+import { TagIcon, X, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -14,38 +14,41 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
 import { IconButton } from '@/components/custom'
-import { placeholderTags } from '@/lib/mock-data'
+import { useTags } from '@/hooks'
+import type { Tag } from '@/lib/data'
 
 type TagEditorProps = {
-  tags: string[]
-  onTagChange: (tags: string[]) => void
+  tags: Tag[]
+  onTagChange: (tags: Tag[]) => void
 }
 
 export function TagEditor({ tags, onTagChange }: TagEditorProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
 
-  const tagList = Object.values(placeholderTags).filter((tag) => !tags.includes(tag.displayName))
+  const { tags: tagsData } = useTags()
+
+  const tagList = tagsData?.filter((tag) => !tags.find((t) => t.id === tag.id))
 
   return (
     <div className="flex flex-col gap-2">
       <Label className="font-bold">Tags</Label>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <Badge key={tag} className="flex pl-4 pr-1 rounded-md gap-1 text-sm" variant="outline">
-            {tag}
+          <Badge key={tag.id} className="flex pl-4 pr-1 rounded-md gap-1 text-sm" variant="outline">
+            {tag.displayName}
             <IconButton
               icon={<X />}
               tooltip="Remove tag"
               iconSize="small"
-              onClick={() => onTagChange(tags.filter((t) => t !== tag))}
+              onClick={() => onTagChange(tags.filter((t) => t.id !== tag.id))}
             />
           </Badge>
         ))}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open}>
-              <Tag />
+              <TagIcon />
               Add tag
             </Button>
           </PopoverTrigger>
@@ -54,7 +57,7 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
               <CommandInput placeholder="Find tag" />
               <CommandList>
                 <CommandEmpty>No tag found.</CommandEmpty>
-                {tagList.length > 0 && (
+                {tagList && tagList.length > 0 && (
                   <CommandGroup>
                     {tagList.map((tag) => (
                       <CommandItem
@@ -63,7 +66,7 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
                         onSelect={(currentValue) => {
                           setOpen(false)
                           setValue(currentValue === value ? '' : currentValue)
-                          onTagChange([...tags, currentValue])
+                          onTagChange([...tags, tag])
                         }}
                         className="cursor-pointer pl-8"
                       >

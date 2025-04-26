@@ -19,6 +19,8 @@ import {
   SortableGroup,
   type GroupData,
 } from '@/components/custom'
+import { nanoid } from 'nanoid'
+import type { Recipe, Tag } from '@/lib/data'
 
 export default function Add() {
   const [recipeTitle, setRecipeTitle] = useState<string>('')
@@ -26,7 +28,7 @@ export default function Add() {
 
   const instructionList = useRef<string[]>([])
 
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
   const [yieldValue, setYieldValue] = useState<string>('')
   const [totalTime, setTotalTime] = useState<string>('')
   const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
@@ -35,7 +37,7 @@ export default function Add() {
   const router = useRouter()
 
   useEffect(() => {
-    setSubmitDisabled(recipeTitle.length > 0)
+    setSubmitDisabled(!recipeTitle.length)
   }, [recipeTitle])
 
   const handleClosePage = () => {
@@ -53,6 +55,22 @@ export default function Add() {
     const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
     const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
     return [formattedHours, formattedMinutes].join(' ')
+  }
+
+  const handleSubmitRecipe = () => {
+    const id = nanoid()
+    const submitData: Recipe = {
+      title: recipeTitle,
+      id,
+      ingredients: ingredientGroups.current,
+      instructions: instructionList.current,
+      tags: tags.map((t) => t.id),
+      metadata: {
+        yield: yieldValue,
+        totalTime,
+      },
+    }
+    alert(JSON.stringify(submitData))
   }
 
   return (
@@ -101,7 +119,6 @@ export default function Add() {
             initialData={[]}
           />
 
-          {/*
           <SortableList
             className="mb-4"
             newItemPlaceholder={['First step', 'Next step']}
@@ -110,7 +127,6 @@ export default function Add() {
             onItemsChange={(newItems) => (instructionList.current = newItems)}
             multiLine
           />
-          */}
 
           <div className="mb-4">
             <TagEditor tags={tags} onTagChange={(newTags) => setTags(newTags)} />
@@ -152,7 +168,7 @@ export default function Add() {
           </div>
 
           <div className="mb-4">
-            <Button onClick={() => {}} disabled={submitDisabled} className="font-bold">
+            <Button onClick={handleSubmitRecipe} disabled={submitDisabled} className="font-bold">
               <Save />
               Save recipe
             </Button>

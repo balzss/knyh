@@ -1,3 +1,4 @@
+import type { GroupData } from '@/components/custom'
 export type RecipeMetaData = {
   totalTime: string
   yield: string
@@ -5,7 +6,7 @@ export type RecipeMetaData = {
 export type Recipe = {
   id: string
   title: string
-  ingredients: string[]
+  ingredients: string[] | GroupData[]
   instructions: string[]
   tags: string[]
   metadata: RecipeMetaData

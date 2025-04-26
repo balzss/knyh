@@ -83,7 +83,7 @@ export function SortableList({
         { value: '', id: nanoid(), noAnimate: true },
       ])
     }
-  }, [initialItems])
+  }, [initialItems, internalItems])
 
   useEffect(() => {
     onItemsChange(internalItems.map((item) => item.value).slice(0, -1))
@@ -182,7 +182,7 @@ export function SortableList({
         <ul className={`grid gap-[0.5rem]`}>
           <SortableContext items={internalItems} strategy={verticalListSortingStrategy}>
             <AnimatePresence>
-              {internalItems.map(({ value, id, autoFocus, noAnimate }, index) => (
+              {internalItems.map(({ value, id, autoFocus }, index) => (
                 <SortableInput
                   key={id}
                   id={id}
