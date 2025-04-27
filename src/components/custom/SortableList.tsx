@@ -73,17 +73,22 @@ export function SortableList({
       isInitialMount.current = false
       return
     }
-    const sameValues = initialItems.every((item, index) => item === internalItems[index].value)
-    if (initialItems.length && !sameValues) {
-      setInternalItems([
+    setInternalItems((prevInternalItems) => {
+      const sameValues = initialItems.every(
+        (item, index) => item === prevInternalItems[index].value
+      )
+      if (!initialItems.length || sameValues) {
+        return prevInternalItems
+      }
+      return [
         ...initialItems.map((item) => ({
           value: item,
           id: nanoid(),
         })),
         { value: '', id: nanoid(), noAnimate: true },
-      ])
-    }
-  }, [initialItems, internalItems])
+      ]
+    })
+  }, [initialItems])
 
   useEffect(() => {
     onItemsChange(internalItems.map((item) => item.value).slice(0, -1))
