@@ -78,6 +78,7 @@ export default function Archive() {
               recipeData={recipe}
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+              archivedMode
             />
           ))}
           {placeholderData.map((recipe) => (
@@ -89,6 +90,7 @@ export default function Archive() {
               tags={recipe.tags}
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+              archivedMode
             />
           ))}
         </PageLayout>

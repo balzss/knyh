@@ -3,13 +3,17 @@ import { Recipe } from '@/lib/data'
 
 const recipesJsonPath = '/knyh/data/recipes.json'
 
+type UseRecipesParams = {
+  ids?: string[]
+}
+
 type UseRecipesReturn = {
   recipes: Recipe[] | null
   loading: boolean
   error: Error | null
 }
 
-function useRecipes(): UseRecipesReturn {
+function useRecipes({ ids }: UseRecipesParams = {}): UseRecipesReturn {
   const [recipes, setRecipes] = useState<Recipe[] | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<Error | null>(null)
@@ -35,8 +39,9 @@ function useRecipes(): UseRecipesReturn {
           throw new TypeError('Received non-JSON response')
         }
 
-        const data = await response.json()
-        setRecipes(data)
+        const data: Recipe[] = await response.json()
+        const filteredData = ids ? data.filter((r) => ids.includes(r.id)) : data
+        setRecipes(filteredData)
       } catch (err) {
         if (err instanceof Error) {
           // Type guard for error

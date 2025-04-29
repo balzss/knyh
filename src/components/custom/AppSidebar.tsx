@@ -97,12 +97,12 @@ export function AppSidebar({ path }: AppSidebarProps) {
               {path !== '/new' ? (
                 <Link href="/recipes/new" onClick={() => setOpenMobile(false)}>
                   <FilePlus />
-                  <span>New Recipe</span>
+                  <span>New recipe</span>
                 </Link>
               ) : (
                 <>
                   <FilePlus />
-                  <span>New Recipe</span>
+                  <span>New recipe</span>
                 </>
               )}
             </Button>
