@@ -98,7 +98,7 @@ export default function Add() {
           </div>
         }
       />
-      <AppSidebar path="/add" />
+      <AppSidebar path="/new" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="grid w-full items-center gap-2 mb-4">

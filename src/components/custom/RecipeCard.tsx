@@ -37,7 +37,7 @@ export function RecipeCard({
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
 
-  const { title, metadata } = recipeData
+  const { title, metadata, id } = recipeData
 
   return (
     <Card
@@ -55,7 +55,7 @@ export function RecipeCard({
     >
       <CardHeader className="relative">
         <CardTitle>
-          <Link href="#" className="hover:underline">
+          <Link href={`/recipes/${id}`} className="hover:underline">
             {title}
           </Link>
         </CardTitle>

@@ -89,20 +89,20 @@ export function AppSidebar({ path }: AppSidebarProps) {
         <SidebarGroup>
           <div className="mb-4">
             <Button
-              variant={path === '/add' ? 'outline' : 'default'}
+              variant={path === '/new' ? 'outline' : 'default'}
               className="font-bold py-4 px-3"
-              asChild={path !== '/add'}
-              disabled={path === '/add'}
+              asChild={path !== '/new'}
+              disabled={path === '/new'}
             >
-              {path !== '/add' ? (
-                <Link href="/add" onClick={() => setOpenMobile(false)}>
+              {path !== '/new' ? (
+                <Link href="/recipes/new" onClick={() => setOpenMobile(false)}>
                   <FilePlus />
-                  <span>Add Recipe</span>
+                  <span>New Recipe</span>
                 </Link>
               ) : (
                 <>
                   <FilePlus />
-                  <span>Add Recipe</span>
+                  <span>New Recipe</span>
                 </>
               )}
             </Button>

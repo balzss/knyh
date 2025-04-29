@@ -84,6 +84,7 @@ export function SortableList({
         ...initialItems.map((item) => ({
           value: item,
           id: nanoid(),
+          noAnimate: true,
         })),
         { value: '', id: nanoid(), noAnimate: true },
       ]
@@ -187,7 +188,7 @@ export function SortableList({
         <ul className={`grid gap-[0.5rem]`}>
           <SortableContext items={internalItems} strategy={verticalListSortingStrategy}>
             <AnimatePresence>
-              {internalItems.map(({ value, id, autoFocus }, index) => (
+              {internalItems.map(({ value, id, autoFocus, noAnimate }, index) => (
                 <SortableInput
                   key={id}
                   id={id}
@@ -201,7 +202,7 @@ export function SortableList({
                   autoFocus={autoFocus}
                   placeholder={newItemPlaceholder?.[index ? newItemPlaceholder?.length - 1 : 0]}
                   multiLine={multiLine}
-                  noAnimate={true}
+                  noAnimate={noAnimate}
                 />
               ))}
             </AnimatePresence>

@@ -66,7 +66,9 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
                         onSelect={(currentValue) => {
                           setOpen(false)
                           setValue(currentValue === value ? '' : currentValue)
-                          onTagChange([...tags, tag])
+                          setTimeout(() => {
+                            onTagChange([...tags, tag])
+                          }, 0)
                         }}
                         className="cursor-pointer pl-8"
                       >

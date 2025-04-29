@@ -8,7 +8,7 @@ import { IconButton } from '@/components/custom'
 
 type TopBarProps = {
   onSidebarToggle: () => void
-  customTopbarContent: React.ReactNode
+  customTopbarContent?: React.ReactNode
   hideSidebarToggleMobile?: boolean
 }
 
