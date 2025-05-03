@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Users, Timer, X, Pen, EllipsisVertical, Share2, Presentation } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -14,6 +15,8 @@ type RecipeViewProps = {
 }
 
 export default function RecipeView({ recipeId }: RecipeViewProps) {
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set())
+  const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
   const router = useRouter()
   const { toggleSidebar } = useSidebar()
   const { recipes } = useRecipes({ ids: [recipeId] })
@@ -22,6 +25,18 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
 
   const handleClosePage = () => {
     router.replace('/')
+  }
+
+  const handleIngredientCheckChange = (checked: boolean, index: number) => {
+    if (checked) {
+      setCheckedIngredients((prev) => new Set(prev).add(index))
+    } else {
+      setCheckedIngredients((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete(index)
+        return newSet
+      })
+    }
   }
 
   return (
@@ -98,17 +113,37 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             <ul>
               {recipe?.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center space-x-2 text-md leading-8">
-                  <Checkbox id={`ingredient-${index}`} />
-                  <label htmlFor={`ingredient-${index}`}>{ingredient.toString()}</label>
+                  <Checkbox
+                    id={`ingredient-${index}`}
+                    checked={checkedIngredients.has(index)}
+                    onCheckedChange={(checked) =>
+                      handleIngredientCheckChange(checked as boolean, index)
+                    }
+                    className={
+                      checkedIngredients.has(index)
+                        ? 'data-[state=checked]:bg-muted-foreground data-[state=checked]:text-black border-muted-foreground'
+                        : ''
+                    }
+                  />
+                  <label
+                    htmlFor={`ingredient-${index}`}
+                    className={`${checkedIngredients.has(index) ? 'text-muted-foreground line-through' : ''}`}
+                  >
+                    {ingredient.toString()}
+                  </label>
                 </li>
               ))}
             </ul>
           </div>
           <div className="flex flex-col gap-1">
             <h2 className="text-xl text-muted-foreground mt-4">Instructions</h2>
-            <ol className="list-decimal flex flex-col gap-3 ml-4">
+            <ol className={` flex flex-col gap-3 ml-4 list-[x]`}>
               {recipe?.instructions.map((instruction, index) => (
-                <li key={index} className="flex items-center text-md leading-6 list-item">
+                <li
+                  key={index}
+                  className={`${selectedInstruction === index ? `relative list-none before:content-['★'] before:absolute before:-left-5 text-primary` : selectedInstruction > -1 ? 'text-muted-foreground' : ''} flex items-center text-md leading-6 list-item transition duration-150`}
+                  onClick={() => setSelectedInstruction((prev) => (prev === index ? -1 : index))}
+                >
                   {instruction}
                 </li>
               ))}

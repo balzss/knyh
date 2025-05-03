@@ -23,7 +23,9 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" />
           </div>
-          <Button className="font-bold">Continue</Button>
+          <Button className="font-bold" asChild>
+            <Link href="/">Register</Link>
+          </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t"></span>

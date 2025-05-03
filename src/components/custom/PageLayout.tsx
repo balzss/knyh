@@ -1,17 +1,21 @@
+type LayoutVariant = 'list' | 'grid'
 type PageLayoutProps = {
   title?: string
-  variant?: 'list' | 'grid'
+  variant?: LayoutVariant
+  maxCols?: number
   children: React.ReactNode
 }
 
-const layouts = {
-  list: 'max-w-2xl',
-  grid: 'sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl-grid-cols-6 max-w-7xl',
+function getLayout(variant: LayoutVariant, maxCols: number) {
+  if (variant === 'list') {
+    return 'max-w-2xl'
+  }
+  return `grid-cols-2 lg:grid-cols-${Math.min(3, maxCols)} xl:grid-cols-${Math.min(4, maxCols)} 2xl:grid-cols-${Math.min(5, maxCols)} max-w-7xl`
 }
 
-export function PageLayout({ title, variant = 'list', children }: PageLayoutProps) {
+export function PageLayout({ title, variant = 'list', children, maxCols = 5 }: PageLayoutProps) {
   return (
-    <div className={`gap-3 p-3 w-full mx-auto grid grid-cols-1 ${layouts[variant]}`}>
+    <div className={`gap-3 p-3 w-full mx-auto grid grid-cols-1 ${getLayout(variant, maxCols)}`}>
       {title && (
         <h1 className="col-span-full scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           {title}

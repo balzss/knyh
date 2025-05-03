@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import {
   Archive,
@@ -26,6 +26,7 @@ type RecipeCardProps = {
   archivedMode?: boolean
   recipeData: Recipe
   recipeUrl?: string
+  compact?: boolean
 }
 
 export function RecipeCard({
@@ -36,8 +37,23 @@ export function RecipeCard({
   archivedMode = false,
   recipeData,
   recipeUrl = '',
+  compact = true,
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
+  const selectTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  const handleTouchStart = () => {
+    selectTimeout.current = setTimeout(() => {
+      onSelect(!isSelected)
+    }, 500)
+  }
+
+  const clearSelectTimeout = () => {
+    if (selectTimeout.current) {
+      clearTimeout(selectTimeout.current)
+      selectTimeout.current = null
+    }
+  }
 
   const { title, metadata, id } = recipeData
 
@@ -52,21 +68,30 @@ export function RecipeCard({
           setIsHovered(false)
         }
       }}
-      className={`focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
+      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
       tabIndex={0}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={clearSelectTimeout}
+      onTouchCancel={clearSelectTimeout}
     >
-      <CardHeader className="relative">
+      <CardHeader className={`relative ${compact ? 'p-3 sm:p-6' : ''}`}>
         <CardTitle>
-          <Link href={`/recipes/${id}`} className="hover:underline">
-            {title}
-          </Link>
+          <h3>
+            <Link
+              href={`/recipes/${id}`}
+              className="hover:underline break-words hyphens-auto leading-7"
+              lang="hu"
+            >
+              {title}
+            </Link>
+          </h3>
         </CardTitle>
-        <CardDescription className="flex gap-3 items-center">
+        <CardDescription className="flex gap-3 items-center select-none sm:select-text">
           <div className="flex gap-1 items-center">
-            <Users size="1rem" /> {metadata?.yield}
+            <Users size="1rem" /> {metadata?.yield || '1 adag'}
           </div>
           <div className="flex gap-1 items-center">
-            <Timer size="1rem" /> {metadata?.totalTime}
+            <Timer size="1rem" /> {metadata?.totalTime || '00:30'}
           </div>
         </CardDescription>
         <div
@@ -82,7 +107,9 @@ export function RecipeCard({
           </Button>
         </div>
       </CardHeader>
-      <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto">
+      <CardFooter
+        className={`flex flex-col gap-4 items-start pb-3 mt-auto ${compact ? 'p-3 sm:p-6' : ''} pt-0 sm:pt-0`}
+      >
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
             <Badge

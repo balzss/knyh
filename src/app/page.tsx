@@ -18,6 +18,7 @@ export default function Home() {
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
+  const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -29,8 +30,9 @@ export default function Home() {
     })
   }
 
-  const handleLayoutChange = (selectedValue: 'grid' | 'list') => {
+  const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
     setSelectedLayout(selectedValue)
+    setLayoutGridCols(gridCols)
   }
 
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
@@ -48,6 +50,7 @@ export default function Home() {
                 onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
                 selectedLayout={selectedLayout}
                 onLayoutChange={handleLayoutChange}
+                layoutGridCols={layoutGridCols}
               />
             )}
             {topBarMode === 'select' && (
@@ -73,7 +76,7 @@ export default function Home() {
       />
       <AppSidebar path="/" />
       <main className="w-full mt-14">
-        <PageLayout variant={selectedLayout}>
+        <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
           {recipes?.map((recipe) => (
             <RecipeCard
               key={recipe.id}
@@ -85,6 +88,7 @@ export default function Home() {
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
               recipeUrl={`${window?.location.href}/recipes/${recipe.id}`}
+              compact={selectedLayout === 'grid'}
             />
           ))}
           {placeholderData.map((recipe) => (
@@ -96,6 +100,7 @@ export default function Home() {
               tags={recipe.tags}
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+              compact={selectedLayout === 'grid'}
             />
           ))}
         </PageLayout>

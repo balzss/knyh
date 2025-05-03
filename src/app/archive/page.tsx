@@ -17,6 +17,7 @@ export default function Archive() {
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
+  const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -28,8 +29,9 @@ export default function Archive() {
     })
   }
 
-  const handleLayoutChange = (selectedValue: 'grid' | 'list') => {
+  const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
     setSelectedLayout(selectedValue)
+    setLayoutGridCols(gridCols)
   }
 
   const topBarModeMap = {
@@ -39,6 +41,7 @@ export default function Archive() {
         onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
         selectedLayout={selectedLayout}
         onLayoutChange={handleLayoutChange}
+        layoutGridCols={layoutGridCols}
       />
     ),
     select: (

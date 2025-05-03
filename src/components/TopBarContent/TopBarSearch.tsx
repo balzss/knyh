@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
 
@@ -16,7 +17,8 @@ type TopBarSearchProps = {
   searchQuery: string
   onSearchQueryChange: (newValue: string) => void
   selectedLayout: 'grid' | 'list'
-  onLayoutChange: (selectedValue: 'grid' | 'list') => void
+  layoutGridCols: number
+  onLayoutChange: (selectedValue: 'grid' | 'list', layoudGridCols?: number) => void
 }
 
 export function TopBarSearch({
@@ -24,6 +26,7 @@ export function TopBarSearch({
   onSearchQueryChange,
   selectedLayout,
   onLayoutChange,
+  layoutGridCols = 7,
 }: TopBarSearchProps) {
   const [isFilterOptionsOpen, setIsFilterOptionsOpen] = useState<boolean>(false)
   return (
@@ -60,8 +63,8 @@ export function TopBarSearch({
             />
           </span>
         </PopoverTrigger>
-        <PopoverContent className="w-80 mx-2">
-          <div className="hidden sm:flex items-center justify-between">
+        <PopoverContent className="w-80 mx-2 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
             <Label htmlFor="layoutSelect" className="font-bold">
               Layout
             </Label>
@@ -75,6 +78,20 @@ export function TopBarSearch({
               </SelectContent>
             </Select>
           </div>
+          {selectedLayout === 'grid' && (
+            <div className="flex items-center justify-between h-10">
+              <Label htmlFor="layoutSelect" className="font-bold">
+                Max cols: {layoutGridCols}
+              </Label>
+              <Slider
+                defaultValue={[layoutGridCols - 2]}
+                max={3}
+                step={1}
+                className="w-[180px]"
+                onValueChange={(value) => onLayoutChange(selectedLayout, value[0] + 2)}
+              />
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     </motion.div>
