@@ -21,7 +21,7 @@ export function TopBarSelect({
 }: TopBarSelectProps) {
   return (
     <motion.div
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 w-full max-w-2xl"
       initial={{ y: 16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.15 }}
@@ -34,7 +34,7 @@ export function TopBarSelect({
         tooltip="Clear selection"
         onClick={onClearSelection}
       />
-      <span className="mr-auto sm:mr-4 font-bold">{selectionLength} selected</span>
+      <span className="mr-auto font-bold">{selectionLength} selected</span>
       {selectActions.map(({ icon, tooltip, onClick }, index) => (
         <IconButton
           key={index}

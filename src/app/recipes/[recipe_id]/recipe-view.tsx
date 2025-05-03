@@ -37,36 +37,37 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               icon={<X />}
               tooltip="Clear selection"
               onClick={handleClosePage}
-              className="mr-auto sm:mr-0"
             />
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<Presentation />}
-              tooltip="More options"
-              onClick={() => {}}
-            />
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<Pen />}
-              tooltip="More options"
-              onClick={() => {}}
-            />
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<Share2 />}
-              tooltip="More options"
-              onClick={() => {}}
-            />
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<EllipsisVertical />}
-              tooltip="More options"
-              onClick={() => {}}
-            />
+            <div className="w-full max-w-2xl flex gap-2 items-center justify-end">
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<Presentation />}
+                tooltip="More options"
+                onClick={() => {}}
+              />
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<Pen />}
+                tooltip="More options"
+                onClick={() => {}}
+              />
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<Share2 />}
+                tooltip="More options"
+                onClick={() => {}}
+              />
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<EllipsisVertical />}
+                tooltip="More options"
+                onClick={() => {}}
+              />
+            </div>
           </div>
         }
       />

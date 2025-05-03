@@ -25,6 +25,7 @@ type RecipeCardProps = {
   onSelect: (isSelected: boolean) => void
   archivedMode?: boolean
   recipeData: Recipe
+  recipeUrl?: string
 }
 
 export function RecipeCard({
@@ -34,6 +35,7 @@ export function RecipeCard({
   onSelect,
   archivedMode = false,
   recipeData,
+  recipeUrl = '',
 }: RecipeCardProps) {
   const [isHovered, setIsHovered] = useState<boolean>(false)
 
@@ -108,6 +110,7 @@ export function RecipeCard({
               <ShareDialog
                 recipeId={title.replace(' ', '-').toLowerCase()}
                 trigger={<IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />}
+                recipeUrl={recipeUrl}
               />
               <IconButton
                 icon={<Archive />}

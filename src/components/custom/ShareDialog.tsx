@@ -13,14 +13,13 @@ import { myToast } from '@/components/custom'
 type ShareDialogProps = {
   trigger: React.ReactNode
   recipeId: string
+  recipeUrl: string
 }
 
-export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
-  const recipeUrl = `https://example.cooking/${recipeId}`
-
+export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) {
   const handleCopyUrl = () => {
     myToast({ message: 'URL copied to clipboard' })
-    navigator.clipboard.writeText(recipeUrl)
+    navigator.clipboard.writeText(recipeUrl || '')
   }
 
   const handleShare = () => {
@@ -28,16 +27,12 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
       navigator
         .share({
           title: recipeId,
-          url: 'https://example.com',
+          url: recipeUrl,
         })
         .catch((error) => console.error('Error sharing:', error))
     } else {
       console.log('Web Share API not supported in this browser.')
     }
-  }
-
-  const handleUrlFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select()
   }
 
   return (
@@ -49,7 +44,12 @@ export function ShareDialog({ trigger, recipeId }: ShareDialogProps) {
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
-            <Input defaultValue={recipeUrl} readOnly onFocus={handleUrlFocus} inputMode="none" />
+            <Input
+              defaultValue={recipeUrl}
+              readOnly
+              inputMode="none"
+              className=" selection:bg-primary selection:text-black focus-visible:ring-0"
+            />
           </div>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" className="font-bold" onClick={handleCopyUrl} size="sm">
