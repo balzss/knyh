@@ -31,5 +31,30 @@
       "yield": "5 adag",
       "totalTime": "1:00"
     }
+  },
+  {
+    "id": "pdos32ns",
+    "title": "Palacsinta",
+    "ingredients": [
+      "20 dkg liszt",
+      "2 tojás",
+      "3 dl tej",
+      "3 dl szóda",
+      "csipet só"
+    ],
+    "instructions": [
+      "Felütjük a tojásokat, kicsit felverjük, majd hozzáadjuk a lisztet.",
+      "Apránként hígítjuk a tejjel és a vízzel, csipet sóval ízesítjük.",
+      "Forró serpenyőbe öntünk annyi tésztát, hogy ne legyen túl vastag a palacsinta, majd mindkét oldalát pirosra sütjük."
+    ],
+    "tags": [
+      "34jkdsa9",
+      "ezpe49z0",
+      "gik6jce3"
+    ],
+    "metadata": {
+      "yield": "20 darab",
+      "totalTime": "0:30"
+    }
   }
 ]

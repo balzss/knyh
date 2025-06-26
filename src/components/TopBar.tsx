@@ -57,7 +57,7 @@ export function TopBar({
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2 flex flex-col gap-3 font-bold">
           <span>Logged in as Balazs</span>
-          <Button className="font-bold" asChild>
+          <Button asChild>
             <Link href="/login">
               <LogOut /> Sign Out
             </Link>

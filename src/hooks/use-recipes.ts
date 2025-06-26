@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Recipe } from '@/lib/data'
 
 const recipesJsonPath = '/knyh/data/recipes.json'
 
+type SortOrder = 'default' | 'random'
+
 type UseRecipesParams = {
   ids?: string[]
+  sort?: SortOrder
 }
 
 type UseRecipesReturn = {
@@ -13,10 +16,25 @@ type UseRecipesReturn = {
   error: Error | null
 }
 
-function useRecipes({ ids }: UseRecipesParams = {}): UseRecipesReturn {
+function fisherYatesShuffle<T>(array: T[]): T[] {
+  let currentIndex = array.length,
+    randomIndex
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--
+    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+  }
+
+  return array
+}
+
+function useRecipes({ ids, sort = 'default' }: UseRecipesParams = {}): UseRecipesReturn {
   const [recipes, setRecipes] = useState<Recipe[] | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<Error | null>(null)
+
+  const allRecipesRef = useRef<Recipe[] | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -40,11 +58,17 @@ function useRecipes({ ids }: UseRecipesParams = {}): UseRecipesReturn {
         }
 
         const data: Recipe[] = await response.json()
-        const filteredData = ids ? data.filter((r) => ids.includes(r.id)) : data
-        setRecipes(filteredData)
+        allRecipesRef.current = data
+
+        let processedData = ids ? data.filter((r) => ids.includes(r.id)) : data
+
+        if (sort === 'random') {
+          processedData = fisherYatesShuffle([...processedData])
+        }
+
+        setRecipes(processedData)
       } catch (err) {
         if (err instanceof Error) {
-          // Type guard for error
           if (err.name === 'AbortError') {
             console.log('Fetch aborted')
           } else {
@@ -52,7 +76,6 @@ function useRecipes({ ids }: UseRecipesParams = {}): UseRecipesReturn {
             setError(err)
           }
         } else {
-          // Handle cases where the caught object is not an Error instance
           console.error('An unknown error occurred during fetch:', err)
           setError(new Error('An unknown error occurred'))
         }
@@ -63,13 +86,24 @@ function useRecipes({ ids }: UseRecipesParams = {}): UseRecipesReturn {
       }
     }
 
-    fetchData()
+    if (!allRecipesRef.current || !ids) {
+      fetchData()
+    } else {
+      let processedData = ids
+        ? allRecipesRef.current.filter((r) => ids.includes(r.id))
+        : allRecipesRef.current
+
+      if (sort === 'random') {
+        processedData = fisherYatesShuffle([...processedData])
+      }
+      setRecipes(processedData)
+      setLoading(false)
+    }
 
     return () => {
       controller.abort()
-      setLoading(false)
     }
-  }, [])
+  }, [ids, sort])
 
   return { recipes, loading, error }
 }

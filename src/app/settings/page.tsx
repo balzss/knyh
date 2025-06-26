@@ -45,7 +45,7 @@ export default function Settings() {
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="flex items-center justify-between border p-3 rounded-md">
-            <Label className="font-bold">Theme</Label>
+            <Label>Theme</Label>
             <Select onValueChange={handleThemeSelect} defaultValue={theme}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
@@ -58,7 +58,7 @@ export default function Settings() {
           </div>
 
           <div className="flex items-center justify-between border p-3 rounded-md">
-            <Label className="font-bold">Language</Label>
+            <Label>Language</Label>
             <Select onValueChange={handleThemeSelect} defaultValue={theme}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />

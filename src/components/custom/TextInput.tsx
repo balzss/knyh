@@ -1,8 +1,7 @@
 import { useRef } from 'react'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { X } from 'lucide-react'
+import { IconButton } from '@/components/custom'
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string
@@ -40,23 +39,13 @@ export function TextInput({
         {...rest}
       />
       {value && clearable && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 transform p-3 rounded-full"
-                onClick={handleClear}
-              >
-                <X />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Clear input field</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <IconButton
+          className="absolute right-2 top-1/2 -translate-y-1/2"
+          icon={<X />}
+          tooltip="Clear input field"
+          iconSize="small"
+          onClick={handleClear}
+        />
       )}
     </div>
   )

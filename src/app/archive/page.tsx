@@ -6,14 +6,11 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout, RecipeCard } from '@/components/custom'
-import { useRecipes, useTags } from '@/hooks'
 
 import { placeholderData } from '@/lib/mock-data'
 
 export default function Archive() {
   const { toggleSidebar } = useSidebar()
-  const { recipes } = useRecipes()
-  const { tags } = useTags()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -71,19 +68,6 @@ export default function Archive() {
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
-          {recipes?.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              selectionMode={selectionList.length > 0}
-              tags={recipe.tags
-                .map((tagId) => tags?.find((tag) => tag.id === tagId))
-                .filter((t) => !!t)}
-              recipeData={recipe}
-              isSelected={selectionList.includes(recipe.id)}
-              onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-              archivedMode
-            />
-          ))}
           {placeholderData.map((recipe) => (
             <RecipeCard
               key={recipe.id}

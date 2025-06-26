@@ -141,7 +141,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               {recipe?.instructions.map((instruction, index) => (
                 <li
                   key={index}
-                  className={`${selectedInstruction === index ? `relative list-none before:content-['★'] before:absolute before:-left-5 text-primary` : selectedInstruction > -1 ? 'text-muted-foreground' : ''} flex items-center text-md leading-6 list-item transition duration-150`}
+                  className={`${selectedInstruction === index ? `relative list-none before:content-['★'] before:absolute before:-left-5 text-primary` : selectedInstruction > -1 ? 'text-muted-foreground' : ''} flex items-center text-md leading-6 list-item transition duration-150 ${selectedInstruction > index ? 'line-through' : ''}`}
                   onClick={() => setSelectedInstruction((prev) => (prev === index ? -1 : index))}
                 >
                   {instruction}

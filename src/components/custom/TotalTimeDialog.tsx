@@ -57,7 +57,7 @@ export function TotalTimeDialog({
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
             <div className="flex flex-col gap-2 flex-grow">
-              <Label className="font-bold">Hours</Label>
+              <Label>Hours</Label>
               <Input
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
@@ -66,7 +66,7 @@ export function TotalTimeDialog({
               />
             </div>
             <div className="flex flex-col gap-2 flex-grow">
-              <Label className="font-bold">Minutes</Label>
+              <Label>Minutes</Label>
               <Input
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
@@ -77,11 +77,11 @@ export function TotalTimeDialog({
           </div>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
-              <Button variant="outline" className="font-bold" size="sm">
+              <Button variant="outline" size="sm">
                 Cancel
               </Button>
             </DialogClose>
-            <Button onClick={handleSetValue} className="font-bold" size="sm">
+            <Button onClick={handleSetValue} size="sm">
               Set
             </Button>
           </div>

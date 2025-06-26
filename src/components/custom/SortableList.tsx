@@ -179,7 +179,7 @@ export function SortableList({
 
   return (
     <div className={`grid w-full items-center gap-2 mb-4 ${className}`}>
-      <Label className="font-bold">{label}</Label>
+      <Label>{label}</Label>
       <DndContext
         onDragEnd={handleDragEnd}
         modifiers={[restrictToParentElementCustom]}

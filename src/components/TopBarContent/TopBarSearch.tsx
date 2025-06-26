@@ -65,9 +65,7 @@ export function TopBarSearch({
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="layoutSelect" className="font-bold">
-              Layout
-            </Label>
+            <Label htmlFor="layoutSelect">Layout</Label>
             <Select onValueChange={onLayoutChange} defaultValue={selectedLayout}>
               <SelectTrigger className="w-[180px]" id="layoutSelect">
                 <SelectValue />
@@ -80,9 +78,7 @@ export function TopBarSearch({
           </div>
           {selectedLayout === 'grid' && (
             <div className="flex items-center justify-between h-10">
-              <Label htmlFor="layoutSelect" className="font-bold">
-                Max cols: {layoutGridCols}
-              </Label>
+              <Label htmlFor="layoutSelect">Max cols: {layoutGridCols}</Label>
               <Slider
                 defaultValue={[layoutGridCols - 2]}
                 max={3}

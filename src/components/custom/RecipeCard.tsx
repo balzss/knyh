@@ -20,9 +20,9 @@ import type { Recipe, Tag } from '@/lib/data'
 
 type RecipeCardProps = {
   tags: Tag[]
-  isSelected: boolean
+  isSelected?: boolean
   selectionMode?: boolean
-  onSelect: (isSelected: boolean) => void
+  onSelect?: (isSelected: boolean) => void
   archivedMode?: boolean
   recipeData: Recipe
   recipeUrl?: string
@@ -31,9 +31,9 @@ type RecipeCardProps = {
 
 export function RecipeCard({
   tags,
-  isSelected = true,
+  isSelected = false,
   selectionMode = false,
-  onSelect,
+  onSelect = () => {},
   archivedMode = false,
   recipeData,
   recipeUrl = '',

@@ -9,11 +9,9 @@ import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { AppSidebar, RecipeCard, PageLayout, myToast } from '@/components/custom'
 import { useRecipes, useTags } from '@/hooks'
 
-import { placeholderData } from '@/lib/mock-data'
-
 export default function Home() {
   const { toggleSidebar } = useSidebar()
-  const { recipes } = useRecipes()
+  const { recipes } = useRecipes({ sort: 'random' })
   const { tags } = useTags()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -88,18 +86,6 @@ export default function Home() {
               isSelected={selectionList.includes(recipe.id)}
               onSelect={(selected) => handleCardSelect(recipe.id, selected)}
               recipeUrl={`${window?.location.href}/recipes/${recipe.id}`}
-              compact={selectedLayout === 'grid'}
-            />
-          ))}
-          {placeholderData.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              selectionMode={selectionList.length > 0}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              recipeData={recipe as any}
-              tags={recipe.tags}
-              isSelected={selectionList.includes(recipe.id)}
-              onSelect={(selected) => handleCardSelect(recipe.id, selected)}
               compact={selectedLayout === 'grid'}
             />
           ))}

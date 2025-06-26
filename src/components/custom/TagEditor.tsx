@@ -20,9 +20,11 @@ import type { Tag } from '@/lib/data'
 type TagEditorProps = {
   tags: Tag[]
   onTagChange: (tags: Tag[]) => void
+  label: string
+  buttonLabel: string
 }
 
-export function TagEditor({ tags, onTagChange }: TagEditorProps) {
+export function TagEditor({ tags, onTagChange, label, buttonLabel }: TagEditorProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
 
@@ -32,7 +34,7 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label className="font-bold">Tags</Label>
+      <Label>{label}</Label>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
           <Badge key={tag.id} className="flex pl-4 pr-1 rounded-md gap-1 text-sm" variant="outline">
@@ -49,7 +51,7 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open}>
               <TagIcon />
-              Add tag
+              {buttonLabel}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
@@ -93,6 +95,14 @@ export function TagEditor({ tags, onTagChange }: TagEditorProps) {
             </Command>
           </PopoverContent>
         </Popover>
+        {tags && tags?.length > 0 && (
+          <IconButton
+            icon={<X />}
+            tooltip="Clear selected tags"
+            onClick={() => onTagChange([])}
+            variant="outline"
+          />
+        )}
       </div>
     </div>
   )

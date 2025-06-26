@@ -102,9 +102,7 @@ export default function Add() {
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="grid w-full items-center gap-2 mb-4">
-            <Label htmlFor="recipe-title" className="font-bold">
-              Recipe title
-            </Label>
+            <Label htmlFor="recipe-title">Recipe title</Label>
             <Input
               type="text"
               id="recipe-title"
@@ -129,13 +127,18 @@ export default function Add() {
           />
 
           <div className="mb-4">
-            <TagEditor tags={tags} onTagChange={(newTags) => setTags(newTags)} />
+            <TagEditor
+              label="Tags"
+              buttonLabel="Add tag"
+              tags={tags}
+              onTagChange={(newTags) => setTags(newTags)}
+            />
           </div>
 
           <div className="mb-8 flex gap-2">
             <YieldDialog
               trigger={
-                <Button className="font-bold" variant="outline">
+                <Button variant="outline">
                   <Users />
                   {yieldValue ? (
                     <>
@@ -151,7 +154,7 @@ export default function Add() {
             />
             <TotalTimeDialog
               trigger={
-                <Button onClick={() => {}} className="font-bold" variant="outline">
+                <Button onClick={() => {}} variant="outline">
                   <Timer />
                   {totalTime ? (
                     <>
@@ -168,7 +171,7 @@ export default function Add() {
           </div>
 
           <div className="mb-4">
-            <Button onClick={handleSubmitRecipe} disabled={submitDisabled} className="font-bold">
+            <Button onClick={handleSubmitRecipe} disabled={submitDisabled}>
               <Save />
               Save recipe
             </Button>

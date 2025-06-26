@@ -23,7 +23,7 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" />
           </div>
-          <Button className="font-bold" asChild>
+          <Button asChild>
             <Link href="/">Register</Link>
           </Button>
           <div className="relative">
@@ -34,17 +34,17 @@ export default function LoginPage() {
               <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
             </div>
           </div>
-          <Button className="font-bold" variant="outline">
+          <Button variant="outline">
             <SiGithub />
             Github
           </Button>
-          <Button className="font-bold" variant="outline">
+          <Button variant="outline">
             <SiGoogle />
             Google
           </Button>
         </CardContent>
         <CardFooter>
-          <span className="text-muted-foreground ">
+          <span className="text-muted-foreground text-sm">
             Already have an account?{' '}
             <Link href="/login" className="underline hover:text-foreground">
               Log in

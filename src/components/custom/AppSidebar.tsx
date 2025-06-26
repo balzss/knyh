@@ -24,6 +24,7 @@ import {
   FilePlus,
   ShoppingCart,
   BookOpenText,
+  Dices,
 } from 'lucide-react'
 import { placeholderTags } from '@/lib/mock-data'
 
@@ -46,6 +47,11 @@ const sidebarItems = [
         href: '#',
       }
     }),
+  },
+  {
+    displayName: 'Random',
+    icon: <Dices />,
+    href: '/random',
   },
   {
     displayName: 'Shopping List',
