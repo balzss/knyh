@@ -1,111 +1,80 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Recipe } from '@/lib/data'
 
-const recipesJsonPath = '/knyh/data/recipes.json'
-
-type SortOrder = 'default' | 'random'
-
-type UseRecipesParams = {
+type UseRecipesOptions = {
+  // An array of recipe IDs to fetch. If undefined, all recipes are considered.
   ids?: string[]
-  sort?: SortOrder
+  // The sorting strategy. Currently supports 'random'.
+  sort?: 'random'
 }
 
-type UseRecipesReturn = {
-  recipes: Recipe[] | null
-  loading: boolean
-  error: Error | null
-}
-
-function fisherYatesShuffle<T>(array: T[]): T[] {
-  let currentIndex = array.length,
-    randomIndex
-
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--
-    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+/**
+ * Shuffles an array in place using the Fisher-Yates algorithm for an unbiased result.
+ * It returns a new shuffled array to maintain immutability.
+ * @param array The array to shuffle.
+ * @returns A new array with the elements shuffled randomly.
+ */
+const shuffleArray = <T>(array: T[]): T[] => {
+  const newArray = [...array] // Create a shallow copy
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]] // Swap elements
   }
-
-  return array
+  return newArray
 }
 
-function useRecipes({ ids, sort = 'default' }: UseRecipesParams = {}): UseRecipesReturn {
-  const [recipes, setRecipes] = useState<Recipe[] | null>(null)
+/**
+ * A custom hook to fetch, filter, and sort recipes.
+ * @param options - Optional configuration for filtering and sorting.
+ */
+export const useRecipes = (options?: UseRecipesOptions) => {
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<Error | null>(null)
 
-  const allRecipesRef = useRef<Recipe[] | null>(null)
+  const recipesJsonPath = '/knyh/data/recipes.json' // Path to the recipe data
 
   useEffect(() => {
-    const controller = new AbortController()
-    const signal = controller.signal
-
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
-
+    const fetchRecipes = async () => {
       try {
-        const response = await fetch(recipesJsonPath, { signal })
-
+        const response = await fetch(recipesJsonPath)
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`)
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
-
-        const contentType = response.headers.get('content-type')
-        if (!contentType || !contentType.includes('application/json')) {
-          console.warn(`Received non-JSON content type: ${contentType} from ${recipesJsonPath}`)
-          throw new TypeError('Received non-JSON response')
-        }
-
         const data: Recipe[] = await response.json()
-        allRecipesRef.current = data
-
-        let processedData = ids ? data.filter((r) => ids.includes(r.id)) : data
-
-        if (sort === 'random') {
-          processedData = fisherYatesShuffle([...processedData])
-        }
-
-        setRecipes(processedData)
-      } catch (err) {
-        if (err instanceof Error) {
-          if (err.name === 'AbortError') {
-            console.log('Fetch aborted')
-          } else {
-            console.error('Failed to fetch JSON:', err)
-            setError(err)
-          }
-        } else {
-          console.error('An unknown error occurred during fetch:', err)
-          setError(new Error('An unknown error occurred'))
-        }
+        setAllRecipes(data)
+      } catch (e) {
+        setError(e as Error)
       } finally {
-        if (!signal.aborted) {
-          setLoading(false)
-        }
+        setLoading(false)
       }
     }
 
-    if (!allRecipesRef.current || !ids) {
-      fetchData()
-    } else {
-      let processedData = ids
-        ? allRecipesRef.current.filter((r) => ids.includes(r.id))
-        : allRecipesRef.current
+    fetchRecipes()
+  }, [recipesJsonPath]) // Effect runs only once on component mount
 
-      if (sort === 'random') {
-        processedData = fisherYatesShuffle([...processedData])
-      }
-      setRecipes(processedData)
-      setLoading(false)
+  // useMemo ensures that filtering and sorting are only re-calculated
+  // when the source data or options change, optimizing performance.
+  const processedRecipes = useMemo(() => {
+    let recipes = [...allRecipes]
+
+    // 1. Filter by specific IDs if provided
+    if (options?.ids && options.ids.length > 0) {
+      const idSet = new Set(options.ids)
+      recipes = recipes.filter((recipe) => idSet.has(recipe.id))
     }
 
-    return () => {
-      controller.abort()
+    // 2. Apply sorting strategies
+    switch (options?.sort) {
+      case 'random':
+        return shuffleArray(recipes)
+      // Future sorting methods like 'alphabetical' could be added here
+      // case 'alphabetical':
+      //   return recipes.sort((a, b) => a.title.localeCompare(b.title))
+      default:
+        return recipes
     }
-  }, [ids, sort])
+  }, [allRecipes, options])
 
-  return { recipes, loading, error }
+  return { recipes: processedRecipes, loading, error }
 }
-
-export { useRecipes }

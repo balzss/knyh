@@ -19,7 +19,8 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
   const router = useRouter()
   const { toggleSidebar } = useSidebar()
-  const { recipes } = useRecipes({ ids: [recipeId] })
+  // TODO fix infinite update from useRecipes -> only happens when `ids` prop is provided
+  const { recipes } = useRecipes({ ids: [recipeId], sort: 'random' })
   const { tags } = useTags()
   const recipe = recipes?.[0]
 

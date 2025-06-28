@@ -54,7 +54,7 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel }: TagEditorPr
               {buttonLabel}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
+          <PopoverContent className="p-0" align="start">
             <Command>
               <CommandInput placeholder="Find tag" />
               <CommandList>
