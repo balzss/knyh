@@ -1,18 +1,31 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+
 import { AnimatePresence } from 'motion/react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Archive } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
-import { AppSidebar, RecipeCard, PageLayout, myToast } from '@/components/custom'
+import { AppSidebar, RecipeCard, PageLayout, myToast, TagEditor } from '@/components/custom'
 import { useRecipes, useTags } from '@/hooks'
+import type { Tag } from '@/lib/data'
 
 export default function Home() {
   const { toggleSidebar } = useSidebar()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
   const { recipes } = useRecipes({ sort: 'random' })
   const { tags } = useTags()
+
+  const tagParam = searchParams.get('tag')?.split(',')
+  const filterTags = tags.filter((t) => tagParam?.includes(t.id))
+  const filteredRecipes = filterTags.length
+    ? recipes.filter((r) => tagParam?.every((t) => r.tags.includes(t)))
+    : recipes
+
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -31,6 +44,16 @@ export default function Home() {
   const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
     setSelectedLayout(selectedValue)
     setLayoutGridCols(gridCols)
+  }
+
+  const handleTagFilterChange = (newTags: Tag[]) => {
+    if (!newTags.length) {
+      router.push('/')
+      return
+    }
+
+    const tagIdList = newTags.map((t) => t.id).join(',')
+    router.push(`/?tag=${tagIdList}`)
   }
 
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
@@ -75,7 +98,15 @@ export default function Home() {
       <AppSidebar path="/" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
-          {recipes?.map((recipe) => (
+          {tagParam && (
+            <TagEditor
+              label="Filter"
+              buttonLabel="Select tag"
+              tags={filterTags}
+              onTagChange={handleTagFilterChange}
+            />
+          )}
+          {filteredRecipes?.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               selectionMode={selectionList.length > 0}

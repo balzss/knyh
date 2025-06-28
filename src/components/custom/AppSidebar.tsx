@@ -26,13 +26,14 @@ import {
   BookOpenText,
   Dices,
 } from 'lucide-react'
-import { placeholderTags } from '@/lib/mock-data'
+import { useTags } from '@/hooks'
+import type { Tag } from '@/lib/data'
 
 type AppSidebarProps = {
   path?: string
 }
 
-const sidebarItems = [
+const sidebarItems = (tags: Tag[]) => [
   {
     displayName: 'Recipes',
     icon: <BookOpenText />,
@@ -41,20 +42,20 @@ const sidebarItems = [
   {
     displayName: 'Tags',
     icon: <Tags />,
-    subItems: Object.values(placeholderTags).map(({ displayName }) => {
+    subItems: Object.values(tags).map(({ id, displayName }) => {
       return {
         displayName,
-        href: '#',
+        href: `/?tag=${id}`,
       }
     }),
   },
   {
-    displayName: 'Random',
+    displayName: 'Random recipe',
     icon: <Dices />,
     href: '/random',
   },
   {
-    displayName: 'Shopping List',
+    displayName: 'Shopping list',
     icon: <ShoppingCart />,
     href: '/shopping-list',
   },
@@ -72,6 +73,7 @@ const sidebarItems = [
 
 export function AppSidebar({ path }: AppSidebarProps) {
   const { isMobile, setOpenMobile } = useSidebar()
+  const { tags } = useTags()
 
   return (
     <Sidebar>
@@ -115,7 +117,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.map((item) => {
+              {sidebarItems(tags).map((item) => {
                 if (item.subItems) {
                   return (
                     <Collapsible

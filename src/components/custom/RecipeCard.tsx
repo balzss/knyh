@@ -22,7 +22,7 @@ type RecipeCardProps = {
   tags: Tag[]
   isSelected?: boolean
   selectionMode?: boolean
-  onSelect?: (isSelected: boolean) => void
+  onSelect?: (isSelected: boolean) => void | undefined
   archivedMode?: boolean
   recipeData: Recipe
   recipeUrl?: string
@@ -33,7 +33,7 @@ export function RecipeCard({
   tags,
   isSelected = false,
   selectionMode = false,
-  onSelect = () => {},
+  onSelect,
   archivedMode = false,
   recipeData,
   recipeUrl = '',
@@ -44,7 +44,7 @@ export function RecipeCard({
 
   const handleTouchStart = () => {
     selectTimeout.current = setTimeout(() => {
-      onSelect(!isSelected)
+      onSelect?.(!isSelected)
     }, 500)
   }
 
@@ -97,14 +97,16 @@ export function RecipeCard({
         <div
           className={`text-muted-foreground absolute top-0 right-0 ${isHovered || selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-100 ease-in-out`}
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
-            onClick={() => onSelect(!isSelected)}
-          >
-            {isSelected ? <CircleCheckBig /> : <Circle />}
-          </Button>
+          {onSelect && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
+              onClick={() => onSelect(!isSelected)}
+            >
+              {isSelected ? <CircleCheckBig /> : <Circle />}
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardFooter
@@ -115,11 +117,10 @@ export function RecipeCard({
             <Badge
               key={tag.id}
               tabIndex={archivedMode ? undefined : 0}
-              onClick={archivedMode ? undefined : () => console.log(tag.displayName)}
               className={archivedMode ? '' : 'cursor-pointer'}
               variant={archivedMode ? 'outline' : 'default'}
             >
-              {tag.displayName}
+              <Link href={`/?tag=${tag.id}`}>{tag.displayName}</Link>
             </Badge>
           ))}
         </div>
