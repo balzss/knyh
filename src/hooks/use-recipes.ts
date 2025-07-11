@@ -74,7 +74,8 @@ export const useRecipes = (options?: UseRecipesOptions) => {
       default:
         return recipes
     }
-  }, [allRecipes, options])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allRecipes, options?.sort, JSON.stringify(options?.ids)])
 
   return { recipes: processedRecipes, loading, error }
 }

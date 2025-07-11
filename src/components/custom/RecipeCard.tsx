@@ -116,11 +116,14 @@ export function RecipeCard({
           {tags.map((tag) => (
             <Badge
               key={tag.id}
-              tabIndex={archivedMode ? undefined : 0}
               className={archivedMode ? '' : 'cursor-pointer'}
               variant={archivedMode ? 'outline' : 'default'}
             >
-              <Link href={`/?tag=${tag.id}`}>{tag.displayName}</Link>
+              {archivedMode ? (
+                tag.displayName
+              ) : (
+                <Link href={`/?tag=${tag.id}`}>{tag.displayName}</Link>
+              )}
             </Badge>
           ))}
         </div>

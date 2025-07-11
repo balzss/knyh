@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 
 export default function LoginPage() {
   return (
-    <div className="flex w-full items-center justify-center m-3">
+    <div className="flex w-full items-start justify-center m-3 mt-16">
       <Card className="max-w-sm w-full flex flex-col items-center">
         <CardHeader className="flex flex-col items-center">
           <CardTitle>Create an account</CardTitle>

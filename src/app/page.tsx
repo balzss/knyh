@@ -97,15 +97,16 @@ export default function Home() {
       />
       <AppSidebar path="/" />
       <main className="w-full mt-14">
+        {tagParam && (
+          <TagEditor
+            label="Filter"
+            buttonLabel="Select tag"
+            tags={filterTags}
+            onTagChange={handleTagFilterChange}
+            className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+          />
+        )}
         <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
-          {tagParam && (
-            <TagEditor
-              label="Filter"
-              buttonLabel="Select tag"
-              tags={filterTags}
-              onTagChange={handleTagFilterChange}
-            />
-          )}
           {filteredRecipes?.map((recipe) => (
             <RecipeCard
               key={recipe.id}

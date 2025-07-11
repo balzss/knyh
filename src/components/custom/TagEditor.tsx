@@ -22,9 +22,10 @@ type TagEditorProps = {
   onTagChange: (tags: Tag[]) => void
   label: string
   buttonLabel: string
+  className?: string
 }
 
-export function TagEditor({ tags, onTagChange, label, buttonLabel }: TagEditorProps) {
+export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: TagEditorProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
 
@@ -33,7 +34,7 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel }: TagEditorPr
   const tagList = tagsData?.filter((tag) => !tags.find((t) => t.id === tag.id))
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col gap-2 ${className}`}>
       <Label>{label}</Label>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (

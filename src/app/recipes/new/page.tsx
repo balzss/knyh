@@ -41,7 +41,7 @@ export default function Add() {
   }, [recipeTitle])
 
   const handleClosePage = () => {
-    if (document.referrer.startsWith('https://balzss.github.io/knyh/')) {
+    if (window.history.length && document.referrer === '') {
       router.back()
     } else {
       router.replace('/')
@@ -84,7 +84,7 @@ export default function Add() {
               iconSize="normal"
               variant="ghost"
               icon={<X />}
-              tooltip="Clear selection"
+              tooltip="Close"
               onClick={handleClosePage}
             />
             <span className="mr-auto sm:mr-4 font-bold">New recipe</span>

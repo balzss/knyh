@@ -39,7 +39,7 @@ export function TopBarSearch({
     >
       <div className="flex-1 relative flex items-center max-w-2xl ml-1">
         <TextInput
-          placeholder="Search"
+          placeholder="Search recipes"
           clearable
           icon={Search}
           value={searchQuery}
