@@ -11,9 +11,10 @@ export type GroupData = {
 type SortableGroupProps = {
   initialData?: GroupData[]
   onDataChange?: (newData: GroupData[]) => void
+  defaultLabel: string
 }
 
-export function SortableGroup({ initialData, onDataChange }: SortableGroupProps) {
+export function SortableGroup({ initialData, onDataChange, defaultLabel }: SortableGroupProps) {
   const [, setUpdateTrigger] = useState<number>(0)
   const [disableAddGroupBtn, setDisableAddGroupBtn] = useState<boolean>(false)
   const groupData = useRef<GroupData[]>([{ label: '', items: [] }])
@@ -21,7 +22,6 @@ export function SortableGroup({ initialData, onDataChange }: SortableGroupProps)
   useEffect(() => {
     if (initialData && initialData.length > 0) {
       groupData.current = initialData
-      // setUpdateTrigger((p) => p + 1)
     }
   }, [initialData])
 
@@ -97,7 +97,7 @@ export function SortableGroup({ initialData, onDataChange }: SortableGroupProps)
                 />
               )}
               <SortableList
-                label="Ingredients"
+                label={defaultLabel}
                 newItemPlaceholder={['New ingredient']}
                 initialItems={group.items}
                 onItemsChange={(newItems) => handleItemsChange(index, newItems)}

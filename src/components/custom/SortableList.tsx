@@ -63,7 +63,6 @@ export function SortableList({
     })),
     { value: '', id: nanoid(), noAnimate: true },
   ])
-  const [focusedIngredientId, setFocusedIngredientId] = useState<string>('')
   const ingredientInputRefs = useRef<{
     [key: string]: HTMLInputElement | HTMLTextAreaElement | null
   }>({})
@@ -113,20 +112,27 @@ export function SortableList({
     itemId: string
   ) => {
     const { value } = changeEvent.target
-    const lastItem =
-      internalItems.findIndex((item) => item.id === itemId) === internalItems.length - 1
+
     setInternalItems((prevItems) => {
-      const updatedValues = prevItems.map((item) =>
-        item.id === itemId ? { ...item, value, autoFocus: false, noAnimate: true } : item
+      const currentIndex = prevItems.findIndex((item) => item.id === itemId)
+      const isLastItem = currentIndex === prevItems.length - 1
+
+      // Determine if we should add a new row.
+      // This should only happen when typing in the very last, previously empty input.
+      const shouldAddNewItem = isLastItem && prevItems[currentIndex].value === '' && value !== ''
+
+      let updatedItems = prevItems.map((item) =>
+        item.id === itemId ? { ...item, value, autoFocus: false, noAnimate: false } : item
       )
-      if (lastItem) {
-        return [...updatedValues, { id: nanoid(), value: '' }]
+
+      if (shouldAddNewItem) {
+        // CHANGE IS HERE: The new item no longer has `noAnimate: true`.
+        // It will now animate on entry.
+        updatedItems = [...updatedItems, { id: nanoid(), value: '' }]
       }
-      return updatedValues
+
+      return updatedItems
     })
-    if (lastItem) {
-      ingredientInputRefs.current[focusedIngredientId]?.focus()
-    }
   }
 
   const handleKeydown = (
@@ -198,7 +204,6 @@ export function SortableList({
                   onRemoveSelf={() => handleRemoveItem(id)}
                   newItemMode={index === internalItems.length - 1}
                   onKeyDown={(e) => handleKeydown(e, id)}
-                  onFocus={() => setFocusedIngredientId(id)}
                   autoFocus={autoFocus}
                   placeholder={newItemPlaceholder?.[index ? newItemPlaceholder?.length - 1 : 0]}
                   multiLine={multiLine}

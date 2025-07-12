@@ -113,6 +113,7 @@ export default function Add() {
           </div>
 
           <SortableGroup
+            defaultLabel="Ingredients"
             onDataChange={(newData) => (ingredientGroups.current = newData)}
             initialData={[]}
           />
