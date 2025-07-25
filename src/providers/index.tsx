@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider } from '@/providers/theme-provider'
+import { ThemeProvider } from 'next-themes'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 
