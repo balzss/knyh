@@ -1,4 +1,8 @@
-import type { GroupData } from '@/components/custom'
+export type GroupData = {
+  label: string
+  items: string[]
+}
+
 export type RecipeMetaData = {
   totalTime: string
   yield: string

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Tag } from '@/lib/data'
+import type { Tag } from '@/lib/types'
 
 export const useTags = () => {
   const [tags, setTags] = useState<Tag[]>([])
