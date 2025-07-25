@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Users, Timer, X, Pen, EllipsisVertical, Share2, Presentation } from 'lucide-react'
+import { Users, Timer, X, Pen, EllipsisVertical, Share2, Presentation, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { AppSidebar, PageLayout, IconButton, ShareDialog } from '@/components/custom'
-import { useRecipes, useTags } from '@/hooks'
+import { AppSidebar, PageLayout, IconButton, ShareDialog, myToast } from '@/components/custom'
+import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
 
 type RecipeViewProps = {
   recipeId: string
@@ -25,6 +25,8 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const { recipes } = useRecipes({ ids: [recipeId], sort: 'random' })
   const { tags } = useTags()
   const recipe = recipes?.[0]
+
+  const { deleteRecipe } = useRecipeMutations()
 
   const handleClosePage = () => {
     if (window.history.length && document.referrer === '') {
@@ -44,6 +46,18 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
         return newSet
       })
     }
+  }
+
+  const handleDeleteRecipe = () => {
+    deleteRecipe.mutate(recipeId, {
+      onSuccess: () => {
+        router.push('/')
+        myToast({
+          message: 'Recipe deleted successfully!',
+          action: { label: 'Undo', onClick: () => {} },
+        })
+      },
+    })
   }
 
   return (
@@ -71,6 +85,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 trigger={<IconButton icon={<Share2 />} tooltip="Share recipe" />}
                 recipeUrl={'https://placeholder.url'}
               />
+              <IconButton icon={<Trash2 />} tooltip="More options" onClick={handleDeleteRecipe} />
               <IconButton icon={<EllipsisVertical />} tooltip="More options" onClick={() => {}} />
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import crypto from 'crypto'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -17,4 +18,18 @@ export function shuffleArray<T>(array: T[]): T[] {
     ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]] // Swap elements
   }
   return newArray
+}
+
+/**
+ * Generates a cryptographically secure 8-character string using a-z and 0-9.
+ */
+export function generateId(): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+  const randomBytes = crypto.randomBytes(8)
+  let result = ''
+  for (let i = 0; i < 8; i++) {
+    // Map each random byte to a character in our set
+    result += chars[randomBytes[i] % chars.length]
+  }
+  return result
 }

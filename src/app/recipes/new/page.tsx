@@ -17,9 +17,10 @@ import {
   YieldDialog,
   TotalTimeDialog,
   SortableGroup,
+  myToast,
 } from '@/components/custom'
-import { nanoid } from 'nanoid'
-import type { GroupData, Recipe, Tag } from '@/lib/types'
+import { useRecipeMutations } from '@/hooks'
+import type { GroupData, Tag } from '@/lib/types'
 
 export default function Add() {
   const [recipeTitle, setRecipeTitle] = useState<string>('')
@@ -34,6 +35,7 @@ export default function Add() {
 
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
+  const { createRecipe } = useRecipeMutations()
 
   useEffect(() => {
     setSubmitDisabled(!recipeTitle.length)
@@ -57,10 +59,12 @@ export default function Add() {
   }
 
   const handleSubmitRecipe = () => {
-    const id = nanoid()
-    const submitData: Recipe = {
+    if (!recipeTitle || !ingredientGroups.current.length || !instructionList.current.length) {
+      alert('Some fields are empty')
+      return
+    }
+    const newRecipePayload = {
       title: recipeTitle,
-      id,
       ingredients: ingredientGroups.current,
       instructions: instructionList.current,
       tags: tags.map((t) => t.id),
@@ -69,7 +73,14 @@ export default function Add() {
         totalTime,
       },
     }
-    alert(JSON.stringify(submitData))
+    createRecipe.mutate(newRecipePayload, {
+      onSuccess: (newlyCreatedRecipe) => {
+        router.push(`/recipes/${newlyCreatedRecipe.id}`)
+        myToast({
+          message: 'Recipe created successfully!',
+        })
+      },
+    })
   }
 
   return (
