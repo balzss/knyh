@@ -59,9 +59,6 @@ export const useRecipes = (options?: UseRecipesOptions) => {
 
       return processed
     },
-    // This query result for a static file is very stable.
-    staleTime: Infinity,
-    cacheTime: Infinity,
   })
 
   // The random sort is a "view concern" and is handled separately to avoid

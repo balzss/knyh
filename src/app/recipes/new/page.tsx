@@ -17,10 +17,9 @@ import {
   YieldDialog,
   TotalTimeDialog,
   SortableGroup,
-  type GroupData,
 } from '@/components/custom'
 import { nanoid } from 'nanoid'
-import type { Recipe, Tag } from '@/lib/data'
+import type { GroupData, Recipe, Tag } from '@/lib/types'
 
 export default function Add() {
   const [recipeTitle, setRecipeTitle] = useState<string>('')

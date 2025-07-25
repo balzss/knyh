@@ -10,7 +10,7 @@ import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { AppSidebar, RecipeCard, PageLayout, myToast, TagEditor } from '@/components/custom'
 import { useRecipes, useTags } from '@/hooks'
-import type { Tag } from '@/lib/data'
+import type { Tag } from '@/lib/types'
 
 export default function Home() {
   const { toggleSidebar } = useSidebar()

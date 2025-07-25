@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
-import type { Recipe, Tag } from '@/lib/data'
+import type { Recipe, Tag } from '@/lib/types'
 
 type RecipeCardProps = {
   tags: Tag[]

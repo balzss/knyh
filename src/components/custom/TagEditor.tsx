@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Badge } from '@/components/ui/badge'
 import { IconButton } from '@/components/custom'
 import { useTags } from '@/hooks'
-import type { Tag } from '@/lib/data'
+import type { Tag } from '@/lib/types'
 
 type TagEditorProps = {
   tags: Tag[]

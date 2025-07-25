@@ -6,7 +6,7 @@ import { Dices } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout, RecipeCard, IconButton, TagEditor } from '@/components/custom'
 import { useRecipes, useTags } from '@/hooks'
-import type { Tag } from '@/lib/data'
+import type { Tag } from '@/lib/types'
 
 export default function Archive() {
   const { toggleSidebar } = useSidebar()

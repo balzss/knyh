@@ -1,7 +1,7 @@
 import RecipeView from './recipe-view'
 import fs from 'fs'
 import path from 'path'
-import type { Recipe } from '@/lib/data'
+import type { Recipe } from '@/lib/types'
 
 type RecipePageProps = {
   params: Promise<{ recipe_id: string }>

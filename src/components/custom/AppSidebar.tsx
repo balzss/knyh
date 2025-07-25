@@ -27,7 +27,7 @@ import {
   Dices,
 } from 'lucide-react'
 import { useTags } from '@/hooks'
-import type { Tag } from '@/lib/data'
+import type { Tag } from '@/lib/types'
 
 type AppSidebarProps = {
   path?: string
