@@ -1,31 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import type { Tag } from '@/lib/types'
 
 export const useTags = () => {
-  const [tags, setTags] = useState<Tag[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<Error | null>(null)
+  const {
+    data: tags,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ['tags'],
 
-  const tagsJsonPath = '/knyh/data/tags.json'
-
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await fetch(tagsJsonPath)
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const data: Tag[] = await response.json()
-        setTags(data)
-      } catch (e) {
-        setError(e as Error)
-      } finally {
-        setLoading(false)
+    queryFn: async (): Promise<Tag[]> => {
+      const response = await fetch('/knyh/data/tags.json')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
-    }
+      return response.json()
+    },
+  })
 
-    fetchTags()
-  }, [tagsJsonPath])
-
-  return { tags, loading, error }
+  return { tags: tags ?? [], loading, error }
 }
