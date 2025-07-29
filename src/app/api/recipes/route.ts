@@ -14,23 +14,35 @@ async function getRecipes(): Promise<Recipe[]> {
 
 export async function POST(request: Request) {
   try {
-    const newRecipeData = await request.json()
-    const allRecipes = await getRecipes()
+    const payload = await request.json()
 
-    // Generate a unique ID for the new recipe
-    const newRecipe: Recipe = {
-      id: generateId(),
-      ...newRecipeData,
+    // Enforce the array contract
+    if (!Array.isArray(payload)) {
+      return NextResponse.json(
+        { message: 'Request body must be an array of recipe objects.' },
+        { status: 400 }
+      )
     }
 
-    // Add the new recipe to the list
-    allRecipes.push(newRecipe)
+    // Reject empty arrays as a bad request
+    if (payload.length === 0) {
+      return NextResponse.json(
+        { message: 'Cannot create recipes from an empty array.' },
+        { status: 400 }
+      )
+    }
 
-    // Write the updated list back to the file
-    await fs.writeFile(dataFilePath, JSON.stringify(allRecipes, null, 2))
+    const allRecipes = await getRecipes()
 
-    // Return the newly created recipe with a 201 status code
-    return NextResponse.json(newRecipe, { status: 201 })
+    const newRecipes = payload.map((recipeData) => ({
+      id: generateId(),
+      ...recipeData,
+    }))
+
+    const updatedRecipes = [...allRecipes, ...newRecipes]
+    await fs.writeFile(dataFilePath, JSON.stringify(updatedRecipes, null, 2))
+
+    return NextResponse.json(newRecipes, { status: 201 })
   } catch (error) {
     console.error(error)
     if (error instanceof SyntaxError) {

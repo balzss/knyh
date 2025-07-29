@@ -1,45 +1,18 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, Save, Timer, Users, Ellipsis } from 'lucide-react'
+import { X, Ellipsis } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { TopBar } from '@/components/TopBar'
-import {
-  AppSidebar,
-  PageLayout,
-  SortableList,
-  IconButton,
-  TagEditor,
-  YieldDialog,
-  TotalTimeDialog,
-  SortableGroup,
-  myToast,
-} from '@/components/custom'
-import { useRecipeMutations } from '@/hooks'
-import type { GroupData, Tag } from '@/lib/types'
+import { AppSidebar, IconButton } from '@/components/custom'
+import FormView from './form-view'
+import RawView from './raw-view'
 
-export default function Add() {
-  const [recipeTitle, setRecipeTitle] = useState<string>('')
-  const ingredientGroups = useRef<GroupData[]>([])
-
-  const instructionList = useRef<string[]>([])
-
-  const [tags, setTags] = useState<Tag[]>([])
-  const [yieldValue, setYieldValue] = useState<string>('')
-  const [totalTime, setTotalTime] = useState<string>('')
-  const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
+export default function NewPage() {
+  const inRawView = true
 
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
-  const { createRecipe } = useRecipeMutations()
-
-  useEffect(() => {
-    setSubmitDisabled(!recipeTitle.length)
-  }, [recipeTitle])
 
   const handleClosePage = () => {
     if (window.history.length && document.referrer === '') {
@@ -47,40 +20,6 @@ export default function Add() {
     } else {
       router.replace('/')
     }
-  }
-
-  const formatTotalTime = (time: string) => {
-    const splitTime = time.split(':')
-    const hours = Number(splitTime[0])
-    const minutes = Number(splitTime[1])
-    const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
-    const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
-    return [formattedHours, formattedMinutes].join(' ')
-  }
-
-  const handleSubmitRecipe = () => {
-    if (!recipeTitle || !ingredientGroups.current.length || !instructionList.current.length) {
-      alert('Some fields are empty')
-      return
-    }
-    const newRecipePayload = {
-      title: recipeTitle,
-      ingredients: ingredientGroups.current,
-      instructions: instructionList.current,
-      tags: tags.map((t) => t.id),
-      metadata: {
-        yield: yieldValue,
-        totalTime,
-      },
-    }
-    createRecipe.mutate(newRecipePayload, {
-      onSuccess: (newlyCreatedRecipe) => {
-        router.push(`/recipes/${newlyCreatedRecipe.id}`)
-        myToast({
-          message: 'Recipe created successfully!',
-        })
-      },
-    })
   }
 
   return (
@@ -109,86 +48,7 @@ export default function Add() {
         }
       />
       <AppSidebar path="/new" />
-      <main className="w-full mt-16 mx-auto">
-        <PageLayout>
-          <div className="grid w-full items-center gap-2 mb-4">
-            <Label htmlFor="recipe-title">Recipe title</Label>
-            <Input
-              type="text"
-              id="recipe-title"
-              autoComplete="off"
-              value={recipeTitle}
-              onChange={(e) => setRecipeTitle(e.target.value)}
-            />
-          </div>
-
-          <SortableGroup
-            defaultLabel="Ingredients"
-            onDataChange={(newData) => (ingredientGroups.current = newData)}
-            initialData={[]}
-          />
-
-          <SortableList
-            className="mb-4"
-            newItemPlaceholder={['First step', 'Next step']}
-            label="Instructions"
-            initialItems={[]}
-            onItemsChange={(newItems) => (instructionList.current = newItems)}
-            multiLine
-          />
-
-          <div className="mb-4">
-            <TagEditor
-              label="Tags"
-              buttonLabel="Add tag"
-              tags={tags}
-              onTagChange={(newTags) => setTags(newTags)}
-            />
-          </div>
-
-          <div className="mb-8 flex gap-2">
-            <YieldDialog
-              trigger={
-                <Button variant="outline">
-                  <Users />
-                  {yieldValue ? (
-                    <>
-                      Yield: <span className="font-normal">{yieldValue}</span>
-                    </>
-                  ) : (
-                    'Set yield'
-                  )}
-                </Button>
-              }
-              yieldValue={yieldValue}
-              onYieldValueChange={(newValue) => setYieldValue(newValue)}
-            />
-            <TotalTimeDialog
-              trigger={
-                <Button onClick={() => {}} variant="outline">
-                  <Timer />
-                  {totalTime ? (
-                    <>
-                      Total time: <span className="font-normal">{formatTotalTime(totalTime)}</span>
-                    </>
-                  ) : (
-                    'Add total time'
-                  )}
-                </Button>
-              }
-              totalTimeValue={totalTime}
-              onTotalTimeValueChange={(newValue) => setTotalTime(newValue)}
-            />
-          </div>
-
-          <div className="mb-4">
-            <Button onClick={handleSubmitRecipe} disabled={submitDisabled}>
-              <Save />
-              Save recipe
-            </Button>
-          </div>
-        </PageLayout>
-      </main>
+      <main className="w-full mt-16 mx-auto">{inRawView ? <RawView /> : <FormView />}</main>
     </div>
   )
 }

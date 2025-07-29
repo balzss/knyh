@@ -20,15 +20,23 @@ export const useRecipeMutations = () => {
 
   // CREATE mutation
   const createRecipe = useMutation({
-    mutationFn: async (payload: CreateRecipePayload): Promise<Recipe> => {
+    mutationFn: async (payload: CreateRecipePayload | CreateRecipePayload[]): Promise<Recipe[]> => {
+      // Ensure the body is always an array to match the API contract
+      const body = Array.isArray(payload) ? payload : [payload]
+
       const response = await fetch('/knyh/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       })
+
       if (!response.ok) {
-        throw new Error('Failed to create recipe')
+        // Pass along the specific error message from the API
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to create recipe(s)')
       }
+
+      // The API returns an array of the created recipes
       return response.json()
     },
     onSuccess: invalidateRecipesQuery,
