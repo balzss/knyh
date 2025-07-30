@@ -31,7 +31,7 @@ export function IconButton({
             {...rest}
             variant={variant}
             size="icon"
-            className={`${className} ${iconSize === 'small' ? 'h-6 w-6' : ''} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
+            className={`${className} ${iconSize === 'small' ? 'h-6 w-6' : 'h-9 w-9'} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
             onClick={onClick}
           >
             {icon}

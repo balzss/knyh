@@ -85,7 +85,7 @@ export function SortableInput({
             {...rest}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            className="px-10 py-2 resize-none h-auto min-h-10"
+            className="px-10 resize-none h-auto min-h-9"
             rows={multiHeight}
             onChange={(e) => {
               setMultiHeight(e.target.value.split('\n').length)
@@ -101,7 +101,7 @@ export function SortableInput({
             // Set isHovered to true when the input gains focus, and only set it to false when focus moves completely outside the
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            className="px-10 py-2"
+            className="px-10"
             placeholder={newItemMode ? placeholder : ''}
             ref={inputRef}
           />

@@ -72,7 +72,7 @@ export default function FormView() {
   }
   return (
     <PageLayout>
-      <div className="grid w-full items-center gap-2 mb-4">
+      <div className="grid w-full items-center gap-2 mb-3">
         <Label htmlFor="recipe-title">Recipe title</Label>
         <Input
           type="text"
@@ -90,7 +90,7 @@ export default function FormView() {
       />
 
       <SortableList
-        className="mb-4"
+        className="mb-3"
         newItemPlaceholder={['First step', 'Next step']}
         label="Instructions"
         initialItems={[]}
@@ -98,7 +98,7 @@ export default function FormView() {
         multiLine
       />
 
-      <div className="mb-4">
+      <div className="mb-3">
         <TagEditor
           label="Tags"
           buttonLabel="Add tag"
@@ -107,7 +107,7 @@ export default function FormView() {
         />
       </div>
 
-      <div className="mb-8 flex gap-2">
+      <div className="mb-6 flex gap-2">
         <YieldDialog
           trigger={
             <Button variant="outline">
@@ -126,7 +126,7 @@ export default function FormView() {
         />
         <TotalTimeDialog
           trigger={
-            <Button onClick={() => {}} variant="outline">
+            <Button variant="outline">
               <Timer />
               {totalTime ? (
                 <>
@@ -142,8 +142,8 @@ export default function FormView() {
         />
       </div>
 
-      <div className="mb-4">
-        <Button onClick={handleSubmitRecipe} disabled={submitDisabled}>
+      <div className="mb-3">
+        <Button onClick={handleSubmitRecipe} disabled={submitDisabled} size="sm">
           <Save />
           Save recipe
         </Button>

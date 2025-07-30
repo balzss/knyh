@@ -55,13 +55,11 @@ export function YieldDialog({ trigger, yieldValue, onYieldValueChange }: YieldDi
           </div>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
-              <Button variant="outline" onClick={() => setValue('')} size="sm">
+              <Button variant="outline" onClick={() => setValue('')}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button onClick={handleSetValue} size="sm">
-              Set
-            </Button>
+            <Button onClick={handleSetValue}>Set</Button>
           </div>
         </div>
       </DialogContent>

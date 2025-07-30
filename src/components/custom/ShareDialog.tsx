@@ -52,11 +52,11 @@ export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) 
             />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button variant="outline" onClick={handleCopyUrl} size="sm">
+            <Button variant="outline" onClick={handleCopyUrl}>
               <Clipboard />
               Copy
             </Button>
-            <Button onClick={handleShare} size="sm" variant="outline">
+            <Button onClick={handleShare} variant="outline">
               <Share />
               Share via device
             </Button>

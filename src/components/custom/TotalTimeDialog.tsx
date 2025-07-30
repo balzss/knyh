@@ -77,13 +77,9 @@ export function TotalTimeDialog({
           </div>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
-              <Button variant="outline" size="sm">
-                Cancel
-              </Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button onClick={handleSetValue} size="sm">
-              Set
-            </Button>
+            <Button onClick={handleSetValue}>Set</Button>
           </div>
         </div>
       </DialogContent>

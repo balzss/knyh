@@ -14,7 +14,7 @@ export function myToast({ message, action }: MyToastProps) {
     <div className="flex justify-between w-full items-center font-bold">
       {message}
       {action && (
-        <Button size="sm" variant="ghost" onClick={action.onClick}>
+        <Button variant="ghost" onClick={action.onClick}>
           {action.label}
         </Button>
       )}

@@ -38,7 +38,11 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
       <Label>{label}</Label>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <Badge key={tag.id} className="flex pl-4 pr-1 rounded-md gap-1 text-sm" variant="outline">
+          <Badge
+            key={tag.id}
+            className="flex pl-5 pr-2 rounded-3xl gap-1 text-sm"
+            variant="outline"
+          >
             {tag.displayName}
             <IconButton
               icon={<X />}
