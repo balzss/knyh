@@ -9,8 +9,8 @@ body {
   font-optical-sizing: auto;
 }
 
-pre {
-  font-family: "Noto Sans Mono", monospace;
+.code-editor {
+  outline: none;
 }
 
 @layer base {
