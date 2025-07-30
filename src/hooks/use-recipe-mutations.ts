@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { Recipe } from '@/lib/types'
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+const apiUrl = `${basePath}/api/recipes`
+
 // The type for creating a recipe (all fields except the server-generated id)
 type CreateRecipePayload = Omit<Recipe, 'id'>
 
@@ -24,7 +27,7 @@ export const useRecipeMutations = () => {
       // Ensure the body is always an array to match the API contract
       const body = Array.isArray(payload) ? payload : [payload]
 
-      const response = await fetch('/knyh/api/recipes', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -45,7 +48,7 @@ export const useRecipeMutations = () => {
   // UPDATE mutation
   const updateRecipe = useMutation({
     mutationFn: async ({ id, data }: UpdateRecipePayload): Promise<Recipe> => {
-      const response = await fetch(`/knyh/api/recipes/${id}`, {
+      const response = await fetch(`${apiUrl}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -61,7 +64,7 @@ export const useRecipeMutations = () => {
   // DELETE mutation
   const deleteRecipe = useMutation({
     mutationFn: async (recipeId: string): Promise<{ message: string }> => {
-      const response = await fetch(`/knyh/api/recipes/${recipeId}`, {
+      const response = await fetch(`${apiUrl}/${recipeId}`, {
         method: 'DELETE',
       })
       if (!response.ok) {

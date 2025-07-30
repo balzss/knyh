@@ -3,6 +3,9 @@ import { useMemo } from 'react'
 import { shuffleArray } from '@/lib/utils'
 import type { Recipe } from '@/lib/types'
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+const recipesJsonPath = `${basePath}/data/recipes.json`
+
 type UseRecipesOptions = {
   // An array of recipe IDs to fetch. If undefined, all recipes are considered.
   ids?: string[]
@@ -26,7 +29,7 @@ export const useRecipes = (options?: UseRecipesOptions) => {
 
     // The query function handles the actual data fetching.
     queryFn: async (): Promise<Recipe[]> => {
-      const response = await fetch('/knyh/data/recipes.json')
+      const response = await fetch(recipesJsonPath)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }

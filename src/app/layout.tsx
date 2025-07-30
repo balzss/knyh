@@ -2,11 +2,13 @@ import type { Metadata } from 'next'
 import Providers from '@/providers'
 import './globals.css'
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+
 export const metadata: Metadata = {
   title: 'KONYHA',
   description: 'Recipe Manager',
   icons: {
-    icon: '/knyh/cooking-pot.png',
+    icon: `${basePath}/cooking-pot.png`,
   },
 }
 
