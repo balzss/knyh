@@ -8,14 +8,21 @@ import 'prismjs/components/prism-markdown'
 import 'prismjs/themes/prism-dark.css'
 import { Button } from '@/components/ui/button'
 import { PageLayout, HelpDialog } from '@/components/custom'
+import type { Recipe } from '@/lib/types'
 
 const placeHolder = `# Recipe title
 
 - first ingredient
 - second ingredient`
 
-export default function RawView() {
+type RawViewProps = {
+  recipeData: Recipe
+}
+
+export default function RawView({ recipeData }: RawViewProps) {
   const [code, setCode] = useState('')
+
+  console.log({ recipeData })
 
   const renderCheckButton = () => {
     if (code === '') {

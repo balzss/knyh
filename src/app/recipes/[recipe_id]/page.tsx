@@ -7,6 +7,7 @@ type RecipePageProps = {
   params: Promise<{ recipe_id: string }>
 }
 
+// this is needed to work with output: export
 export async function generateStaticParams() {
   console.log('Generating static params by reading local JSON file...')
 

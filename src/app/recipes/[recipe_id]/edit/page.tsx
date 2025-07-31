@@ -1,12 +1,14 @@
-import RecipeView from '../recipe-view'
+import EditRecipeView from '../../edit-recipe-view'
 import fs from 'fs'
 import path from 'path'
 import type { Recipe } from '@/lib/types'
 
 type RecipePageProps = {
   params: Promise<{ recipe_id: string }>
+  searchParams: Promise<{ mode: 'raw' | 'form' }>
 }
 
+// this is needed to work with output: export
 export async function generateStaticParams() {
   console.log('Generating static params by reading local JSON file...')
 
@@ -27,9 +29,10 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function RecipePage({ params }: RecipePageProps) {
-  const paramsValue = await params
-  const recipeId = paramsValue.recipe_id
+export default async function RecipePage({ params, searchParams }: RecipePageProps) {
+  const { recipe_id } = await params
+  const { mode } = await searchParams
+  const addMode = mode === 'raw' ? 'raw' : 'form'
 
-  return <RecipeView recipeId={recipeId} />
+  return <EditRecipeView mode={addMode} recipeId={recipe_id} />
 }

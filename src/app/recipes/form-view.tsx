@@ -17,9 +17,14 @@ import {
 } from '@/components/custom'
 
 import { useRecipeMutations } from '@/hooks'
-import type { GroupData, Tag } from '@/lib/types'
+import type { GroupData, Tag, Recipe } from '@/lib/types'
 
-export default function FormView() {
+type FormViewProps = {
+  recipeData: Recipe
+}
+
+export default function FormView({ recipeData }: FormViewProps) {
+  console.log({ recipeData })
   const [recipeTitle, setRecipeTitle] = useState<string>('')
   const ingredientGroups = useRef<GroupData[]>([])
 
