@@ -24,7 +24,6 @@ type FormViewProps = {
 }
 
 export default function FormView({ recipeData }: FormViewProps) {
-  console.log({ recipeData })
   const [recipeTitle, setRecipeTitle] = useState<string>('')
   const ingredientGroups = useRef<GroupData[]>([])
 
@@ -41,6 +40,12 @@ export default function FormView({ recipeData }: FormViewProps) {
   useEffect(() => {
     setSubmitDisabled(!recipeTitle.length)
   }, [recipeTitle])
+
+  useEffect(() => {
+    if (recipeData) {
+      setRecipeTitle(recipeData.title)
+    }
+  }, [recipeData])
 
   const formatTotalTime = (time: string) => {
     const splitTime = time.split(':')
@@ -91,14 +96,18 @@ export default function FormView({ recipeData }: FormViewProps) {
       <SortableGroup
         defaultLabel="Ingredients"
         onDataChange={(newData) => (ingredientGroups.current = newData)}
-        initialData={[]}
+        initialData={
+          typeof recipeData?.ingredients[0] === 'string'
+            ? [{ label: 'vale', items: recipeData?.ingredients as string[] }]
+            : []
+        }
       />
 
       <SortableList
         className="mb-3"
         newItemPlaceholder={['First step', 'Next step']}
         label="Instructions"
-        initialItems={[]}
+        initialItems={recipeData?.instructions || []}
         onItemsChange={(newItems) => (instructionList.current = newItems)}
         multiLine
       />

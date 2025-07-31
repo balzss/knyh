@@ -50,7 +50,9 @@ export default function NewRecipeView({ mode, recipeId }: NewRecipeViewProps) {
               tooltip="Close"
               onClick={handleClosePage}
             />
-            <span className="mr-auto sm:mr-4 font-bold">New recipe</span>
+            <span className="mr-auto sm:mr-4 font-bold">
+              {recipes[0]?.id ? 'Edit' : 'New'} recipe
+            </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <IconButton
