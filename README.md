@@ -1,3 +1,7 @@
+## Demo
+
+[https://balzss.github.io/knyh/](https://balzss.github.io/knyh/)
+
 ## Getting Started
 
 Install dependencies:
@@ -12,4 +16,4 @@ Run the dev server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000/knyh) in your browser
+Open [http://localhost:3000/knyh](http://localhost:3000/knyh) in your browser

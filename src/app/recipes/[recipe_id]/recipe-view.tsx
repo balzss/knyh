@@ -79,7 +79,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 tooltip="View in presentation mode"
                 onClick={() => {}}
               />
-              <IconButton icon={<Pen />} tooltip="Edit recipe" onClick={() => {}} />
+              <IconButton icon={<Pen />} tooltip="Edit recipe" href={`/recipes/${recipeId}/edit`} />
               <ShareDialog
                 recipeId={recipeId}
                 trigger={<IconButton icon={<Share2 />} tooltip="Share recipe" />}

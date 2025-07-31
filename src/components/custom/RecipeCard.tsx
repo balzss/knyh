@@ -137,7 +137,12 @@ export function RecipeCard({
             </>
           ) : (
             <>
-              <IconButton icon={<Pencil />} tooltip="Edit Recipe" iconSize="small" />
+              <IconButton
+                icon={<Pencil />}
+                tooltip="Edit Recipe"
+                iconSize="small"
+                href={`/recipes/${id}/edit`}
+              />
               <ShareDialog
                 recipeId={title.replace(' ', '-').toLowerCase()}
                 trigger={<IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />}
