@@ -8,7 +8,7 @@ type RecipePageProps = {
   searchParams: Promise<{ mode: 'raw' | 'form' }>
 }
 
-// this is needed to work with output: export
+// this is needed for static exports
 export async function generateStaticParams() {
   console.log('Generating static params by reading local JSON file...')
 
@@ -29,10 +29,8 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function RecipePage({ params, searchParams }: RecipePageProps) {
+export default async function RecipePage({ params }: RecipePageProps) {
   const { recipe_id } = await params
-  const { mode } = await searchParams
-  const addMode = mode === 'raw' ? 'raw' : 'form'
 
-  return <EditRecipeView mode={addMode} recipeId={recipe_id} />
+  return <EditRecipeView recipeId={recipe_id} />
 }

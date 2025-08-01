@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { X, Ellipsis } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
@@ -19,11 +19,13 @@ import RawView from './raw-view'
 import { useRecipes } from '@/hooks'
 
 type NewRecipeViewProps = {
-  mode: 'raw' | 'form'
   recipeId?: string
 }
 
-export default function NewRecipeView({ mode, recipeId }: NewRecipeViewProps) {
+export default function NewRecipeView({ recipeId }: NewRecipeViewProps) {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get('mode') === 'raw' ? 'raw' : 'form'
+
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
   const { recipes } = useRecipes({ ids: recipeId ? [recipeId] : [], sort: 'random' })

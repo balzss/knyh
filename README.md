@@ -1,3 +1,7 @@
+## Project status
+
+Work in progress
+
 ## Demo
 
 [https://balzss.github.io/knyh/](https://balzss.github.io/knyh/)
