@@ -1,5 +1,5 @@
-import NewRecipeView from '../edit-recipe-view'
+import EditRecipeView from '../edit-recipe-view'
 
 export default function NewPage() {
-  return <NewRecipeView />
+  return <EditRecipeView />
 }

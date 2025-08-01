@@ -16,7 +16,7 @@ import {
   myToast,
 } from '@/components/custom'
 
-import { useRecipeMutations } from '@/hooks'
+import { useRecipeMutations, useTags } from '@/hooks'
 import type { GroupData, Tag, Recipe } from '@/lib/types'
 
 type FormViewProps = {
@@ -36,10 +36,14 @@ export default function FormView({ recipeData }: FormViewProps) {
 
   const router = useRouter()
   const { createRecipe } = useRecipeMutations()
+  const { tags: initialTags } = useTags({
+    ids: recipeData?.tags || [],
+  })
 
   useEffect(() => {
     setSubmitDisabled(!recipeTitle.length)
-  }, [recipeTitle])
+    setTags(initialTags)
+  }, [recipeTitle, initialTags])
 
   useEffect(() => {
     if (recipeData) {

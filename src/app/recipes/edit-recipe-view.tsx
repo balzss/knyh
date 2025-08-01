@@ -22,13 +22,16 @@ type NewRecipeViewProps = {
   recipeId?: string
 }
 
-export default function NewRecipeView({ recipeId }: NewRecipeViewProps) {
+export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const searchParams = useSearchParams()
   const mode = searchParams.get('mode') === 'raw' ? 'raw' : 'form'
 
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
-  const { recipes } = useRecipes({ ids: recipeId ? [recipeId] : [], sort: 'random' })
+  const { recipes } = useRecipes({
+    ids: recipeId ? [recipeId] : [],
+    sort: 'random',
+  })
 
   const handleClosePage = () => {
     if (window.history.length > 1 && document.referrer === '') {
