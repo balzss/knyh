@@ -13,6 +13,10 @@ body {
   outline: none;
 }
 
+.sortable-input-multiline {
+  field-sizing: content;
+}
+
 @layer base {
   :root {
     --background: 229 57% 100%;

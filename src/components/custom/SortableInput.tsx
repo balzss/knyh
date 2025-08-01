@@ -27,7 +27,6 @@ export function SortableInput({
   multiLine,
   ...rest
 }: SortableInputProps) {
-  const [multiHeight, setMultiHeight] = useState<number>(1)
   const [hovered, setHovered] = useState<boolean>(false)
   const [focused, setFocused] = useState<boolean>(false)
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
@@ -85,10 +84,8 @@ export function SortableInput({
             {...rest}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            className="px-10 resize-none h-auto min-h-9"
-            rows={multiHeight}
+            className="px-10 resize-none h-auto min-h-9 sortable-input-multiline"
             onChange={(e) => {
-              setMultiHeight(e.target.value.split('\n').length)
               rest.onChange?.(e)
             }}
             placeholder={newItemMode ? placeholder : ''}
