@@ -10,7 +10,7 @@ export type RecipeMetaData = {
 export type Recipe = {
   id: string
   title: string
-  ingredients: string[] | GroupData[]
+  ingredients: string[] // | GroupData[]
   instructions: string[]
   tags: string[]
   metadata: RecipeMetaData

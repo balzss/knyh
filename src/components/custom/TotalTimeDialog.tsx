@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Timer } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -13,16 +14,11 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
 type TotalTimeDialogProps = {
-  trigger: React.ReactNode
   totalTimeValue: string
   onTotalTimeValueChange: (newValue: string) => void
 }
 
-export function TotalTimeDialog({
-  trigger,
-  totalTimeValue,
-  onTotalTimeValueChange,
-}: TotalTimeDialogProps) {
+export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: TotalTimeDialogProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [hours, setHours] = useState<string>('')
   const [minutes, setMinutes] = useState<string>('')
@@ -33,6 +29,15 @@ export function TotalTimeDialog({
       setHours(splitTotalTime[0])
       setMinutes(splitTotalTime[1])
     }
+  }
+
+  const formatTotalTime = (time: string) => {
+    const splitTime = time.split(':')
+    const hours = Number(splitTime[0])
+    const minutes = Number(splitTime[1])
+    const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
+    const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
+    return [formattedHours, formattedMinutes].join(' ')
   }
 
   const handleSetValue = () => {
@@ -48,7 +53,18 @@ export function TotalTimeDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Timer />
+          {totalTimeValue ? (
+            <>
+              Total time: <span className="font-normal">{formatTotalTime(totalTimeValue)}</span>
+            </>
+          ) : (
+            'Add total time'
+          )}
+        </Button>
+      </DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
           <DialogTitle>Set total time</DialogTitle>

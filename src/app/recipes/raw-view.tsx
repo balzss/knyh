@@ -16,13 +16,13 @@ const placeHolder = `# Recipe title
 - second ingredient`
 
 type RawViewProps = {
-  recipeData: Recipe
+  initialRecipe?: Recipe
 }
 
-export default function RawView({ recipeData }: RawViewProps) {
+export default function RawView({ initialRecipe }: RawViewProps) {
   const [code, setCode] = useState('')
 
-  console.log({ recipeData })
+  console.log({ initialRecipe })
 
   const renderCheckButton = () => {
     if (code === '') {

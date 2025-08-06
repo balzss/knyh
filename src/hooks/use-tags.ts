@@ -27,8 +27,11 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
 
     select: useCallback(
       (allTags: Tag[]) => {
-        if (!ids || ids.length === 0) {
+        if (!ids) {
           return allTags // Return all tags if no IDs are provided
+        }
+        if (ids.length === 0) {
+          return []
         }
         // Create a Set for efficient O(1) lookups
         const idSet = new Set(ids)

@@ -40,6 +40,10 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     // TanStack Query will memoize the result of this function, re-running it
     // only when the source data changes.
     select: (allRecipes: Recipe[]) => {
+      if (options?.ids?.length === 0) {
+        return
+      }
+
       let processed = allRecipes
 
       // 1. Filter by specific IDs if provided

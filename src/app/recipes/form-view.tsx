@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Save, Timer, Users } from 'lucide-react'
+import { Save } from 'lucide-react'
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -12,160 +13,150 @@ import {
   TagEditor,
   YieldDialog,
   TotalTimeDialog,
-  SortableGroup,
   myToast,
 } from '@/components/custom'
 
 import { useRecipeMutations, useTags } from '@/hooks'
-import type { GroupData, Tag, Recipe } from '@/lib/types'
+import type { Tag, Recipe } from '@/lib/types'
+
+type RecipeForm = Omit<Recipe, 'id' | 'tags'> & { tags: Tag[] }
 
 type FormViewProps = {
-  recipeData: Recipe
+  initialRecipe?: Recipe
+  resetTrigger?: number
 }
 
-export default function FormView({ recipeData }: FormViewProps) {
-  const [recipeTitle, setRecipeTitle] = useState<string>('')
-  const ingredientGroups = useRef<GroupData[]>([])
-
-  const instructionList = useRef<string[]>([])
-
-  const [tags, setTags] = useState<Tag[]>([])
-  const [yieldValue, setYieldValue] = useState<string>('')
-  const [totalTime, setTotalTime] = useState<string>('')
-  const [submitDisabled, setSubmitDisabled] = useState<boolean>(true)
-
+export default function FormView({ initialRecipe, resetTrigger }: FormViewProps) {
   const router = useRouter()
-  const { createRecipe } = useRecipeMutations()
+  const { createRecipe, updateRecipe } = useRecipeMutations()
   const { tags: initialTags } = useTags({
-    ids: recipeData?.tags || [],
+    ids: initialRecipe?.tags || [],
+  })
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty, isValid },
+  } = useForm<RecipeForm>({
+    defaultValues: { ...initialRecipe, tags: initialTags },
   })
 
   useEffect(() => {
-    setSubmitDisabled(!recipeTitle.length)
-    setTags(initialTags)
-  }, [recipeTitle, initialTags])
+    reset()
+  }, [resetTrigger, reset])
 
-  useEffect(() => {
-    if (recipeData) {
-      setRecipeTitle(recipeData.title)
-    }
-  }, [recipeData])
-
-  const formatTotalTime = (time: string) => {
-    const splitTime = time.split(':')
-    const hours = Number(splitTime[0])
-    const minutes = Number(splitTime[1])
-    const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
-    const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
-    return [formattedHours, formattedMinutes].join(' ')
-  }
-
-  const handleSubmitRecipe = () => {
-    if (!recipeTitle || !ingredientGroups.current.length || !instructionList.current.length) {
-      alert('Some fields are empty')
+  const onSubmit: SubmitHandler<RecipeForm> = (submitData) => {
+    if (!isValid) {
+      alert('Recipe data is invalid')
       return
     }
-    const newRecipePayload = {
-      title: recipeTitle,
-      ingredients: ingredientGroups.current,
-      instructions: instructionList.current,
-      tags: tags.map((t) => t.id),
-      metadata: {
-        yield: yieldValue,
-        totalTime,
-      },
+
+    const formattedSubmitData = {
+      ...submitData,
+      tags: submitData.tags.map((t) => t.id),
     }
-    createRecipe.mutate(newRecipePayload, {
-      onSuccess: (newlyCreatedRecipes) => {
-        router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
-        myToast({
-          message: 'Recipe created successfully!',
-        })
-      },
-    })
+
+    if (initialRecipe) {
+      updateRecipe.mutate(
+        { data: formattedSubmitData, id: initialRecipe.id },
+        {
+          onSuccess: (updatedRecipe) => {
+            router.push(`/recipes/${updatedRecipe.id}`)
+            myToast({
+              message: 'Recipe updated successfully!',
+            })
+          },
+        }
+      )
+    } else {
+      createRecipe.mutate(formattedSubmitData, {
+        onSuccess: (newlyCreatedRecipes) => {
+          router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
+          myToast({
+            message: 'Recipe created successfully!',
+          })
+        },
+      })
+    }
   }
+
   return (
     <PageLayout>
-      <div className="grid w-full items-center gap-2 mb-3">
-        <Label htmlFor="recipe-title">Recipe title</Label>
-        <Input
-          type="text"
-          id="recipe-title"
-          autoComplete="off"
-          value={recipeTitle}
-          onChange={(e) => setRecipeTitle(e.target.value)}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <div className="grid w-full items-center gap-2">
+          <Label htmlFor="recipe-title">Recipe title</Label>
+          <Input type="text" autoComplete="off" {...register('title')} />
+        </div>
+
+        <Controller
+          control={control}
+          name="ingredients"
+          render={({ field }) => (
+            <SortableList
+              label="Instructions"
+              addItemLabel="Add ingredient"
+              items={field.value}
+              onItemsChange={field.onChange}
+            />
+          )}
         />
-      </div>
 
-      <SortableGroup
-        defaultLabel="Ingredients"
-        onDataChange={(newData) => (ingredientGroups.current = newData)}
-        initialData={
-          typeof recipeData?.ingredients[0] === 'string'
-            ? [{ label: 'vale', items: recipeData?.ingredients as string[] }]
-            : []
-        }
-      />
-
-      <SortableList
-        className="mb-3"
-        newItemPlaceholder={['First step', 'Next step']}
-        label="Instructions"
-        initialItems={recipeData?.instructions || []}
-        onItemsChange={(newItems) => (instructionList.current = newItems)}
-        multiLine
-      />
-
-      <div className="mb-3">
-        <TagEditor
-          label="Tags"
-          buttonLabel="Add tag"
-          tags={tags}
-          onTagChange={(newTags) => setTags(newTags)}
+        <Controller
+          control={control}
+          name="instructions"
+          render={({ field }) => (
+            <SortableList
+              label="Instructions"
+              addItemLabel="Add instruction"
+              items={field.value}
+              onItemsChange={field.onChange}
+              multiLine
+            />
+          )}
         />
-      </div>
 
-      <div className="mb-6 flex gap-2">
-        <YieldDialog
-          trigger={
-            <Button variant="outline">
-              <Users />
-              {yieldValue ? (
-                <>
-                  Yield: <span className="font-normal">{yieldValue}</span>
-                </>
-              ) : (
-                'Set yield'
-              )}
-            </Button>
-          }
-          yieldValue={yieldValue}
-          onYieldValueChange={(newValue) => setYieldValue(newValue)}
+        <Controller
+          control={control}
+          name="tags"
+          render={({ field }) => (
+            <TagEditor
+              label="Tags"
+              buttonLabel="Add tag"
+              tags={field.value}
+              onTagChange={field.onChange}
+            />
+          )}
         />
-        <TotalTimeDialog
-          trigger={
-            <Button variant="outline">
-              <Timer />
-              {totalTime ? (
-                <>
-                  Total time: <span className="font-normal">{formatTotalTime(totalTime)}</span>
-                </>
-              ) : (
-                'Add total time'
-              )}
-            </Button>
-          }
-          totalTimeValue={totalTime}
-          onTotalTimeValueChange={(newValue) => setTotalTime(newValue)}
-        />
-      </div>
 
-      <div className="mb-3">
-        <Button onClick={handleSubmitRecipe} disabled={submitDisabled} size="sm">
-          <Save />
-          Save recipe
-        </Button>
-      </div>
+        <div className="mb-3 flex gap-2">
+          <Controller
+            control={control}
+            name="metadata.yield"
+            render={({ field }) => (
+              <YieldDialog yieldValue={field.value} onYieldValueChange={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="metadata.totalTime"
+            render={({ field }) => (
+              <TotalTimeDialog
+                totalTimeValue={field.value}
+                onTotalTimeValueChange={field.onChange}
+              />
+            )}
+          />
+        </div>
+
+        <div className="mb-3">
+          <Button disabled={!isValid || !isDirty} type="submit">
+            <Save />
+            Save recipe
+          </Button>
+        </div>
+      </form>
     </PageLayout>
   )
 }

@@ -24,7 +24,7 @@ export function TopBar({
   }
 
   return (
-    <nav className="fixed max-h-14 top-0 right-0 w-full z-50 flex items-center p-2 border-b bg-background gap-2 overflow-hidden">
+    <nav className="fixed max-h-14 top-0 right-0 w-full z-50 flex items-center p-3 border-b bg-background gap-2 overflow-hidden">
       <IconButton
         className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}

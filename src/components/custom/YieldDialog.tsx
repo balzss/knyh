@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Users } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -12,12 +13,11 @@ import { Button } from '@/components/ui/button'
 import { TextInput } from '@/components/custom'
 
 type YieldDialogProps = {
-  trigger: React.ReactNode
   yieldValue: string
   onYieldValueChange: (newValue: string) => void
 }
 
-export function YieldDialog({ trigger, yieldValue, onYieldValueChange }: YieldDialogProps) {
+export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [value, setValue] = useState<string>('')
   const handleOpenChange = (prevOpen: boolean) => {
@@ -38,7 +38,18 @@ export function YieldDialog({ trigger, yieldValue, onYieldValueChange }: YieldDi
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Users />
+          {yieldValue ? (
+            <>
+              Yield: <span className="font-normal">{yieldValue}</span>
+            </>
+          ) : (
+            'Set yield'
+          )}
+        </Button>
+      </DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
           <DialogTitle>Set the yield amount</DialogTitle>
