@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getLocale, getMessages } from 'next-intl/server'
 import Providers from '@/providers'
 import './globals.css'
 
@@ -12,15 +13,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
+  const messages = await getMessages({ locale })
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <Providers i18n={{ locale, messages }}>{children}</Providers>
       </body>
     </html>
   )

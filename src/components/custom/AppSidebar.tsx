@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
   Sidebar,
@@ -33,47 +34,48 @@ type AppSidebarProps = {
   path?: string
 }
 
-const sidebarItems = (tags: Tag[]) => [
-  {
-    displayName: 'Recipes',
-    icon: <BookOpenText />,
-    href: '/',
-  },
-  {
-    displayName: 'Tags',
-    icon: <Tags />,
-    subItems: Object.values(tags).map(({ id, displayName }) => {
-      return {
-        displayName,
-        href: `/?tag=${id}`,
-      }
-    }),
-  },
-  {
-    displayName: 'Random recipe',
-    icon: <Dices />,
-    href: '/random',
-  },
-  {
-    displayName: 'Shopping list',
-    icon: <ShoppingCart />,
-    href: '/shopping-list',
-  },
-  {
-    displayName: 'Archive',
-    icon: <Archive />,
-    href: '/archive',
-  },
-  {
-    displayName: 'Settings',
-    icon: <Settings />,
-    href: '/settings',
-  },
-]
-
 export function AppSidebar({ path }: AppSidebarProps) {
+  const t = useTranslations('Navigation')
   const { isMobile, setOpenMobile } = useSidebar()
   const { tags } = useTags()
+
+  const sidebarItems = (tags: Tag[]) => [
+    {
+      displayName: t('recipes'),
+      icon: <BookOpenText />,
+      href: '/',
+    },
+    {
+      displayName: t('tags'),
+      icon: <Tags />,
+      subItems: Object.values(tags).map(({ id, displayName }) => {
+        return {
+          displayName,
+          href: `/?tag=${id}`,
+        }
+      }),
+    },
+    {
+      displayName: t('random'),
+      icon: <Dices />,
+      href: '/random',
+    },
+    {
+      displayName: t('shopping-list'),
+      icon: <ShoppingCart />,
+      href: '/shopping-list',
+    },
+    {
+      displayName: t('archive'),
+      icon: <Archive />,
+      href: '/archive',
+    },
+    {
+      displayName: t('settings'),
+      icon: <Settings />,
+      href: '/settings',
+    },
+  ]
 
   return (
     <Sidebar>
@@ -105,12 +107,12 @@ export function AppSidebar({ path }: AppSidebarProps) {
               {path !== '/new' ? (
                 <Link href="/recipes/new" onClick={() => setOpenMobile(false)}>
                   <FilePlus />
-                  <span>New recipe</span>
+                  <span>{t('new-recipe-button')}</span>
                 </Link>
               ) : (
                 <>
                   <FilePlus />
-                  <span>New recipe</span>
+                  <span>{t('new-recipe-button')}</span>
                 </>
               )}
             </Button>

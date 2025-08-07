@@ -1,0 +1,11 @@
+{
+  "Navigation": {
+    "recipes": "Recipes",
+    "tags": "Tags",
+    "random": "Random recipe",
+    "shopping-list": "Shopping list",
+    "archive": "Archive",
+    "settings": "Settings",
+    "new-recipe-button": "New recipe"
+  }
+}
