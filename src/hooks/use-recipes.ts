@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { shuffleArray } from '@/lib/utils'
-import type { Recipe } from '@/lib/types'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-const recipesJsonPath = `${basePath}/data/recipes.json`
+import { shuffleArray, clientDataPath } from '@/lib/utils'
+import type { DatabaseSchema } from '@/lib/types'
 
 type UseRecipesOptions = {
   // An array of recipe IDs to fetch. If undefined, all recipes are considered.
@@ -28,8 +25,8 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     queryKey: ['recipes'],
 
     // The query function handles the actual data fetching.
-    queryFn: async (): Promise<Recipe[]> => {
-      const response = await fetch(recipesJsonPath)
+    queryFn: async (): Promise<DatabaseSchema> => {
+      const response = await fetch(clientDataPath)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -39,20 +36,17 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     // The 'select' option transforms or selects a part of the data.
     // TanStack Query will memoize the result of this function, re-running it
     // only when the source data changes.
-    select: (allRecipes: Recipe[]) => {
+    select: ({ recipes }: DatabaseSchema) => {
       if (options?.ids?.length === 0) {
         return
       }
 
-      let processed = allRecipes
-
-      // 1. Filter by specific IDs if provided
       if (options?.ids && options.ids.length > 0) {
         const idSet = new Set(options.ids)
-        processed = allRecipes.filter((recipe) => idSet.has(recipe.id))
+        return recipes.filter((recipe) => idSet.has(recipe.id))
       }
 
-      return processed
+      return recipes
     },
   })
 

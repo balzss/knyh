@@ -1,9 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
-import type { Tag } from '@/lib/types'
 import { useCallback } from 'react'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-const tagsJsonPath = `${basePath}/data/tags.json`
+import { useQuery } from '@tanstack/react-query'
+import { clientDataPath } from '@/lib/utils'
+import type { DatabaseSchema } from '@/lib/types'
 
 type UseTagsProps = {
   ids?: string[]
@@ -17,8 +15,8 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
   } = useQuery({
     queryKey: ['tags'],
 
-    queryFn: async (): Promise<Tag[]> => {
-      const response = await fetch(tagsJsonPath)
+    queryFn: async (): Promise<DatabaseSchema> => {
+      const response = await fetch(clientDataPath)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -26,16 +24,16 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
     },
 
     select: useCallback(
-      (allTags: Tag[]) => {
+      ({ tags }: DatabaseSchema) => {
         if (!ids) {
-          return allTags // Return all tags if no IDs are provided
+          return tags // Return all tags if no IDs are provided
         }
         if (ids.length === 0) {
           return []
         }
         // Create a Set for efficient O(1) lookups
         const idSet = new Set(ids)
-        return allTags.filter((tag) => idSet.has(tag.id))
+        return tags.filter((tag) => idSet.has(tag.id))
       },
       [ids]
     ),

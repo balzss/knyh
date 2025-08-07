@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { Recipe } from '@/lib/types'
-import { generateId } from '@/lib/utils'
+import { generateId, serverDataPath } from '@/lib/utils'
+import type { DatabaseSchema } from '@/lib/types'
 
-// Define the path to your data file
-const dataFilePath = path.join(process.cwd(), 'public/data/recipes.json')
+const dataFilePath = path.join(process.cwd(), serverDataPath)
 
-async function getRecipes(): Promise<Recipe[]> {
+async function getAllData(): Promise<DatabaseSchema> {
   const fileContents = await fs.readFile(dataFilePath, 'utf8')
   return JSON.parse(fileContents)
 }
@@ -32,15 +31,16 @@ export async function POST(request: Request) {
       )
     }
 
-    const allRecipes = await getRecipes()
+    const allData = await getAllData()
 
     const newRecipes = payload.map((recipeData) => ({
       id: generateId(),
       ...recipeData,
     }))
 
-    const updatedRecipes = [...allRecipes, ...newRecipes]
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedRecipes, null, 2))
+    const updatedRecipes = [...allData.recipes, ...newRecipes]
+    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
+    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
 
     return NextResponse.json(newRecipes, { status: 201 })
   } catch (error) {

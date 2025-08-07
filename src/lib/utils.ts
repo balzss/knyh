@@ -33,3 +33,8 @@ export function generateId(): string {
   }
   return result
 }
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+export const dataJsonPath = `data/data.json`
+export const clientDataPath = `${basePath}/${dataJsonPath}`
+export const serverDataPath = `public/${dataJsonPath}`
