@@ -1,6 +1,11 @@
 {
   "Navigation": {
     "recipes": "Receptek",
-    "tags": "Címkék"
+    "tags": "Címkék",
+    "random": "Random recept",
+    "shopping-list": "Bevásárló lista",
+    "archive": "Archívum",
+    "settings": "Beállítások",
+    "new-recipe-button": "Új recept"
   }
 }
