@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import { useState, useRef } from 'react'
 import Link from 'next/link'
 import {
@@ -39,6 +40,7 @@ export function RecipeCard({
   recipeUrl = '',
   compact = true,
 }: RecipeCardProps) {
+  const t = useTranslations('RecipeCard')
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const selectTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -88,10 +90,10 @@ export function RecipeCard({
         </CardTitle>
         <CardDescription className="flex gap-3 items-center select-none sm:select-text">
           <div className="flex gap-1 items-center">
-            <Users size="1rem" /> {metadata?.yield || '1 adag'}
+            <Users size="1rem" /> {metadata?.yield || t('yield')}
           </div>
           <div className="flex gap-1 items-center">
-            <Timer size="1rem" /> {metadata?.totalTime || '00:30'}
+            <Timer size="1rem" /> {metadata?.totalTime || t('totalTime')}
           </div>
         </CardDescription>
         <div
@@ -132,34 +134,34 @@ export function RecipeCard({
         >
           {archivedMode ? (
             <>
-              <IconButton icon={<ArchiveRestore />} tooltip="Restore" iconSize="small" />
-              <IconButton icon={<Trash2 />} tooltip="Delete" iconSize="small" />
+              <IconButton icon={<ArchiveRestore />} tooltip={t('restore')} iconSize="small" />
+              <IconButton icon={<Trash2 />} tooltip={t('delete')} iconSize="small" />
             </>
           ) : (
             <>
               <IconButton
                 icon={<Pencil />}
-                tooltip="Edit Recipe"
+                tooltip={t('edit')}
                 iconSize="small"
                 href={`/recipes/${id}/edit`}
               />
               <ShareDialog
                 recipeId={title.replace(' ', '-').toLowerCase()}
-                trigger={<IconButton icon={<Share2 />} tooltip="Share" iconSize="small" />}
+                trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
                 recipeUrl={recipeUrl}
               />
               <IconButton
                 icon={<Archive />}
-                tooltip="Archive"
+                tooltip={t('archive')}
                 iconSize="small"
                 onClick={() =>
                   myToast({
-                    message: 'Recipe archived',
-                    action: { label: 'Undo', onClick: () => {} },
+                    message: t('recipeArchived'),
+                    action: { label: t('undo'), onClick: () => {} },
                   })
                 }
               />
-              <IconButton icon={<EllipsisVertical />} tooltip="More Options" iconSize="small" />
+              <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} iconSize="small" />
             </>
           )}
         </div>

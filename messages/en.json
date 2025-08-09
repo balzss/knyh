@@ -14,5 +14,17 @@
     "language": "Language",
     "dark": "Dark",
     "light": "Light"
+  },
+  "RecipeCard": {
+    "yield": "1 serving",
+    "totalTime": "00:30",
+    "restore": "Restore",
+    "delete": "Delete",
+    "edit": "Edit Recipe",
+    "share": "Share",
+    "archive": "Archive",
+    "moreOptions": "More Options",
+    "recipeArchived": "Recipe archived",
+    "undo": "Undo"
   }
 }

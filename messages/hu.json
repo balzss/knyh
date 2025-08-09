@@ -14,5 +14,17 @@
     "language": "Nyelv",
     "dark": "Sötét",
     "light": "Világos"
+  },
+  "RecipeCard": {
+    "yield": "1 adag",
+    "totalTime": "00:30",
+    "restore": "Visszaállítás",
+    "delete": "Törlés",
+    "edit": "Recept szerkesztése",
+    "share": "Megosztás",
+    "archive": "Archiválás",
+    "moreOptions": "További lehetőségek",
+    "recipeArchived": "Recept archiválva",
+    "undo": "Visszavonás"
   }
 }

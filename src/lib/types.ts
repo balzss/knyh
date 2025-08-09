@@ -14,6 +14,7 @@ export type Recipe = {
   instructions: string[]
   tags: string[]
   metadata: RecipeMetaData
+  isArchived: boolean
 }
 
 export type Tag = {
@@ -29,7 +30,6 @@ export type UserConfig = {
 
 export type DatabaseSchema = {
   recipes: Recipe[]
-  archivedRecipes: Recipe[]
   tags: Tag[]
   userConfig: UserConfig
 }
