@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Save } from 'lucide-react'
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
@@ -27,6 +28,7 @@ type FormViewProps = {
 }
 
 export default function FormView({ initialRecipe, resetTrigger }: FormViewProps) {
+  const t = useTranslations('FormView')
   const router = useRouter()
   const { createRecipe, updateRecipe } = useRecipeMutations()
   const { tags: initialTags } = useTags({
@@ -49,7 +51,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
 
   const onSubmit: SubmitHandler<RecipeForm> = (submitData) => {
     if (!isValid) {
-      alert('Recipe data is invalid')
+      alert(t('invalidRecipeData'))
       return
     }
 
@@ -65,7 +67,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
           onSuccess: (updatedRecipe) => {
             router.push(`/recipes/${updatedRecipe.id}`)
             myToast({
-              message: 'Recipe updated successfully!',
+              message: t('recipeUpdated'),
             })
           },
         }
@@ -75,7 +77,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         onSuccess: (newlyCreatedRecipes) => {
           router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
           myToast({
-            message: 'Recipe created successfully!',
+            message: t('recipeCreated'),
           })
         },
       })
@@ -86,7 +88,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
     <PageLayout>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <div className="grid w-full items-center gap-2">
-          <Label htmlFor="recipe-title">Recipe title</Label>
+          <Label htmlFor="recipe-title">{t('recipeTitle')}</Label>
           <Input type="text" autoComplete="off" {...register('title')} />
         </div>
 
@@ -95,8 +97,8 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
           name="ingredients"
           render={({ field }) => (
             <SortableList
-              label="Instructions"
-              addItemLabel="Add ingredient"
+              label={t('ingredients')}
+              addItemLabel={t('addIngredient')}
               items={field.value}
               onItemsChange={field.onChange}
             />
@@ -108,8 +110,8 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
           name="instructions"
           render={({ field }) => (
             <SortableList
-              label="Instructions"
-              addItemLabel="Add instruction"
+              label={t('instructions')}
+              addItemLabel={t('addInstruction')}
               items={field.value}
               onItemsChange={field.onChange}
               multiLine
@@ -122,8 +124,8 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
           name="tags"
           render={({ field }) => (
             <TagEditor
-              label="Tags"
-              buttonLabel="Add tag"
+              label={t('tags')}
+              buttonLabel={t('addTag')}
               tags={field.value}
               onTagChange={field.onChange}
             />
@@ -153,7 +155,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         <div className="mb-3">
           <Button disabled={!isValid || !isDirty} type="submit">
             <Save />
-            Save recipe
+            {t('saveRecipe')}
           </Button>
         </div>
       </form>

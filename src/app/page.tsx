@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import { AnimatePresence } from 'motion/react'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -13,6 +14,7 @@ import { useRecipes, useTags } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
 export default function Home() {
+  const t = useTranslations('HomePage')
   const { toggleSidebar } = useSidebar()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -82,11 +84,11 @@ export default function Home() {
                 selectActions={[
                   {
                     icon: <Archive />,
-                    tooltip: 'Archive',
+                    tooltip: t('archive'),
                     onClick: () =>
                       myToast({
-                        message: `${selectionList.length} item${selectionList.length > 1 ? 's' : ''} archived`,
-                        action: { label: 'Undo', onClick: () => {} },
+                        message: t('archivedItems', { count: selectionList.length }),
+                        action: { label: t('undo'), onClick: () => {} },
                       }),
                   },
                 ]}
@@ -99,8 +101,8 @@ export default function Home() {
       <main className="w-full mt-14">
         {tagParam && (
           <TagEditor
-            label="Filter"
-            buttonLabel="Select tag"
+            label={t('filter')}
+            buttonLabel={t('selectTag')}
             tags={filterTags}
             onTagChange={handleTagFilterChange}
             className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}

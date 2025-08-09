@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Dices } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
@@ -8,7 +9,8 @@ import { AppSidebar, PageLayout, RecipeCard, IconButton, TagEditor } from '@/com
 import { useRecipes, useTags } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
-export default function Archive() {
+export default function RandomPage() {
+  const t = useTranslations('RandomRecipePage')
   const { toggleSidebar } = useSidebar()
   const { recipes } = useRecipes({ sort: 'random' })
   const [tagFilter, setTagFilter] = useState<Tag[]>([])
@@ -21,12 +23,12 @@ export default function Archive() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
-            <span className="mr-auto sm:mr-4 font-bold">Random recipe</span>
+            <span className="mr-auto sm:mr-4 font-bold">{t('title')}</span>
             <IconButton
               iconSize="normal"
               variant="ghost"
               icon={<Dices />}
-              tooltip="Roll new recipe"
+              tooltip={t('rollNew')}
               onClick={() => window.location.reload()}
             />
           </div>
@@ -36,8 +38,8 @@ export default function Archive() {
       <main className="w-full mt-14">
         <PageLayout variant="list">
           <TagEditor
-            label="Filter"
-            buttonLabel="Select tag"
+            label={t('filter')}
+            buttonLabel={t('selectTag')}
             tags={tagFilter}
             onTagChange={(newTags) => setTagFilter(newTags)}
           />

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { X, Ellipsis } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
@@ -26,6 +27,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const [formResetTrigger, setFormResetTrigger] = useState<number>(0)
 
   const searchParams = useSearchParams()
+  const t = useTranslations('EditRecipeView')
   const mode = searchParams.get('mode') === 'raw' ? 'raw' : 'form'
 
   const { toggleSidebar } = useSidebar()
@@ -53,7 +55,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
         customTopbarContent={
           <div className="flex items-center gap-2">
             <span className="mr-auto sm:mr-4 font-bold">
-              {recipes[0]?.id ? 'Edit' : 'New'} recipe
+              {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -61,16 +63,16 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
                   iconSize="normal"
                   variant="ghost"
                   icon={<Ellipsis />}
-                  tooltip="More options"
+                  tooltip={t('moreOptions')}
                 />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
-                  Reset changes
+                  {t('resetChanges')}
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href={mode === 'raw' ? '?mode=form' : '?mode=raw'}>
-                    Switch to {mode === 'raw' ? 'form' : 'markdown'} mode
+                    {t(mode === 'raw' ? 'switchToForm' : 'switchToMarkdown')}
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -79,7 +81,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               iconSize="normal"
               variant="ghost"
               icon={<X />}
-              tooltip="Close"
+              tooltip={t('close')}
               onClick={handleClosePage}
             />
           </div>

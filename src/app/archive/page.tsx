@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { ArchiveRestore, Trash2 } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
@@ -10,6 +11,7 @@ import { AppSidebar, PageLayout, RecipeCard } from '@/components/custom'
 import { placeholderData } from '@/lib/mock-data'
 
 export default function Archive() {
+  const t = useTranslations('ArchivePage')
   const { toggleSidebar } = useSidebar()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -48,12 +50,12 @@ export default function Archive() {
         selectActions={[
           {
             icon: <ArchiveRestore />,
-            tooltip: 'Restore',
+            tooltip: t('restore'),
             onClick: () => console.log(selectionList.length + ' item restored...'),
           },
           {
             icon: <Trash2 />,
-            tooltip: 'Delete',
+            tooltip: t('delete'),
             onClick: () => console.log(selectionList.length + ' item deleted...'),
           },
         ]}

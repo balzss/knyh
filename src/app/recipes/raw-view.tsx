@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { FileWarning, Save } from 'lucide-react'
 import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs'
@@ -20,6 +21,7 @@ type RawViewProps = {
 }
 
 export default function RawView({ initialRecipe }: RawViewProps) {
+  const t = useTranslations('RawView')
   const [code, setCode] = useState('')
 
   console.log({ initialRecipe })
@@ -31,11 +33,11 @@ export default function RawView({ initialRecipe }: RawViewProps) {
           trigger={
             <Button className="justify-self-start mb-2" variant="outline">
               <FileWarning />
-              Bad formatting
+              {t('badFormatting')}
             </Button>
           }
-          title="Bad formatting"
-          content="Cannot save empty recipe"
+          title={t('badFormatting')}
+          content={t('emptyRecipeWarning')}
         />
       )
     }
@@ -43,7 +45,7 @@ export default function RawView({ initialRecipe }: RawViewProps) {
     return (
       <Button className="justify-self-start mb-2">
         <Save />
-        Save recipe
+        {t('saveRecipe')}
       </Button>
     )
   }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Users, Timer, X, Pen, EllipsisVertical, Share2, Presentation, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -20,6 +21,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
 
   const router = useRouter()
+  const t = useTranslations('RecipeView')
   const { toggleSidebar } = useSidebar()
 
   const { recipes } = useRecipes({ ids: [recipeId], sort: 'random' })
@@ -53,8 +55,8 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
       onSuccess: () => {
         router.push('/')
         myToast({
-          message: 'Recipe deleted successfully!',
-          action: { label: 'Undo', onClick: () => {} },
+          message: t('recipeDeleted'),
+          action: { label: t('undo'), onClick: () => {} },
         })
       },
     })
@@ -69,24 +71,36 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           <div className="flex items-center gap-2">
             <IconButton
               icon={<X />}
-              tooltip="Close recipe"
+              tooltip={t('closeRecipe')}
               onClick={handleClosePage}
               className="mr-auto sm:mr-4 "
             />
             <div className="flex gap-2 items-center">
               <IconButton
                 icon={<Presentation />}
-                tooltip="View in presentation mode"
+                tooltip={t('presentationMode')}
                 onClick={() => {}}
               />
-              <IconButton icon={<Pen />} tooltip="Edit recipe" href={`/recipes/${recipeId}/edit`} />
+              <IconButton
+                icon={<Pen />}
+                tooltip={t('editRecipe')}
+                href={`/recipes/${recipeId}/edit`}
+              />
               <ShareDialog
                 recipeId={recipeId}
-                trigger={<IconButton icon={<Share2 />} tooltip="Share recipe" />}
+                trigger={<IconButton icon={<Share2 />} tooltip={t('shareRecipe')} />}
                 recipeUrl={'https://placeholder.url'}
               />
-              <IconButton icon={<Trash2 />} tooltip="More options" onClick={handleDeleteRecipe} />
-              <IconButton icon={<EllipsisVertical />} tooltip="More options" onClick={() => {}} />
+              <IconButton
+                icon={<Trash2 />}
+                tooltip={t('deleteRecipe')}
+                onClick={handleDeleteRecipe}
+              />
+              <IconButton
+                icon={<EllipsisVertical />}
+                tooltip={t('moreOptions')}
+                onClick={() => {}}
+              />
             </div>
           </div>
         }
@@ -116,7 +130,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl text-muted-foreground mt-4">Ingredients</h2>
+            <h2 className="text-xl text-muted-foreground mt-4">{t('ingredients')}</h2>
             <ul>
               {recipe?.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center space-x-2 text-md leading-8">
@@ -143,7 +157,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             </ul>
           </div>
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl text-muted-foreground mt-4">Instructions</h2>
+            <h2 className="text-xl text-muted-foreground mt-4">{t('instructions')}</h2>
             <ol className={` flex flex-col gap-3 ml-4 list-[x]`}>
               {recipe?.instructions.map((instruction, index) => (
                 <li

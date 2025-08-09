@@ -26,5 +26,61 @@
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "undo": "Visszavonás"
+  },
+  "HomePage": {
+    "archive": "Archiválás",
+    "archivedItems": "{count, plural, one {# recept archiválva} other {# recept archiválva}}",
+    "undo": "Visszavonás",
+    "filter": "Szűrő",
+    "selectTag": "Címke kiválasztása"
+  },
+  "ArchivePage": {
+    "restore": "Visszaállítás",
+    "delete": "Törlés"
+  },
+  "RandomRecipePage": {
+    "title": "Random recept",
+    "rollNew": "Másik recept",
+    "filter": "Szűrő",
+    "selectTag": "Címke kiválasztása"
+  },
+  "EditRecipeView": {
+    "editRecipe": "Recept szerkesztése",
+    "newRecipe": "Új recept",
+    "moreOptions": "További lehetőségek",
+    "resetChanges": "Változtatások visszavonása",
+    "switchToForm": "Váltás űrlap módra",
+    "switchToMarkdown": "Váltás markdown módra",
+    "close": "Bezárás"
+  },
+  "FormView": {
+    "invalidRecipeData": "Érvénytelen recept adatok",
+    "recipeUpdated": "Recept sikeresen frissítve!",
+    "recipeCreated": "Recept sikeresen létrehozva!",
+    "recipeTitle": "Recept neve",
+    "ingredients": "Hozzávalók",
+    "addIngredient": "Új hozzávaló",
+    "instructions": "Elkészítés",
+    "addInstruction": "Következő lépés",
+    "tags": "Címkék",
+    "addTag": "Címke hozzáadása",
+    "saveRecipe": "Recept mentése"
+  },
+  "RawView": {
+    "badFormatting": "Rossz formázás",
+    "emptyRecipeWarning": "Nem lehet üres receptet menteni",
+    "saveRecipe": "Recept mentése"
+  },
+  "RecipeView": {
+    "recipeDeleted": "Recept sikeresen törölve!",
+    "undo": "Visszavonás",
+    "closeRecipe": "Recept bezárása",
+    "presentationMode": "Prezentációs mód",
+    "editRecipe": "Recept szerkesztése",
+    "shareRecipe": "Recept megosztása",
+    "deleteRecipe": "Recept törlése",
+    "moreOptions": "További lehetőségek",
+    "ingredients": "Hozzávalók",
+    "instructions": "Elkészítés"
   }
 }

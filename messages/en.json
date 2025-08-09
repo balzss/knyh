@@ -26,5 +26,61 @@
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
     "undo": "Undo"
+  },
+  "HomePage": {
+    "archive": "Archive",
+    "archivedItems": "{count, plural, one {# item archived} other {# items archived}}",
+    "undo": "Undo",
+    "filter": "Filter",
+    "selectTag": "Select tag"
+  },
+  "ArchivePage": {
+    "restore": "Restore",
+    "delete": "Delete"
+  },
+  "RandomRecipePage": {
+    "title": "Random recipe",
+    "rollNew": "Roll new recipe",
+    "filter": "Filter",
+    "selectTag": "Select tag"
+  },
+  "EditRecipeView": {
+    "editRecipe": "Edit recipe",
+    "newRecipe": "New recipe",
+    "moreOptions": "More options",
+    "resetChanges": "Reset changes",
+    "switchToForm": "Switch to form mode",
+    "switchToMarkdown": "Switch to markdown mode",
+    "close": "Close"
+  },
+  "FormView": {
+    "invalidRecipeData": "Recipe data is invalid",
+    "recipeUpdated": "Recipe updated successfully!",
+    "recipeCreated": "Recipe created successfully!",
+    "recipeTitle": "Recipe title",
+    "ingredients": "Ingredients",
+    "addIngredient": "Add ingredient",
+    "instructions": "Instructions",
+    "addInstruction": "Add instruction",
+    "tags": "Tags",
+    "addTag": "Add tag",
+    "saveRecipe": "Save recipe"
+  },
+  "RawView": {
+    "badFormatting": "Bad formatting",
+    "emptyRecipeWarning": "Cannot save empty recipe",
+    "saveRecipe": "Save recipe"
+  },
+  "RecipeView": {
+    "recipeDeleted": "Recipe deleted successfully!",
+    "undo": "Undo",
+    "closeRecipe": "Close recipe",
+    "presentationMode": "View in presentation mode",
+    "editRecipe": "Edit recipe",
+    "shareRecipe": "Share recipe",
+    "deleteRecipe": "Delete recipe",
+    "moreOptions": "More options",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions"
   }
 }
