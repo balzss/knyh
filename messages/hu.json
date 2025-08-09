@@ -7,5 +7,12 @@
     "archive": "Archívum",
     "settings": "Beállítások",
     "new-recipe-button": "Új recept"
+  },
+  "SettingsPage": {
+    "settings": "Beállítások",
+    "theme": "Téma",
+    "language": "Nyelv",
+    "dark": "Sötét",
+    "light": "Világos"
   }
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Label } from '@/components/ui/label'
@@ -13,16 +14,40 @@ import {
 } from '@/components/ui/select'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
+import { useConfig, useUpdateConfig } from '@/hooks'
 
 type Theme = 'dark' | 'light'
+type Language = 'hu' | 'en'
 
-export default function Settings() {
+export default function SettingsPage() {
+  const t = useTranslations('SettingsPage')
   const { toggleSidebar } = useSidebar()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const { data: config, isLoading: configLoading } = useConfig()
+  const updateConfig = useUpdateConfig()
 
   const handleThemeSelect = (newTheme: Theme) => {
-    setTheme(newTheme)
+    updateConfig.mutate(
+      { theme: newTheme },
+      {
+        onSuccess: () => {
+          setTheme(newTheme)
+        },
+      }
+    )
+  }
+
+  const handleLanguageChange = (language: Language) => {
+    updateConfig.mutate(
+      { language },
+      {
+        onSuccess: () => {
+          // reload page to load new language
+          window.location.reload()
+        },
+      }
+    )
   }
 
   useEffect(() => {
@@ -44,31 +69,33 @@ export default function Settings() {
       <AppSidebar path="/settings" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
-          <div className="flex items-center justify-between border p-3 rounded-md">
-            <Label>Theme</Label>
+          <div className="flex flex-col gap-2 mb-3">
+            <Label>{t('theme')}</Label>
             <Select onValueChange={handleThemeSelect} defaultValue={theme}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-48">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">{t('dark')}</SelectItem>
+                <SelectItem value="light">{t('light')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="flex items-center justify-between border p-3 rounded-md">
-            <Label>Language</Label>
-            <Select onValueChange={handleThemeSelect} defaultValue={theme}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dark">English</SelectItem>
-                <SelectItem value="light">Hungarian</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {!configLoading && (
+            <div className="flex flex-col gap-2">
+              <Label>{t('language')}</Label>
+              <Select onValueChange={handleLanguageChange} defaultValue={config?.language}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="hu">Magyar</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </PageLayout>
       </main>
     </div>

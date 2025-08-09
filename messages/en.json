@@ -7,5 +7,12 @@
     "archive": "Archive",
     "settings": "Settings",
     "new-recipe-button": "New recipe"
+  },
+  "SettingsPage": {
+    "settings": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "dark": "Dark",
+    "light": "Light"
   }
 }

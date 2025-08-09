@@ -83,8 +83,8 @@
     }
   ],
   "userConfig": {
+    "language": "en",
     "userId": "bsaros",
-    "theme": "dark",
-    "language": "hu"
+    "theme": "dark"
   }
 }
