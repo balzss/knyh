@@ -10,7 +10,7 @@ import { Archive } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { AppSidebar, RecipeCard, PageLayout, myToast, TagEditor } from '@/components/custom'
-import { useRecipes, useTags } from '@/hooks'
+import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
 export default function Home() {
@@ -20,6 +20,7 @@ export default function Home() {
   const router = useRouter()
 
   const { recipes } = useRecipes({ sort: 'random' })
+  const { updateRecipes } = useRecipeMutations()
   const { tags } = useTags()
 
   const tagParam = searchParams.get('tag')?.split(',')
@@ -85,11 +86,27 @@ export default function Home() {
                   {
                     icon: <Archive />,
                     tooltip: t('archive'),
-                    onClick: () =>
-                      myToast({
-                        message: t('archivedItems', { count: selectionList.length }),
-                        action: { label: t('undo'), onClick: () => {} },
-                      }),
+                    onClick: () => {
+                      updateRecipes.mutate(
+                        { ids: selectionList, data: { archived: true } },
+                        {
+                          onSuccess: () => {
+                            myToast({
+                              message: t('archivedItems', { count: selectionList.length }),
+                              action: {
+                                label: t('undo'),
+                                onClick: () =>
+                                  updateRecipes.mutate({
+                                    ids: selectionList,
+                                    data: { archived: false },
+                                  }),
+                              },
+                            })
+                            setSelectionList([])
+                          },
+                        }
+                      )
+                    },
                   },
                 ]}
               />

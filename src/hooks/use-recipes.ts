@@ -8,6 +8,8 @@ type UseRecipesOptions = {
   ids?: string[]
   // The sorting strategy. Currently supports 'random'.
   sort?: 'random'
+  // If true, returns only archived recipes. If false or undefined, returns only unarchived recipes.
+  archived?: boolean
 }
 
 /**
@@ -46,7 +48,7 @@ export const useRecipes = (options?: UseRecipesOptions) => {
         return recipes.filter((recipe) => idSet.has(recipe.id))
       }
 
-      return recipes
+      return recipes.filter((recipe) => !!options?.archived === !!recipe.archived)
     },
   })
 

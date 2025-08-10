@@ -25,11 +25,12 @@
     "archive": "Archiválás",
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
+    "recipeRestored": "Recept visszállítva",
     "undo": "Visszavonás"
   },
   "HomePage": {
     "archive": "Archiválás",
-    "archivedItems": "{count, plural, one {# recept archiválva} other {# recept archiválva}}",
+    "archivedItems": "{count, plural, one {# recept archiválva} other {# receptek archiválva}}",
     "undo": "Visszavonás",
     "filter": "Szűrő",
     "selectTag": "Címke kiválasztása"
@@ -79,8 +80,37 @@
     "editRecipe": "Recept szerkesztése",
     "shareRecipe": "Recept megosztása",
     "deleteRecipe": "Recept törlése",
+    "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
     "instructions": "Elkészítés"
+  },
+  "LoginPage": {
+    "signIn": "Bejelentkezés",
+    "email": "E-mail",
+    "password": "Jelszó",
+    "orContinueWith": "Vagy folytatás a következővel",
+    "github": "Github",
+    "google": "Google",
+    "noAccountYet": "Még nincs fiókod?",
+    "signUp": "Regisztráció"
+  },
+  "SignupPage": {
+    "createAccount": "Fiók létrehozása",
+    "email": "E-mail",
+    "password": "Jelszó",
+    "register": "Regisztráció",
+    "orContinueWith": "Vagy folytatás a következővel",
+    "github": "Github",
+    "google": "Google",
+    "alreadyHaveAccount": "Van már fiókod?",
+    "noAccountYet": "Nincs még fiókod?",
+    "logIn": "Bejelentkezés"
+  },
+  "TopBar": {
+    "searchRecipes": "Receptek keresése",
+    "selectedItems": "kijelölve",
+    "clearSelection": "Kijelölés megszűntetése",
+    "toggleSidebar": "Oldalső menü átkapcsolása"
   }
 }

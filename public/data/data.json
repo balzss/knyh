@@ -1,7 +1,6 @@
 {
   "recipes": [
     {
-      "id": "kgnk24xa",
       "title": "Rizses hús",
       "ingredients": [
         "5 dkg füstölt szalonna",
@@ -31,7 +30,9 @@
       "metadata": {
         "yield": "5 adag",
         "totalTime": "1:00"
-      }
+      },
+      "archived": false,
+      "id": "kgnk24xa"
     },
     {
       "id": "pdos32ns",
@@ -57,6 +58,24 @@
         "yield": "20 darab",
         "totalTime": "0:30"
       }
+    },
+    {
+      "tags": [
+        "b8qx3p9k"
+      ],
+      "title": "teszt for arch",
+      "ingredients": [
+        "aa"
+      ],
+      "instructions": [
+        "22"
+      ],
+      "metadata": {
+        "yield": "1 t",
+        "totalTime": ":11"
+      },
+      "archived": true,
+      "id": "mvpak3q7"
     }
   ],
   "tags": [

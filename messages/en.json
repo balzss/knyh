@@ -25,6 +25,7 @@
     "archive": "Archive",
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
+    "recipeRestored": "Recipe restored",
     "undo": "Undo"
   },
   "HomePage": {
@@ -79,8 +80,37 @@
     "editRecipe": "Edit recipe",
     "shareRecipe": "Share recipe",
     "deleteRecipe": "Delete recipe",
+    "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",
     "ingredients": "Ingredients",
     "instructions": "Instructions"
+  },
+  "LoginPage": {
+    "signIn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "orContinueWith": "Or continue with",
+    "github": "Github",
+    "google": "Google",
+    "noAccountYet": "Don't have an account yet?",
+    "signUp": "Sign up"
+  },
+  "SignupPage": {
+    "createAccount": "Create an account",
+    "email": "Email",
+    "password": "Password",
+    "register": "Register",
+    "orContinueWith": "Or continue with",
+    "github": "Github",
+    "google": "Google",
+    "alreadyHaveAccount": "Already have an account?",
+    "noAccountYet": "Don't have an account yet?",
+    "logIn": "Log in"
+  },
+  "TopBar": {
+    "searchRecipes": "Search recipes",
+    "selectedItems": "selected",
+    "clearSelection": "Clear selection",
+    "toggleSidebar": "Toggle sidebar"
   }
 }

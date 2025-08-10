@@ -3,7 +3,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Users, Timer, X, Pen, EllipsisVertical, Share2, Presentation, Trash2 } from 'lucide-react'
+import {
+  Users,
+  Timer,
+  X,
+  Pen,
+  EllipsisVertical,
+  Share2,
+  Presentation,
+  Trash2,
+  Archive,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
@@ -28,7 +38,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const { tags } = useTags()
   const recipe = recipes?.[0]
 
-  const { deleteRecipe } = useRecipeMutations()
+  const { deleteRecipe, updateRecipe } = useRecipeMutations()
 
   const handleClosePage = () => {
     if (window.history.length && document.referrer === '') {
@@ -62,6 +72,23 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
     })
   }
 
+  const handleArchiveRecipe = () => {
+    if (recipe) {
+      const { id, ...data } = recipe
+      updateRecipe.mutate(
+        { id, data: { ...data, archived: true } },
+        {
+          onSuccess: () => {
+            router.push('/')
+            myToast({
+              message: t('recipeArchived'),
+            })
+          },
+        }
+      )
+    }
+  }
+
   return (
     <div className="flex w-full">
       <TopBar
@@ -90,6 +117,11 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 recipeId={recipeId}
                 trigger={<IconButton icon={<Share2 />} tooltip={t('shareRecipe')} />}
                 recipeUrl={'https://placeholder.url'}
+              />
+              <IconButton
+                icon={<Archive />}
+                tooltip={t('archiveRecipe')}
+                onClick={handleArchiveRecipe}
               />
               <IconButton
                 icon={<Trash2 />}

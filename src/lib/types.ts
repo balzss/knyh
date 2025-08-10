@@ -14,7 +14,7 @@ export type Recipe = {
   instructions: string[]
   tags: string[]
   metadata: RecipeMetaData
-  isArchived: boolean
+  archived?: boolean
 }
 
 export type Tag = {

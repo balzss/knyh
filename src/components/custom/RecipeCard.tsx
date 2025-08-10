@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
+import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 
 type RecipeCardProps = {
   tags: Tag[]
@@ -41,8 +42,27 @@ export function RecipeCard({
   compact = true,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
+  const { updateRecipe } = useRecipeMutations()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const selectTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  const handleArchiveRecipe = (archived: boolean = true) => {
+    const { id, ...data } = recipeData
+    updateRecipe.mutate(
+      { id, data: { ...data, archived } },
+      {
+        onSuccess: () => {
+          myToast({
+            message: archived ? t('recipeArchived') : t('recipeRestored'),
+            action: {
+              label: t('undo'),
+              onClick: () => updateRecipe.mutate({ id, data: { ...data, archived: !archived } }),
+            },
+          })
+        },
+      }
+    )
+  }
 
   const handleTouchStart = () => {
     selectTimeout.current = setTimeout(() => {
@@ -134,7 +154,12 @@ export function RecipeCard({
         >
           {archivedMode ? (
             <>
-              <IconButton icon={<ArchiveRestore />} tooltip={t('restore')} iconSize="small" />
+              <IconButton
+                icon={<ArchiveRestore />}
+                tooltip={t('restore')}
+                iconSize="small"
+                onClick={() => handleArchiveRecipe(false)}
+              />
               <IconButton icon={<Trash2 />} tooltip={t('delete')} iconSize="small" />
             </>
           ) : (
@@ -154,12 +179,7 @@ export function RecipeCard({
                 icon={<Archive />}
                 tooltip={t('archive')}
                 iconSize="small"
-                onClick={() =>
-                  myToast({
-                    message: t('recipeArchived'),
-                    action: { label: t('undo'), onClick: () => {} },
-                  })
-                }
+                onClick={() => handleArchiveRecipe()}
               />
               <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} iconSize="small" />
             </>

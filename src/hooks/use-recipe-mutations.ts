@@ -13,6 +13,11 @@ type UpdateRecipePayload = {
   data: CreateRecipePayload
 }
 
+type UpdateRecipesPayload = {
+  ids: string[]
+  data: Partial<CreateRecipePayload>
+}
+
 export const useRecipeMutations = () => {
   const queryClient = useQueryClient()
 
@@ -61,6 +66,22 @@ export const useRecipeMutations = () => {
     onSuccess: invalidateRecipesQuery,
   })
 
+  // BULK UPDATE mutation
+  const updateRecipes = useMutation({
+    mutationFn: async ({ ids, data }: UpdateRecipesPayload): Promise<Recipe[]> => {
+      const response = await fetch(apiUrl, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids, data }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update recipes')
+      }
+      return response.json()
+    },
+    onSuccess: invalidateRecipesQuery,
+  })
+
   // DELETE mutation
   const deleteRecipe = useMutation({
     mutationFn: async (recipeId: string): Promise<{ message: string }> => {
@@ -75,5 +96,5 @@ export const useRecipeMutations = () => {
     onSuccess: invalidateRecipesQuery,
   })
 
-  return { createRecipe, updateRecipe, deleteRecipe }
+  return { createRecipe, updateRecipe, updateRecipes, deleteRecipe }
 }

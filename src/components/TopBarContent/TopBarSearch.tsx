@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion } from 'motion/react'
 import { SlidersHorizontal, Search } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -28,6 +29,7 @@ export function TopBarSearch({
   onLayoutChange,
   layoutGridCols = 7,
 }: TopBarSearchProps) {
+  const t = useTranslations('TopBar')
   const [isFilterOptionsOpen, setIsFilterOptionsOpen] = useState<boolean>(false)
   return (
     <motion.div
@@ -39,7 +41,7 @@ export function TopBarSearch({
     >
       <div className="flex-1 relative flex items-center max-w-2xl ml-1">
         <TextInput
-          placeholder="Search recipes"
+          placeholder={t('searchRecipes')}
           clearable
           icon={Search}
           value={searchQuery}

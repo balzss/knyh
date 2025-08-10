@@ -7,16 +7,32 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout, RecipeCard } from '@/components/custom'
-
-import { placeholderData } from '@/lib/mock-data'
+import { useRecipes } from '@/hooks/use-recipes'
+import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
+import { useTags } from '@/hooks/use-tags'
+import type { Recipe, Tag } from '@/lib/types'
 
 export default function Archive() {
   const t = useTranslations('ArchivePage')
   const { toggleSidebar } = useSidebar()
+  const { recipes, loading } = useRecipes({ archived: true })
+  const { tags } = useTags()
+  const { updateRecipes } = useRecipeMutations()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
   const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
+
+  const handleUnarchive = () => {
+    updateRecipes.mutate(
+      { ids: selectionList, data: { archived: false } },
+      {
+        onSuccess: () => {
+          setSelectionList([])
+        },
+      }
+    )
+  }
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -51,7 +67,7 @@ export default function Archive() {
           {
             icon: <ArchiveRestore />,
             tooltip: t('restore'),
-            onClick: () => console.log(selectionList.length + ' item restored...'),
+            onClick: handleUnarchive,
           },
           {
             icon: <Trash2 />,
@@ -70,18 +86,23 @@ export default function Archive() {
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
-          {placeholderData.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              selectionMode={selectionList.length > 0}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              recipeData={recipe as any}
-              tags={recipe.tags}
-              isSelected={selectionList.includes(recipe.id)}
-              onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-              archivedMode
-            />
-          ))}
+          {loading && <div>Loading...</div>}
+          {recipes?.map((recipe: Recipe) => {
+            const recipeTags = recipe.tags
+              ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))
+              : []
+            return (
+              <RecipeCard
+                key={recipe.id}
+                selectionMode={selectionList.length > 0}
+                recipeData={recipe}
+                tags={recipeTags}
+                isSelected={selectionList.includes(recipe.id)}
+                onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+                archivedMode
+              />
+            )
+          })}
         </PageLayout>
       </main>
     </div>

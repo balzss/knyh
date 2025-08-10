@@ -72,3 +72,44 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
   }
 }
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  try {
+    const { archived, ids }: { archived: boolean; ids?: string[] } = await request.json()
+    const allData = await getAllData()
+
+    let updatedRecipes = [...allData.recipes]
+
+    if (ids && Array.isArray(ids) && ids.length > 0) {
+      // Handle multiple recipe updates
+      updatedRecipes = updatedRecipes.map((recipe) =>
+        ids.includes(recipe.id) ? { ...recipe, archived } : recipe
+      )
+    } else {
+      // Handle single recipe update based on URL id
+      const recipeIndex = updatedRecipes.findIndex((recipe) => recipe.id === id)
+
+      if (recipeIndex === -1) {
+        return NextResponse.json({ message: 'Recipe not found' }, { status: 404 })
+      }
+
+      updatedRecipes[recipeIndex] = {
+        ...updatedRecipes[recipeIndex],
+        archived,
+      }
+    }
+
+    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
+    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
+
+    return NextResponse.json({ message: 'Recipe(s) updated successfully' }, { status: 200 })
+  } catch (error) {
+    console.error(error)
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ message: 'Invalid JSON body' }, { status: 400 })
+    }
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
+  }
+}

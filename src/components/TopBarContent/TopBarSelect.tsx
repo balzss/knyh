@@ -1,6 +1,7 @@
-import { IconButton } from '@/components/custom'
+import { useTranslations } from 'next-intl'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
+import { IconButton } from '@/components/custom'
 
 type SelectAction = {
   icon: React.ReactNode
@@ -19,6 +20,7 @@ export function TopBarSelect({
   onClearSelection,
   selectActions,
 }: TopBarSelectProps) {
+  const t = useTranslations('TopBar')
   return (
     <motion.div
       className="flex items-center gap-2 w-full max-w-2xl"
@@ -31,10 +33,12 @@ export function TopBarSelect({
         iconSize="normal"
         variant="ghost"
         icon={<X />}
-        tooltip="Clear selection"
+        tooltip={t('clearSelection')}
         onClick={onClearSelection}
       />
-      <span className="mr-auto font-bold">{selectionLength} selected</span>
+      <span className="mr-auto sm:mr-4 font-bold">
+        {selectionLength} {t('selectedItems')}
+      </span>
       {selectActions.map(({ icon, tooltip, onClick }, index) => (
         <IconButton
           key={index}
