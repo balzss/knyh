@@ -47,4 +47,3 @@ export function UserMenu({ hideSidebarToggleMobile }: UserMenuProps) {
     </Popover>
   )
 }
-

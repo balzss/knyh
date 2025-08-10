@@ -13,7 +13,10 @@
     "theme": "Theme",
     "language": "Language",
     "dark": "Dark",
-    "light": "Light"
+    "light": "Light",
+    "export": "Export",
+    "import": "Import",
+    "data": "Data"
   },
   "RecipeCard": {
     "yield": "1 serving",

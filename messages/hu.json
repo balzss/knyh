@@ -13,7 +13,10 @@
     "theme": "Téma",
     "language": "Nyelv",
     "dark": "Sötét",
-    "light": "Világos"
+    "light": "Világos",
+    "export": "Exportálás",
+    "import": "Importálás",
+    "data": "Adatok"
   },
   "RecipeCard": {
     "yield": "1 adag",

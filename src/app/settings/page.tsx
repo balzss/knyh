@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
+import { Download, FileUp } from 'lucide-react'
+
 import { useSidebar } from '@/components/ui/sidebar'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -14,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
-import { useConfig, useUpdateConfig } from '@/hooks'
+import { useConfig, useUpdateConfig, useImportExport } from '@/hooks'
 
 type Theme = 'dark' | 'light'
 type Language = 'hu' | 'en'
@@ -26,6 +29,7 @@ export default function SettingsPage() {
   const [mounted, setMounted] = useState(false)
   const { data: config, isLoading: configLoading } = useConfig()
   const updateConfig = useUpdateConfig()
+  const { handleExport, handleImport } = useImportExport()
 
   const handleThemeSelect = (newTheme: Theme) => {
     updateConfig.mutate(
@@ -96,6 +100,27 @@ export default function SettingsPage() {
               </Select>
             </div>
           )}
+          <div className="flex flex-col items-start gap-2 mt-4">
+            <Label>{t('data')}</Label>
+
+            <Button onClick={handleExport} variant="outline">
+              <Download />
+              {t('export')}
+            </Button>
+            <Button asChild variant="outline" className="cursor-pointer">
+              <Label htmlFor="import-button">
+                <FileUp />
+                {t('import')}
+              </Label>
+            </Button>
+            <input
+              type="file"
+              id="import-button"
+              className="hidden"
+              onChange={handleImport}
+              accept=".json"
+            />
+          </div>
         </PageLayout>
       </main>
     </div>
