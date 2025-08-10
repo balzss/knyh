@@ -11,7 +11,23 @@ function getLayout(variant: LayoutVariant, maxCols: number) {
   if (variant === 'list') {
     return 'max-w-2xl grid-cols-1'
   }
-  return `grid-cols-2 lg:grid-cols-${Math.min(3, maxCols)} xl:grid-cols-${Math.min(4, maxCols)} 2xl:grid-cols-${Math.min(5, maxCols)} max-w-7xl`
+
+  const gridClasses: { [key: number]: string } = {
+    1: 'grid-cols-1',
+    2: 'grid-cols-2',
+    3: 'lg:grid-cols-3',
+    4: 'xl:grid-cols-4',
+    5: '2xl:grid-cols-5',
+  }
+
+  let classes = ''
+  for (let i = 3; i <= maxCols; i++) {
+    if (gridClasses[i]) {
+      classes += `${gridClasses[i]} `
+    }
+  }
+
+  return `grid-cols-2 ${classes} max-w-7xl`
 }
 
 export function PageLayout({
