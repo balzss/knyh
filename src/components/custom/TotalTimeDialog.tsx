@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Timer } from 'lucide-react'
 import {
   Dialog,
@@ -19,6 +20,7 @@ type TotalTimeDialogProps = {
 }
 
 export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: TotalTimeDialogProps) {
+  const t = useTranslations('TotalTimeDialog')
   const [open, setOpen] = useState<boolean>(false)
   const [hours, setHours] = useState<string>('')
   const [minutes, setMinutes] = useState<string>('')
@@ -35,8 +37,9 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
     const splitTime = time.split(':')
     const hours = Number(splitTime[0])
     const minutes = Number(splitTime[1])
-    const formattedHours = hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''
-    const formattedMinutes = minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
+    const formattedHours = hours > 0 ? `${hours} ${t(hours > 1 ? 'hoursShort' : 'hourShort')}` : ''
+    const formattedMinutes =
+      minutes > 0 ? `${minutes} ${t(minutes > 1 ? 'minutesShort' : 'minuteShort')}` : ''
     return [formattedHours, formattedMinutes].join(' ')
   }
 
@@ -58,22 +61,23 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
           <Timer />
           {totalTimeValue ? (
             <>
-              Total time: <span className="font-normal">{formatTotalTime(totalTimeValue)}</span>
+              {t('totalTime')}{' '}
+              <span className="font-normal">{formatTotalTime(totalTimeValue)}</span>
             </>
           ) : (
-            'Add total time'
+            t('addTotalTime')
           )}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
-          <DialogTitle>Set total time</DialogTitle>
-          <DialogDescription>How long it takes from start to finish</DialogDescription>
+          <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
             <div className="flex flex-col gap-2 flex-grow">
-              <Label>Hours</Label>
+              <Label>{t('hours')}</Label>
               <Input
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
@@ -82,7 +86,7 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
               />
             </div>
             <div className="flex flex-col gap-2 flex-grow">
-              <Label>Minutes</Label>
+              <Label>{t('minutes')}</Label>
               <Input
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
@@ -93,9 +97,9 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
           </div>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t('cancel')}</Button>
             </DialogClose>
-            <Button onClick={handleSetValue}>Set</Button>
+            <Button onClick={handleSetValue}>{t('set')}</Button>
           </div>
         </div>
       </DialogContent>

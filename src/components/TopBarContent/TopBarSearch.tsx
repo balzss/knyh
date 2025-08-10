@@ -59,7 +59,7 @@ export function TopBarSearch({
               iconSize="normal"
               variant="ghost"
               icon={<SlidersHorizontal />}
-              tooltip="Filter and view options"
+              tooltip={t('filterAndViewOptions')}
               isActive={isFilterOptionsOpen}
               onClick={() => setIsFilterOptionsOpen((oldValue) => !oldValue)}
             />
@@ -67,20 +67,20 @@ export function TopBarSearch({
         </PopoverTrigger>
         <PopoverContent className="w-80 mx-2 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="layoutSelect">Layout</Label>
+            <Label htmlFor="layoutSelect">{t('layout')}</Label>
             <Select onValueChange={onLayoutChange} defaultValue={selectedLayout}>
               <SelectTrigger className="w-[180px]" id="layoutSelect">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="list">List</SelectItem>
-                <SelectItem value="grid">Grid</SelectItem>
+                <SelectItem value="list">{t('list')}</SelectItem>
+                <SelectItem value="grid">{t('grid')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           {selectedLayout === 'grid' && (
             <div className="flex items-center justify-between h-10">
-              <Label htmlFor="layoutSelect">Max cols: {layoutGridCols}</Label>
+              <Label htmlFor="layoutSelect">{t('maxCols', { cols: layoutGridCols })}</Label>
               <Slider
                 defaultValue={[layoutGridCols - 2]}
                 max={3}

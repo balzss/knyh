@@ -110,12 +110,43 @@
     "noAccountYet": "Don't have an account yet?",
     "logIn": "Log in"
   },
+  "ShoppingListPage": {
+    "title": "Shopping list",
+    "noItems": "No items in your shopping list yet."
+  },
+  "YieldDialog": {
+    "setYield": "Set yield",
+    "title": "Set the yield amount",
+    "description": "E.g.: 6 servings, 1 loaf, 500 ml, etc.",
+    "cancel": "Cancel",
+    "set": "Set",
+    "currentYield": "Yield:"
+  },
+  "TotalTimeDialog": {
+    "addTotalTime": "Add total time",
+    "title": "Set total time",
+    "description": "How long it takes from start to finish",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "cancel": "Cancel",
+    "set": "Set",
+    "totalTime": "Total time:",
+    "hourShort": "hr",
+    "hoursShort": "hrs",
+    "minuteShort": "min",
+    "minutesShort": "mins"
+  },
   "TopBar": {
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
     "clearSelection": "Clear selection",
     "toggleSidebar": "Toggle sidebar",
     "loggedInAs": "Logged in as {username}",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "filterAndViewOptions": "Filter and view options",
+    "layout": "Layout",
+    "list": "List",
+    "grid": "Grid",
+    "maxCols": "Max cols: {cols}"
   }
 }

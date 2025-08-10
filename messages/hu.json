@@ -110,12 +110,43 @@
     "noAccountYet": "Nincs még fiókod?",
     "logIn": "Bejelentkezés"
   },
+  "ShoppingListPage": {
+    "title": "Bevásárló lista",
+    "noItems": "Még nincsenek tételek a bevásárlólistádon."
+  },
+  "YieldDialog": {
+    "setYield": "Adag beállítása",
+    "title": "Adag mennyiségének beállítása",
+    "description": "Pl.: 6 adag, 1 vekni, 500 ml, stb.",
+    "cancel": "Mégse",
+    "set": "Beállítás",
+    "currentYield": "Adag:"
+  },
+  "TotalTimeDialog": {
+    "addTotalTime": "Teljes idő hozzáadása",
+    "title": "Teljes idő beállítása",
+    "description": "Mennyi időt vesz igénybe az elejétől a végéig",
+    "hours": "Óra",
+    "minutes": "Perc",
+    "cancel": "Mégse",
+    "set": "Beállítás",
+    "totalTime": "Teljes idő:",
+    "hourShort": "óra",
+    "hoursShort": "óra",
+    "minuteShort": "perc",
+    "minutesShort": "perc"
+  },
   "TopBar": {
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
     "clearSelection": "Kijelölés megszűntetése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
     "loggedInAs": "Bejelentkezve mint {username}",
-    "signOut": "Kijelentkezés"
+    "signOut": "Kijelentkezés",
+    "filterAndViewOptions": "Szűrő és nézet opciók",
+    "layout": "Elrendezés",
+    "list": "Lista",
+    "grid": "Rács",
+    "maxCols": "Max oszlop: {cols}"
   }
 }

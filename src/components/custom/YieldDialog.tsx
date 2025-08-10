@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Users } from 'lucide-react'
 import {
   Dialog,
@@ -18,6 +19,7 @@ type YieldDialogProps = {
 }
 
 export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps) {
+  const t = useTranslations('YieldDialog')
   const [open, setOpen] = useState<boolean>(false)
   const [value, setValue] = useState<string>('')
   const handleOpenChange = (prevOpen: boolean) => {
@@ -43,17 +45,17 @@ export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps
           <Users />
           {yieldValue ? (
             <>
-              Yield: <span className="font-normal">{yieldValue}</span>
+              {t('currentYield')} <span className="font-normal">{yieldValue}</span>
             </>
           ) : (
-            'Set yield'
+            t('setYield')
           )}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
-          <DialogTitle>Set the yield amount</DialogTitle>
-          <DialogDescription>E.g.: 6 servings, 1 loaf, 500 ml, etc.</DialogDescription>
+          <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
@@ -67,10 +69,10 @@ export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
               <Button variant="outline" onClick={() => setValue('')}>
-                Cancel
+                {t('cancel')}
               </Button>
             </DialogClose>
-            <Button onClick={handleSetValue}>Set</Button>
+            <Button onClick={handleSetValue}>{t('set')}</Button>
           </div>
         </div>
       </DialogContent>
