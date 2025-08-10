@@ -1,10 +1,6 @@
-import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { IconButton } from '@/components/custom'
+import { Menu } from 'lucide-react'
+import { IconButton, UserMenu } from '@/components/custom'
 
 type TopBarProps = {
   onSidebarToggle: () => void
@@ -17,14 +13,8 @@ export function TopBar({
   customTopbarContent = <></>,
   hideSidebarToggleMobile = false,
 }: TopBarProps) {
-  const [isUserPopupOpen, setIsUserPopupOpen] = useState<boolean>(false)
-
-  const handleUserPopupOpen = (shouldOpen: boolean) => {
-    setIsUserPopupOpen(shouldOpen)
-  }
-
   return (
-    <nav className="fixed max-h-14 top-0 right-0 w-full z-50 flex items-center p-3 border-b bg-background gap-2 overflow-hidden">
+    <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-b bg-background p-3">
       <IconButton
         className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}
@@ -34,7 +24,7 @@ export function TopBar({
       />
 
       <Link
-        className="hidden sm:flex text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md w-48 mr-1 items-center justify-center"
+        className="hidden w-48 mr-1 items-center justify-center text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background sm:flex focus:rounded-md"
         href="/"
       >
         KONYHA
@@ -42,28 +32,7 @@ export function TopBar({
 
       <div className="flex-1 items-center">{customTopbarContent}</div>
 
-      <Popover open={isUserPopupOpen} onOpenChange={handleUserPopupOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`ml-auto mr-1 cursor-pointer rounded-full ${hideSidebarToggleMobile ? 'hidden sm:flex' : ''}`}
-          >
-            <Avatar>
-              <AvatarImage src="" alt="SB" />
-              <AvatarFallback>SB</AvatarFallback>
-            </Avatar>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80 mx-2 flex flex-col gap-3 font-bold">
-          <span>Logged in as Balazs</span>
-          <Button asChild>
-            <Link href="/login">
-              <LogOut /> Sign Out
-            </Link>
-          </Button>
-        </PopoverContent>
-      </Popover>
+      <UserMenu hideSidebarToggleMobile={hideSidebarToggleMobile} />
     </nav>
   )
 }

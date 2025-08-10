@@ -111,6 +111,8 @@
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
     "clearSelection": "Kijelölés megszűntetése",
-    "toggleSidebar": "Oldalső menü átkapcsolása"
+    "toggleSidebar": "Oldalső menü átkapcsolása",
+    "loggedInAs": "Bejelentkezve mint {username}",
+    "signOut": "Kijelentkezés"
   }
 }

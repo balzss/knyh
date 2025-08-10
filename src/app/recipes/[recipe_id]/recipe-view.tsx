@@ -164,7 +164,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           <div className="flex flex-col gap-1">
             <h2 className="text-xl text-muted-foreground mt-4">{t('ingredients')}</h2>
             <ul>
-              {recipe?.ingredients.map((ingredient, index) => (
+              {recipe?.ingredients?.map((ingredient, index) => (
                 <li key={index} className="flex items-center space-x-2 text-md leading-8">
                   <Checkbox
                     id={`ingredient-${index}`}
@@ -191,7 +191,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           <div className="flex flex-col gap-1">
             <h2 className="text-xl text-muted-foreground mt-4">{t('instructions')}</h2>
             <ol className={` flex flex-col gap-3 ml-4 list-[x]`}>
-              {recipe?.instructions.map((instruction, index) => (
+              {recipe?.instructions?.map((instruction, index) => (
                 <li
                   key={index}
                   className={`${selectedInstruction === index ? `relative list-none before:content-['★'] before:absolute before:-left-5 text-primary` : selectedInstruction > -1 ? 'text-muted-foreground' : ''} flex items-center text-md leading-6 list-item transition duration-150 ${selectedInstruction > index ? 'line-through' : ''}`}
