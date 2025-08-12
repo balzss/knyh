@@ -46,7 +46,7 @@ export function RecipeCard({
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
   const { updateRecipe, deleteRecipe } = useRecipeMutations()
-  const { confirm } = useConfirmDialog()
+  const { confirmDelete } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const selectTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -73,35 +73,30 @@ export function RecipeCard({
   }, [onSelect, isSelected])
 
   const handleDeleteRecipe = useCallback(async () => {
-    const confirmed = await confirm({
-      title: t('deleteConfirmTitle'),
-      description: t('deleteConfirmDescription', { recipeName: recipeData.title }),
-      confirmText: t('deleteConfirmButton'),
-      cancelText: t('cancelButton'),
-    })
+    const confirmed = await confirmDelete({ name: recipeData.title, entity: t('delete') })
+    if (confirmed) deleteRecipe.mutate(recipeData.id)
+  }, [confirmDelete, recipeData.title, recipeData.id, deleteRecipe, t])
 
-    if (confirmed) {
-      deleteRecipe.mutate(recipeData.id)
-    }
-  }, [confirm, t, recipeData.title, recipeData.id, deleteRecipe])
-
-  const handleArchiveRecipe = useCallback((archived: boolean = true) => {
-    const { id, ...data } = recipeData
-    updateRecipe.mutate(
-      { id, data: { ...data, archived } },
-      {
-        onSuccess: () => {
-          myToast({
-            message: archived ? t('recipeArchived') : t('recipeRestored'),
-            action: {
-              label: t('undo'),
-              onClick: () => updateRecipe.mutate({ id, data: { ...data, archived: !archived } }),
-            },
-          })
-        },
-      }
-    )
-  }, [updateRecipe, recipeData, t])
+  const handleArchiveRecipe = useCallback(
+    (archived: boolean = true) => {
+      const { id, ...data } = recipeData
+      updateRecipe.mutate(
+        { id, data: { ...data, archived } },
+        {
+          onSuccess: () => {
+            myToast({
+              message: archived ? t('recipeArchived') : t('recipeRestored'),
+              action: {
+                label: t('undo'),
+                onClick: () => updateRecipe.mutate({ id, data: { ...data, archived: !archived } }),
+              },
+            })
+          },
+        }
+      )
+    },
+    [updateRecipe, recipeData, t]
+  )
 
   const { title, metadata, id } = recipeData
 

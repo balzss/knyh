@@ -29,11 +29,7 @@
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
-    "undo": "Undo",
-    "deleteConfirmTitle": "Delete Recipe",
-    "deleteConfirmDescription": "Are you sure you want to delete \"{recipeName}\"? This action cannot be undone.",
-    "deleteConfirmButton": "Delete",
-    "cancelButton": "Cancel"
+  "undo": "Undo"
   },
   "HomePage": {
     "archive": "Archive",
@@ -90,7 +86,7 @@
     "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",
     "ingredients": "Ingredients",
-    "instructions": "Instructions"
+  "instructions": "Instructions"
   },
   "LoginPage": {
     "signIn": "Sign in",
@@ -152,5 +148,11 @@
     "list": "List",
     "grid": "Grid",
     "maxCols": "Max cols: {cols}"
+  },
+  "ConfirmDialog": {
+    "deleteTitle": "Delete {entity}",
+    "deleteDescription": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+    "deleteConfirmButton": "Delete",
+    "cancelButton": "Cancel"
   }
 }

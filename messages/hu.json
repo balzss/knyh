@@ -29,11 +29,7 @@
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
-    "undo": "Visszavonás",
-    "deleteConfirmTitle": "Recept törlése",
-    "deleteConfirmDescription": "Biztosan törölni szeretnéd a(z) \"{recipeName}\" receptet? Ez a művelet nem vonható vissza.",
-    "deleteConfirmButton": "Törlés",
-    "cancelButton": "Mégse"
+  "undo": "Visszavonás"
   },
   "HomePage": {
     "archive": "Archiválás",
@@ -90,7 +86,7 @@
     "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
-    "instructions": "Elkészítés"
+  "instructions": "Elkészítés"
   },
   "LoginPage": {
     "signIn": "Bejelentkezés",
@@ -152,5 +148,11 @@
     "list": "Lista",
     "grid": "Rács",
     "maxCols": "Max oszlop: {cols}"
+  },
+  "ConfirmDialog": {
+    "deleteTitle": "{entity} törlése",
+  "deleteDescription": "Biztosan törölni szeretnéd a(z) \"{name}\" recepted? Ez a művelet nem vonható vissza.",
+    "deleteConfirmButton": "Törlés",
+    "cancelButton": "Mégse"
   }
 }

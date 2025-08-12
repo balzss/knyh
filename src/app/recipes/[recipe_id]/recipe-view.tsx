@@ -20,7 +20,7 @@ import { TopBar } from '@/components/TopBar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { AppSidebar, PageLayout, IconButton, ShareDialog, myToast } from '@/components/custom'
-import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
+import { useRecipes, useTags, useRecipeMutations, useConfirmDialog } from '@/hooks'
 
 type RecipeViewProps = {
   recipeId: string
@@ -32,6 +32,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
 
   const router = useRouter()
   const t = useTranslations('RecipeView')
+  const { confirmDelete } = useConfirmDialog()
   const { toggleSidebar } = useSidebar()
 
   const { recipes } = useRecipes({ ids: [recipeId], sort: 'random' })
@@ -60,13 +61,15 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
     }
   }
 
-  const handleDeleteRecipe = () => {
+  const handleDeleteRecipe = async () => {
+    const confirmed = await confirmDelete({ name: recipe?.title, entity: t('deleteRecipe') })
+    if (!confirmed) return
+
     deleteRecipe.mutate(recipeId, {
       onSuccess: () => {
         router.push('/')
         myToast({
           message: t('recipeDeleted'),
-          action: { label: t('undo'), onClick: () => {} },
         })
       },
     })

@@ -7,20 +7,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import React from 'react';
+} from '@/components/ui/alert-dialog'
+import React from 'react'
 
 interface ConfirmDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  title: string;
-  description: string;
-  onConfirm: () => void;
-  onCancel?: () => void;
-  confirmText?: string;
-  cancelText?: string;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  title: string
+  description: string
+  onConfirm: () => void
+  onCancel?: () => void
+  confirmText?: string
+  cancelText?: string
 }
 
 export function ConfirmDialog({
@@ -30,20 +28,20 @@ export function ConfirmDialog({
   description,
   onConfirm,
   onCancel,
-  confirmText = "Continue",
-  cancelText = "Cancel",
+  confirmText = 'Continue',
+  cancelText = 'Cancel',
 }: ConfirmDialogProps) {
   const handleConfirm = () => {
-    onConfirm();
-    onOpenChange(false);
-  };
+    onConfirm()
+    onOpenChange(false)
+  }
 
   const handleCancel = () => {
     if (onCancel) {
-      onCancel();
+      onCancel()
     }
-    onOpenChange(false);
-  };
+    onOpenChange(false)
+  }
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -58,5 +56,5 @@ export function ConfirmDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }
