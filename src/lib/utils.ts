@@ -34,6 +34,15 @@ export function generateId(): string {
   return result
 }
 
+export function getErrorMessage(err: unknown, fallback = 'Unknown error'): string {
+  if (err instanceof Error && typeof err.message === 'string') return err.message
+  if (typeof err === 'object' && err !== null && 'message' in err) {
+    const possible = (err as Record<string, unknown>).message
+    if (typeof possible === 'string') return possible
+  }
+  return fallback
+}
+
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 export const dataJsonPath = `data/data.json`
 export const clientDataPath = `${basePath}/${dataJsonPath}`

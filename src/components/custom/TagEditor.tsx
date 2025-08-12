@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { TagIcon, X, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -14,7 +14,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
 import { IconButton } from '@/components/custom'
-import { useTags } from '@/hooks'
+import { useTags, useTagMutations } from '@/hooks'
+import { myToast } from '@/components/custom'
+import { getErrorMessage } from '@/lib/utils'
 import type { Tag } from '@/lib/types'
 
 type TagEditorProps = {
@@ -27,11 +29,38 @@ type TagEditorProps = {
 
 export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: TagEditorProps) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const { tags: tagsData } = useTags()
+  const { createTag } = useTagMutations()
 
-  const tagList = tagsData?.filter((tag) => !tags.find((t) => t.id === tag.id))
+  const tagList = useMemo(
+    () => tagsData?.filter((tag) => !tags.find((t) => t.id === tag.id)),
+    [tagsData, tags]
+  )
+
+  const normalizedExisting = useMemo(
+    () => new Set(tagsData.map((t) => t.displayName.toLowerCase())),
+    [tagsData]
+  )
+
+  const trimmedSearch = searchTerm.trim()
+  const isDuplicate = normalizedExisting.has(trimmedSearch.toLowerCase())
+  // Show create only when trimmed value is non-empty and not already existing (ignores trailing spaces)
+  const canCreate = trimmedSearch.length > 0 && !isDuplicate
+
+  const handleCreate = async () => {
+    if (!canCreate) return
+    try {
+      const newTag = await createTag.mutateAsync({ displayName: trimmedSearch })
+      onTagChange([...tags, newTag])
+      setSearchTerm('')
+      setOpen(false)
+    } catch (e: unknown) {
+      console.error(e)
+      myToast?.({ message: getErrorMessage(e) })
+    }
+  }
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
@@ -61,7 +90,17 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
           </PopoverTrigger>
           <PopoverContent className="p-0" align="start">
             <Command>
-              <CommandInput placeholder="Find tag" />
+              <CommandInput
+                placeholder="Find or create tag"
+                value={searchTerm}
+                onValueChange={setSearchTerm}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && canCreate) {
+                    e.preventDefault()
+                    void handleCreate()
+                  }
+                }}
+              />
               <CommandList>
                 <CommandEmpty>No tag found.</CommandEmpty>
                 {tagList && tagList.length > 0 && (
@@ -70,12 +109,12 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
                       <CommandItem
                         key={tag.id}
                         value={tag.displayName}
-                        onSelect={(currentValue) => {
+                        onSelect={() => {
                           setOpen(false)
-                          setValue(currentValue === value ? '' : currentValue)
-                          setTimeout(() => {
-                            onTagChange([...tags, tag])
-                          }, 0)
+                          setSearchTerm('')
+                          onTagChange([...tags, tag])
+                          // Clear the input
+                          setSearchTerm('')
                         }}
                         className="cursor-pointer pl-8"
                       >
@@ -85,17 +124,19 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
                   </CommandGroup>
                 )}
                 <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    onSelect={(currentValue) => {
-                      console.log(currentValue)
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <Plus />
-                    Create new tag
-                  </CommandItem>
-                </CommandGroup>
+                {canCreate && (
+                  <CommandGroup>
+                    <CommandItem
+                      disabled={createTag.isPending}
+                      onSelect={handleCreate}
+                      value={`__create__${trimmedSearch}`}
+                      className="cursor-pointer"
+                    >
+                      <Plus />
+                      {`Create tag "${trimmedSearch}"`}
+                    </CommandItem>
+                  </CommandGroup>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>

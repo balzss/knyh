@@ -1,6 +1,7 @@
 export { useRecipes } from './use-recipes'
 export { useRecipeMutations } from './use-recipe-mutations'
 export { useTags } from './use-tags'
+export { useTagMutations } from './use-tag-mutations'
 export { useRecipeForm } from './use-recipe-form'
 export { useConfig } from './use-config'
 export { useUpdateConfig } from './use-update-config'

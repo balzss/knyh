@@ -8,6 +8,18 @@
     "settings": "Beállítások",
     "new-recipe-button": "Új recept"
   },
+  "TagActions": {
+    "renameTag": "Címke átnevezése",
+    "removeTag": "Címke törlése",
+    "deleteTagDialogTitle": "Címke törlése",
+    "deleteTagDialogDescription": "Ez eltávolítja a \"{name}\" címkét minden receptből ({count} érintett). A művelet nem visszavonható.",
+    "deleting": "Törlés...",
+    "delete": "Törlés",
+    "cancel": "Mégse",
+    "tagRenamed": "Címke átnevezve",
+    "tagDeleted": "Címke törölve",
+    "renamePrompt": "Címke átnevezése"
+  },
   "SettingsPage": {
     "settings": "Beállítások",
     "theme": "Téma",

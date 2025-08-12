@@ -8,6 +8,18 @@
     "settings": "Settings",
     "new-recipe-button": "New recipe"
   },
+  "TagActions": {
+    "renameTag": "Rename tag",
+    "removeTag": "Remove tag",
+    "deleteTagDialogTitle": "Delete tag",
+    "deleteTagDialogDescription": "This will remove the tag \"{name}\" from all recipes ({count} affected). This action cannot be undone.",
+    "deleting": "Deleting...",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "tagRenamed": "Tag renamed",
+    "tagDeleted": "Tag deleted",
+    "renamePrompt": "Rename tag"
+  },
   "SettingsPage": {
     "settings": "Settings",
     "theme": "Theme",

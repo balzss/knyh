@@ -27,8 +27,19 @@ import {
   BookOpenText,
   Dices,
 } from 'lucide-react'
-import { useTags } from '@/hooks'
+import { useTags, useTagMutations, useRecipes } from '@/hooks'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
+import { myToast } from '@/components/custom'
+import { useState } from 'react'
 import type { Tag } from '@/lib/types'
+import { getErrorMessage } from '@/lib/utils'
 
 type AppSidebarProps = {
   path?: string
@@ -36,8 +47,12 @@ type AppSidebarProps = {
 
 export function AppSidebar({ path }: AppSidebarProps) {
   const t = useTranslations('Navigation')
+  const tTag = useTranslations('TagActions')
   const { isMobile, setOpenMobile } = useSidebar()
   const { tags } = useTags()
+  const { recipes } = useRecipes()
+  const { renameTag, deleteTag } = useTagMutations()
+  const [tagToDelete, setTagToDelete] = useState<{ id: string; displayName: string } | null>(null)
 
   const sidebarItems = (tags: Tag[]) => [
     {
@@ -49,9 +64,12 @@ export function AppSidebar({ path }: AppSidebarProps) {
       displayName: t('tags'),
       icon: <Tags />,
       subItems: Object.values(tags).map(({ id, displayName }) => {
+        const usageCount = recipes?.filter((r) => r.tags.includes(id)).length || 0
         return {
+          id,
           displayName,
           href: `/?tag=${id}`,
+          usageCount,
         }
       }),
     },
@@ -139,12 +157,62 @@ export function AppSidebar({ path }: AppSidebarProps) {
                         <CollapsibleContent>
                           <SidebarMenuSub>
                             {item.subItems.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.displayName}>
-                                <SidebarMenuSubButton asChild>
+                              <SidebarMenuSubItem
+                                key={subItem.id}
+                                className="flex items-center group/tagrow"
+                              >
+                                <SidebarMenuSubButton asChild className="flex-1">
                                   <Link href={subItem.href} onClick={() => setOpenMobile(false)}>
                                     <span>{subItem.displayName}</span>
                                   </Link>
                                 </SidebarMenuSubButton>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 ml-1 opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 transition-opacity"
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                      onSelect={() => {
+                                        const newName =
+                                          window.prompt(
+                                            tTag('renamePrompt'),
+                                            subItem.displayName
+                                          ) || ''
+                                        const trimmed = newName.trim()
+                                        if (!trimmed || trimmed === subItem.displayName) return
+                                        renameTag.mutate(
+                                          { id: subItem.id, displayName: trimmed },
+                                          {
+                                            onSuccess: () =>
+                                              myToast({ message: tTag('tagRenamed') }),
+                                            onError: (error: unknown) =>
+                                              myToast({
+                                                message: getErrorMessage(error, 'Error'),
+                                              }),
+                                          }
+                                        )
+                                      }}
+                                    >
+                                      <Pencil className="h-4 w-4" /> {tTag('renameTag')}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onSelect={() => {
+                                        setTagToDelete({
+                                          id: subItem.id,
+                                          displayName: subItem.displayName,
+                                        })
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4" /> {tTag('removeTag')}
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </SidebarMenuSubItem>
                             ))}
                           </SidebarMenuSub>
@@ -169,6 +237,30 @@ export function AppSidebar({ path }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      {tagToDelete && (
+        <ConfirmDialog
+          open={!!tagToDelete}
+          onOpenChange={(open) => {
+            if (!open) setTagToDelete(null)
+          }}
+          title={tTag('deleteTagDialogTitle')}
+          description={tTag('deleteTagDialogDescription', {
+            name: tagToDelete.displayName,
+            count: recipes?.filter((r) => r.tags.includes(tagToDelete.id)).length || 0,
+          })}
+          confirmText={deleteTag.isPending ? tTag('deleting') : tTag('delete')}
+          onConfirm={() => {
+            deleteTag.mutate(tagToDelete.id, {
+              onSuccess: () => {
+                myToast({ message: tTag('tagDeleted') })
+              },
+              onError: (e: unknown) => {
+                myToast({ message: getErrorMessage(e, 'Error') })
+              },
+            })
+          }}
+        />
+      )}
     </Sidebar>
   )
 }
