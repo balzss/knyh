@@ -58,30 +58,6 @@
         "yield": "20 darab",
         "totalTime": "0:30"
       }
-    },
-    {
-      "tags": [
-        "b8qx3p9k"
-      ],
-      "title": "teszt for arch",
-      "ingredients": [
-        "aa"
-      ],
-      "instructions": [
-        "22"
-      ],
-      "metadata": {
-        "yield": "1 t",
-        "totalTime": ":11"
-      },
-      "archived": true,
-      "id": "mvpak3q7"
-    },
-    {
-      "id": "omxx3pew",
-      "tags": [],
-      "title": "layout test 3",
-      "metadata": {}
     }
   ],
   "tags": [

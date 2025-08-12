@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl'
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Archive,
@@ -18,13 +18,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
-import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
+import { useRecipeMutations, useConfirmDialog } from '@/hooks'
+
+// Constants
+const SELECTION_TIMEOUT_MS = 500
 
 type RecipeCardProps = {
   tags: Tag[]
   isSelected?: boolean
   selectionMode?: boolean
-  onSelect?: (isSelected: boolean) => void | undefined
+  onSelect?: (isSelected: boolean) => void
   archivedMode?: boolean
   recipeData: Recipe
   recipeUrl?: string
@@ -42,11 +45,47 @@ export function RecipeCard({
   compact = true,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
-  const { updateRecipe } = useRecipeMutations()
+  const { updateRecipe, deleteRecipe } = useRecipeMutations()
+  const { confirm } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const selectTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  const handleArchiveRecipe = (archived: boolean = true) => {
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (selectTimeout.current) {
+        clearTimeout(selectTimeout.current)
+      }
+    }
+  }, [])
+
+  const clearSelectTimeout = useCallback(() => {
+    if (selectTimeout.current) {
+      clearTimeout(selectTimeout.current)
+      selectTimeout.current = null
+    }
+  }, [])
+
+  const handleTouchStart = useCallback(() => {
+    selectTimeout.current = setTimeout(() => {
+      onSelect?.(!isSelected)
+    }, SELECTION_TIMEOUT_MS)
+  }, [onSelect, isSelected])
+
+  const handleDeleteRecipe = useCallback(async () => {
+    const confirmed = await confirm({
+      title: t('deleteConfirmTitle'),
+      description: t('deleteConfirmDescription', { recipeName: recipeData.title }),
+      confirmText: t('deleteConfirmButton'),
+      cancelText: t('cancelButton'),
+    })
+
+    if (confirmed) {
+      deleteRecipe.mutate(recipeData.id)
+    }
+  }, [confirm, t, recipeData.title, recipeData.id, deleteRecipe])
+
+  const handleArchiveRecipe = useCallback((archived: boolean = true) => {
     const { id, ...data } = recipeData
     updateRecipe.mutate(
       { id, data: { ...data, archived } },
@@ -62,20 +101,7 @@ export function RecipeCard({
         },
       }
     )
-  }
-
-  const handleTouchStart = () => {
-    selectTimeout.current = setTimeout(() => {
-      onSelect?.(!isSelected)
-    }, 500)
-  }
-
-  const clearSelectTimeout = () => {
-    if (selectTimeout.current) {
-      clearTimeout(selectTimeout.current)
-      selectTimeout.current = null
-    }
-  }
+  }, [updateRecipe, recipeData, t])
 
   const { title, metadata, id } = recipeData
 
@@ -95,6 +121,8 @@ export function RecipeCard({
       onTouchStart={handleTouchStart}
       onTouchEnd={clearSelectTimeout}
       onTouchCancel={clearSelectTimeout}
+      role="article"
+      aria-label={`Recipe: ${title}`}
     >
       <CardHeader className={`relative ${compact ? 'p-3 sm:p-6' : ''}`}>
         <CardTitle>
@@ -102,7 +130,6 @@ export function RecipeCard({
             <Link
               href={`/recipes/${id}`}
               className="hover:underline break-words hyphens-auto leading-7"
-              lang="hu"
             >
               {title}
             </Link>
@@ -160,7 +187,12 @@ export function RecipeCard({
                 iconSize="small"
                 onClick={() => handleArchiveRecipe(false)}
               />
-              <IconButton icon={<Trash2 />} tooltip={t('delete')} iconSize="small" />
+              <IconButton
+                icon={<Trash2 />}
+                tooltip={t('delete')}
+                iconSize="small"
+                onClick={handleDeleteRecipe}
+              />
             </>
           ) : (
             <>
@@ -171,7 +203,7 @@ export function RecipeCard({
                 href={`/recipes/${id}/edit`}
               />
               <ShareDialog
-                recipeId={title.replace(' ', '-').toLowerCase()}
+                recipeId={title.replaceAll(' ', '-').toLowerCase()}
                 trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
                 recipeUrl={recipeUrl}
               />

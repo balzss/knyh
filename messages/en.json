@@ -29,7 +29,11 @@
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
-    "undo": "Undo"
+    "undo": "Undo",
+    "deleteConfirmTitle": "Delete Recipe",
+    "deleteConfirmDescription": "Are you sure you want to delete \"{recipeName}\"? This action cannot be undone.",
+    "deleteConfirmButton": "Delete",
+    "cancelButton": "Cancel"
   },
   "HomePage": {
     "archive": "Archive",

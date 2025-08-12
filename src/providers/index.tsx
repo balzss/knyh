@@ -6,6 +6,7 @@ import { NextIntlClientProvider, type Messages, type Locale } from 'next-intl'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
+import { ConfirmDialogProvider } from './ConfirmDialogProvider'
 
 const queryClient = new QueryClient()
 
@@ -28,8 +29,10 @@ export default function Providers({ children, i18n }: ProvidersProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider>{children}</SidebarProvider>
-            <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+            <ConfirmDialogProvider>
+              <SidebarProvider>{children}</SidebarProvider>
+              <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+            </ConfirmDialogProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </NextIntlClientProvider>

@@ -29,7 +29,11 @@
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
-    "undo": "Visszavonás"
+    "undo": "Visszavonás",
+    "deleteConfirmTitle": "Recept törlése",
+    "deleteConfirmDescription": "Biztosan törölni szeretnéd a(z) \"{recipeName}\" receptet? Ez a művelet nem vonható vissza.",
+    "deleteConfirmButton": "Törlés",
+    "cancelButton": "Mégse"
   },
   "HomePage": {
     "archive": "Archiválás",
