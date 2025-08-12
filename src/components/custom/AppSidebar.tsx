@@ -171,7 +171,8 @@ export function AppSidebar({ path }: AppSidebarProps) {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-6 w-6 ml-1 opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 transition-opacity"
+                                      // Show while hovered, focused, focused-visible, or when dropdown menu is open
+                                      className="h-6 w-6 ml-1 opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 data-[state=open]:opacity-100 transition-opacity"
                                     >
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>
