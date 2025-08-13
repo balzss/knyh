@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '@/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from '@/components/ui/dropdown-menu'
 import { MoreVertical } from 'lucide-react'
 import { useLongPress } from '@/hooks'
 import { useTranslations } from 'next-intl'
@@ -13,7 +17,6 @@ export interface SidebarAction {
 }
 
 interface SidebarItemRowProps {
-  id: string
   href: string
   displayName: string
   isMobile: boolean
@@ -25,7 +28,6 @@ interface SidebarItemRowProps {
 }
 
 export function SidebarItemRow({
-  id,
   href,
   displayName,
   isMobile,

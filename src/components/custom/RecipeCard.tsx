@@ -20,7 +20,6 @@ import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
 
-
 type RecipeCardProps = {
   tags: Tag[]
   isSelected?: boolean
@@ -91,7 +90,7 @@ export function RecipeCard({
       }}
       className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
       tabIndex={0}
-  {...longPressBind}
+      {...longPressBind}
       role="article"
       aria-label={`Recipe: ${title}`}
     >

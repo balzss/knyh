@@ -61,10 +61,7 @@ export function useMultiLongPress<T extends string | number>({
     [start, end, clear]
   )
 
-  const wasLongPress = useCallback(
-    (id: T) => activatedIdRef.current === id,
-    []
-  )
+  const wasLongPress = useCallback((id: T) => activatedIdRef.current === id, [])
 
   return { getHandlers, wasLongPress }
 }

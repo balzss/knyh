@@ -10,8 +10,6 @@ import {
   SidebarMenuButton,
   SidebarHeader,
   SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -29,16 +27,10 @@ import {
 } from 'lucide-react'
 import { useTags, useTagMutations, useRecipes } from '@/hooks'
 import { SidebarItemRow } from '@/components/custom/SidebarItemRow'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
 import { myToast } from '@/components/custom'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
+import { Pencil, Trash2 } from 'lucide-react'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
 
@@ -161,14 +153,11 @@ export function AppSidebar({ path }: AppSidebarProps) {
                             {item.subItems.map((subItem) => (
                               <SidebarItemRow
                                 key={subItem.id}
-                                id={subItem.id}
                                 href={subItem.href}
                                 displayName={subItem.displayName}
                                 isMobile={isMobile}
                                 open={menuOpenForTag === subItem.id}
-                                onOpenChange={(open) =>
-                                  setMenuOpenForTag(open ? subItem.id : null)
-                                }
+                                onOpenChange={(open) => setMenuOpenForTag(open ? subItem.id : null)}
                                 onNavigate={() => setOpenMobile(false)}
                                 actions={[
                                   {
@@ -177,17 +166,14 @@ export function AppSidebar({ path }: AppSidebarProps) {
                                     icon: <Pencil className="h-4 w-4" />,
                                     onSelect: () => {
                                       const newName =
-                                        window.prompt(
-                                          tTag('renamePrompt'),
-                                          subItem.displayName
-                                        ) || ''
+                                        window.prompt(tTag('renamePrompt'), subItem.displayName) ||
+                                        ''
                                       const trimmed = newName.trim()
                                       if (!trimmed || trimmed === subItem.displayName) return
                                       renameTag.mutate(
                                         { id: subItem.id, displayName: trimmed },
                                         {
-                                          onSuccess: () =>
-                                            myToast({ message: tTag('tagRenamed') }),
+                                          onSuccess: () => myToast({ message: tTag('tagRenamed') }),
                                           onError: (error: unknown) =>
                                             myToast({
                                               message: getErrorMessage(error, 'Error'),
