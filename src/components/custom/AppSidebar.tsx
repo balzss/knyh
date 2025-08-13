@@ -27,7 +27,8 @@ import {
   BookOpenText,
   Dices,
 } from 'lucide-react'
-import { useTags, useTagMutations, useRecipes, useLongPress } from '@/hooks'
+import { useTags, useTagMutations, useRecipes } from '@/hooks'
+import { SidebarItemRow } from '@/components/custom/SidebarItemRow'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -157,92 +158,57 @@ export function AppSidebar({ path }: AppSidebarProps) {
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
-                            {item.subItems.map((subItem) => {
-                              const { bind, wasLongPress } = useLongPress(
-                                () => setMenuOpenForTag(subItem.id),
-                                { enabled: isMobile }
-                              )
-                              return (
-                                <SidebarMenuSubItem
-                                  key={subItem.id}
-                                  className="flex items-center group/tagrow"
-                                  {...bind}
-                                >
-                                <SidebarMenuSubButton asChild className="flex-1">
-                                  <Link
-                                    href={subItem.href}
-                                    onClick={(e) => {
-                                      if (wasLongPress()) {
-                                        e.preventDefault()
-                                        return
-                                      }
-                                      setOpenMobile(false)
-                                    }}
-                                  >
-                                    <span>{subItem.displayName}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                                <DropdownMenu
-                                  open={menuOpenForTag === subItem.id}
-                                  onOpenChange={(open) => {
-                                    setMenuOpenForTag(open ? subItem.id : null)
-                                  }}
-                                >
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      // Always visible on mobile (touch), hover/focus/open on desktop
-                                      className={
-                                        `h-6 w-6 ml-1 transition-opacity ` +
-                                        (isMobile
-                                          ? 'opacity-100'
-                                          : 'opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 data-[state=open]:opacity-100')
-                                      }
-                                    >
-                                      <MoreVertical className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem
-                                      onSelect={() => {
-                                        const newName =
-                                          window.prompt(
-                                            tTag('renamePrompt'),
-                                            subItem.displayName
-                                          ) || ''
-                                        const trimmed = newName.trim()
-                                        if (!trimmed || trimmed === subItem.displayName) return
-                                        renameTag.mutate(
-                                          { id: subItem.id, displayName: trimmed },
-                                          {
-                                            onSuccess: () =>
-                                              myToast({ message: tTag('tagRenamed') }),
-                                            onError: (error: unknown) =>
-                                              myToast({
-                                                message: getErrorMessage(error, 'Error'),
-                                              }),
-                                          }
-                                        )
-                                      }}
-                                    >
-                                      <Pencil className="h-4 w-4" /> {tTag('renameTag')}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onSelect={() => {
-                                        setTagToDelete({
-                                          id: subItem.id,
-                                          displayName: subItem.displayName,
-                                        })
-                                      }}
-                                    >
-                                      <Trash2 className="h-4 w-4" /> {tTag('removeTag')}
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                                </SidebarMenuSubItem>
-                              )
-                            })}
+                            {item.subItems.map((subItem) => (
+                              <SidebarItemRow
+                                key={subItem.id}
+                                id={subItem.id}
+                                href={subItem.href}
+                                displayName={subItem.displayName}
+                                isMobile={isMobile}
+                                open={menuOpenForTag === subItem.id}
+                                onOpenChange={(open) =>
+                                  setMenuOpenForTag(open ? subItem.id : null)
+                                }
+                                onNavigate={() => setOpenMobile(false)}
+                                actions={[
+                                  {
+                                    key: 'rename',
+                                    label: tTag('renameTag'),
+                                    icon: <Pencil className="h-4 w-4" />,
+                                    onSelect: () => {
+                                      const newName =
+                                        window.prompt(
+                                          tTag('renamePrompt'),
+                                          subItem.displayName
+                                        ) || ''
+                                      const trimmed = newName.trim()
+                                      if (!trimmed || trimmed === subItem.displayName) return
+                                      renameTag.mutate(
+                                        { id: subItem.id, displayName: trimmed },
+                                        {
+                                          onSuccess: () =>
+                                            myToast({ message: tTag('tagRenamed') }),
+                                          onError: (error: unknown) =>
+                                            myToast({
+                                              message: getErrorMessage(error, 'Error'),
+                                            }),
+                                        }
+                                      )
+                                    },
+                                  },
+                                  {
+                                    key: 'delete',
+                                    label: tTag('removeTag'),
+                                    icon: <Trash2 className="h-4 w-4" />,
+                                    onSelect: () =>
+                                      setTagToDelete({
+                                        id: subItem.id,
+                                        displayName: subItem.displayName,
+                                      }),
+                                  },
+                                ]}
+                              />
+                            ))}
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       </SidebarMenuItem>

@@ -18,7 +18,8 @@
     "cancel": "Cancel",
     "tagRenamed": "Tag renamed",
     "tagDeleted": "Tag deleted",
-    "renamePrompt": "Rename tag"
+  "renamePrompt": "Rename tag",
+  "actionsAriaLabel": "Actions for {name}"
   },
   "SettingsPage": {
     "settings": "Settings",

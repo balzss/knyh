@@ -18,7 +18,8 @@
     "cancel": "Mégse",
     "tagRenamed": "Címke átnevezve",
     "tagDeleted": "Címke törölve",
-    "renamePrompt": "Címke átnevezése"
+  "renamePrompt": "Címke átnevezése",
+  "actionsAriaLabel": "Műveletek: {name}"
   },
   "SettingsPage": {
     "settings": "Beállítások",
