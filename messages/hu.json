@@ -18,8 +18,8 @@
     "cancel": "Mégse",
     "tagRenamed": "Címke átnevezve",
     "tagDeleted": "Címke törölve",
-  "renamePrompt": "Címke átnevezése",
-  "actionsAriaLabel": "Műveletek: {name}"
+    "renamePrompt": "Címke átnevezése",
+    "actionsAriaLabel": "Műveletek: {name}"
   },
   "SettingsPage": {
     "settings": "Beállítások",
@@ -42,7 +42,7 @@
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
-  "undo": "Visszavonás"
+    "undo": "Visszavonás"
   },
   "HomePage": {
     "archive": "Archiválás",
@@ -87,17 +87,16 @@
     "badFormatting": "Rossz formázás",
     "emptyRecipeWarning": "Nem lehet üres receptet menteni",
     "saveRecipe": "Recept mentése",
-  "exampleRecipeSimple": "# Csokis Torta\n---\nyield: 8 adag\ntime: 01:30\n---\n\n- liszt 300 g\n- cukor 200 g\n- kakaó 50 g\n- tojás 3\n- tej 200 ml\n\n1. Száraz hozzávalók elkeverése.\n2. Tojás és tej hozzáadása.\n3. Sütés 180C ~45p.",
-  "placeholder": "# Csokis Torta\n---\nyield: 8 adag\ntime: 01:30\n---\n\n- liszt 300 g\n- cukor 200 g\n- kakaó 50 g\n- tojás 3\n- tej 200 ml\n\n1. Száraz hozzávalók elkeverése.\n2. Tojás és tej hozzáadása.\n3. Sütés 180C ~45p.",
+    "exampleRecipeSimple": "# Csokis Torta\n---\nyield: 8 adag\ntime: 01:30\n---\n\n- liszt 300 g\n- cukor 200 g\n- kakaó 50 g\n- tojás 3\n- tej 200 ml\n\n1. Száraz hozzávalók elkeverése.\n2. Tojás és tej hozzáadása.\n3. Sütés 180C ~45p.",
     "helpButton": "Súgó",
-  "helpTitle": "Markdown formátum",
-  "helpIntroSimple": "Minimál formátum: cím címsor, opcionális meta blokk, felsorolás hozzávalók, lépések soronként. Több recept új # címsorral.",
-  "ruleStartTitle": "Kezdd ezzel: # Recept Cím (kötelező).",
-  "ruleOptionalMeta": "Opcionális blokk a cím után --- között: yield, time.",
-  "ruleIngredientsSimple": "Hozzávalók: soronként egy - jellel.",
-  "ruleInstructionsSimple": "Üres sor, majd minden lépés külön sor (számozhatod vagy kihagyhatod).",
-  "ruleBulk": "Több: új recept egy új # címsorral.",
-  "hintTips": "A lépések megjelenítéskor számozódnak; saját számozás is rendben. Tartsd egyszerűen; extra üres sorok figyelmen kívül vannak hagyva."
+    "helpTitle": "Markdown formátum",
+    "helpIntroSimple": "Minimál formátum: cím címsor, opcionális meta blokk, felsorolás hozzávalók, lépések soronként. Több recept új # címsorral.",
+    "ruleStartTitle": "Kezdd ezzel: # Recept Cím (kötelező).",
+    "ruleOptionalMeta": "Opcionális blokk a cím után --- között: yield, time.",
+    "ruleIngredientsSimple": "Hozzávalók: soronként egy - jellel.",
+    "ruleInstructionsSimple": "Üres sor, majd minden lépés külön sor (számozhatod vagy kihagyhatod).",
+    "ruleBulk": "Több: új recept egy új # címsorral.",
+    "hintTips": "A lépések megjelenítéskor számozódnak; saját számozás is rendben. Tartsd egyszerűen; extra üres sorok figyelmen kívül vannak hagyva."
   },
   "RecipeView": {
     "recipeDeleted": "Recept sikeresen törölve!",
@@ -110,7 +109,7 @@
     "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
-  "instructions": "Elkészítés"
+    "instructions": "Elkészítés"
   },
   "LoginPage": {
     "signIn": "Bejelentkezés",
@@ -164,7 +163,7 @@
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
     "clearSelection": "Kijelölés megszűntetése",
-  "selectAll": "Összes kijelölése",
+    "selectAll": "Összes kijelölése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
     "loggedInAs": "Bejelentkezve mint {username}",
     "signOut": "Kijelentkezés",
@@ -176,7 +175,7 @@
   },
   "ConfirmDialog": {
     "deleteTitle": "{entity} törlése",
-  "deleteDescription": "Biztosan törölni szeretnéd a(z) \"{name}\" recepted? Ez a művelet nem vonható vissza.",
+    "deleteDescription": "Biztosan törölni szeretnéd a(z) \"{name}\" recepted? Ez a művelet nem vonható vissza.",
     "deleteConfirmButton": "Törlés",
     "cancelButton": "Mégse"
   }

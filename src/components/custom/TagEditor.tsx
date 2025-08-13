@@ -25,9 +25,18 @@ type TagEditorProps = {
   label: string
   buttonLabel: string
   className?: string
+  /** Allow creating new tags (only on new recipe form). */
+  allowCreate?: boolean
 }
 
-export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: TagEditorProps) {
+export function TagEditor({
+  tags,
+  onTagChange,
+  label,
+  buttonLabel,
+  className,
+  allowCreate = false,
+}: TagEditorProps) {
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -47,7 +56,7 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
   const trimmedSearch = searchTerm.trim()
   const isDuplicate = normalizedExisting.has(trimmedSearch.toLowerCase())
   // Show create only when trimmed value is non-empty and not already existing (ignores trailing spaces)
-  const canCreate = trimmedSearch.length > 0 && !isDuplicate
+  const canCreate = allowCreate && trimmedSearch.length > 0 && !isDuplicate
 
   const handleCreate = async () => {
     if (!canCreate) return
@@ -91,7 +100,7 @@ export function TagEditor({ tags, onTagChange, label, buttonLabel, className }: 
           <PopoverContent className="p-0" align="start">
             <Command>
               <CommandInput
-                placeholder="Find or create tag"
+                placeholder={allowCreate ? 'Find or create tag' : 'Find tag'}
                 value={searchTerm}
                 onValueChange={setSearchTerm}
                 onKeyDown={(e) => {

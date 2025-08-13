@@ -18,8 +18,8 @@
     "cancel": "Cancel",
     "tagRenamed": "Tag renamed",
     "tagDeleted": "Tag deleted",
-  "renamePrompt": "Rename tag",
-  "actionsAriaLabel": "Actions for {name}"
+    "renamePrompt": "Rename tag",
+    "actionsAriaLabel": "Actions for {name}"
   },
   "SettingsPage": {
     "settings": "Settings",
@@ -42,7 +42,7 @@
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
-  "undo": "Undo"
+    "undo": "Undo"
   },
   "HomePage": {
     "archive": "Archive",
@@ -87,17 +87,16 @@
     "badFormatting": "Bad formatting",
     "emptyRecipeWarning": "Cannot save empty recipe",
     "saveRecipe": "Save recipe",
-  "exampleRecipeSimple": "# Chocolate Cake\n---\nyield: 8 servings\ntime: 01:30\n---\n\n- flour 300 g\n- sugar 200 g\n- cocoa 50 g\n- eggs 3\n- milk 200 ml\n\n1. Mix dry ingredients.\n2. Add eggs and milk.\n3. Bake at 180C ~45m.",
-  "placeholder": "# Chocolate Cake\n---\nyield: 8 servings\ntime: 01:30\n---\n\n- flour 300 g\n- sugar 200 g\n- cocoa 50 g\n- eggs 3\n- milk 200 ml\n\n1. Mix dry ingredients.\n2. Add eggs and milk.\n3. Bake at 180C ~45m.",
+    "exampleRecipeSimple": "# Chocolate Cake\n---\nyield: 8 servings\ntime: 01:30\n---\n\n- flour 300 g\n- sugar 200 g\n- cocoa 50 g\n- eggs 3\n- milk 200 ml\n\n1. Mix dry ingredients.\n2. Add eggs and milk.\n3. Bake at 180C ~45m.",
     "helpButton": "Help",
-  "helpTitle": "Markdown format",
-  "helpIntroSimple": "Minimal format: title heading, optional meta block, bullet ingredients, steps. Start more recipes with new # headings.",
-  "ruleStartTitle": "Start with: # Recipe Title (required).",
-  "ruleOptionalMeta": "Optional block after title between --- lines with: yield, time.",
-  "ruleIngredientsSimple": "Ingredients: one per line starting with - .",
-  "ruleInstructionsSimple": "Blank line, then each instruction on its own line (you can add numbers or leave them off).",
-  "ruleBulk": "Bulk: just add another # Heading to start a new recipe.",
-  "hintTips": "Steps are numbered when displayed; adding numbers yourself is fine too. Keep it simple; extra blank lines ignored."
+    "helpTitle": "Markdown format",
+    "helpIntroSimple": "Minimal format: title heading, optional meta block, bullet ingredients, steps. Start more recipes with new # headings.",
+    "ruleStartTitle": "Start with: # Recipe Title (required).",
+    "ruleOptionalMeta": "Optional block after title between --- lines with: yield, time.",
+    "ruleIngredientsSimple": "Ingredients: one per line starting with - .",
+    "ruleInstructionsSimple": "Blank line, then each instruction on its own line (you can add numbers or leave them off).",
+    "ruleBulk": "Bulk: just add another # Heading to start a new recipe.",
+    "hintTips": "Steps are numbered when displayed; adding numbers yourself is fine too. Keep it simple; extra blank lines ignored."
   },
   "RecipeView": {
     "recipeDeleted": "Recipe deleted successfully!",
@@ -110,7 +109,7 @@
     "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",
     "ingredients": "Ingredients",
-  "instructions": "Instructions"
+    "instructions": "Instructions"
   },
   "LoginPage": {
     "signIn": "Sign in",
@@ -164,7 +163,7 @@
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
     "clearSelection": "Clear selection",
-  "selectAll": "Select all",
+    "selectAll": "Select all",
     "toggleSidebar": "Toggle sidebar",
     "loggedInAs": "Logged in as {username}",
     "signOut": "Sign Out",
