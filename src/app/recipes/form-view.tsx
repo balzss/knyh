@@ -19,6 +19,7 @@ import {
 
 import { useRecipeMutations, useTags } from '@/hooks'
 import type { Tag, Recipe } from '@/lib/types'
+import { formatTimestamp } from '@/lib/utils'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & { tags: Tag[] }
 
@@ -55,6 +56,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
       return
     }
 
+    const now = formatTimestamp(new Date())
     const formattedSubmitData = {
       ...submitData,
       tags: submitData.tags.map((t) => t.id),
@@ -62,7 +64,14 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
 
     if (initialRecipe) {
       updateRecipe.mutate(
-        { data: formattedSubmitData, id: initialRecipe.id },
+        {
+          data: {
+            ...formattedSubmitData,
+            createdAt: initialRecipe.createdAt,
+            lastModified: now,
+          },
+          id: initialRecipe.id,
+        },
         {
           onSuccess: (updatedRecipe) => {
             router.push(`/recipes/${updatedRecipe.id}`)
@@ -73,14 +82,17 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         }
       )
     } else {
-      createRecipe.mutate(formattedSubmitData, {
-        onSuccess: (newlyCreatedRecipes) => {
-          router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
-          myToast({
-            message: t('recipeCreated'),
-          })
-        },
-      })
+      createRecipe.mutate(
+        { ...formattedSubmitData, createdAt: now, lastModified: now },
+        {
+          onSuccess: (newlyCreatedRecipes) => {
+            router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
+            myToast({
+              message: t('recipeCreated'),
+            })
+          },
+        }
+      )
     }
   }
 

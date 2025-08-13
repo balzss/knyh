@@ -146,6 +146,7 @@ export function RecipeCard({
             </Badge>
           ))}
         </div>
+        {/** intentionally no created/modified display on cards */}
         <div
           className={`flex gap-4 ${isHovered ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >

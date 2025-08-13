@@ -205,6 +205,18 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               ))}
             </ol>
           </div>
+          <div className="mt-8 text-xs italic text-muted-foreground">
+            {recipe?.lastModified && (
+              <p>
+                {t('lastModified')}: {recipe.lastModified}
+              </p>
+            )}
+            {recipe?.createdAt && (
+              <p className="mt-1">
+                {t('created')}: {recipe.createdAt}
+              </p>
+            )}
+          </div>
         </PageLayout>
       </main>
     </div>

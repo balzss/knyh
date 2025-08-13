@@ -11,6 +11,7 @@ export function useRecipeForm(initialData: RecipeFormData) {
     if (formData.title !== initialData.title) {
       return true
     }
+    return false
   }, [formData.title, initialData.title])
 
   // Derive the 'isValid' state based on validation rules.

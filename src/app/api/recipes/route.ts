@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { generateId, serverDataPath } from '@/lib/utils'
+import { generateId, serverDataPath, formatTimestamp } from '@/lib/utils'
 import type { DatabaseSchema } from '@/lib/types'
 
 const dataFilePath = path.join(process.cwd(), serverDataPath)
@@ -33,9 +33,12 @@ export async function POST(request: Request) {
 
     const allData = await getAllData()
 
+    const now = formatTimestamp(new Date())
     const newRecipes = payload.map((recipeData) => ({
       id: generateId(),
       ...recipeData,
+      createdAt: recipeData.createdAt ?? now,
+      lastModified: recipeData.lastModified ?? now,
     }))
 
     const updatedRecipes = [...allData.recipes, ...newRecipes]
@@ -69,9 +72,10 @@ export async function PATCH(request: Request) {
 
     const allData = await getAllData()
 
+    const now = formatTimestamp(new Date())
     const updatedRecipes = allData.recipes.map((recipe) => {
       if (ids.includes(recipe.id)) {
-        return { ...recipe, ...data }
+        return { ...recipe, ...data, lastModified: now }
       }
       return recipe
     })

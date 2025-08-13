@@ -115,7 +115,9 @@
     "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
-    "instructions": "Elkészítés"
+  "instructions": "Elkészítés",
+  "lastModified": "Utoljára módosítva",
+  "created": "Létrehozva"
   },
   "LoginPage": {
     "signIn": "Bejelentkezés",

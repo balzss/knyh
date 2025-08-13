@@ -115,7 +115,9 @@
     "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",
     "ingredients": "Ingredients",
-    "instructions": "Instructions"
+  "instructions": "Instructions",
+  "lastModified": "Last modified",
+  "created": "Created"
   },
   "LoginPage": {
     "signIn": "Sign in",

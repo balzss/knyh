@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import crypto from 'crypto'
+import { format } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -47,6 +48,16 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 export const dataJsonPath = `data/data.json`
 export const clientDataPath = `${basePath}/${dataJsonPath}`
 export const serverDataPath = `public/${dataJsonPath}`
+
+// Timestamps
+export const DEFAULT_TIMESTAMP = '1970-01-01-00:00'
+export function formatTimestamp(date: Date = new Date()): string {
+  try {
+    return format(date, 'yyyy-MM-dd-HH:mm')
+  } catch {
+    return DEFAULT_TIMESTAMP
+  }
+}
 
 // Re-export recipe parsing utilities (barrel style)
 export { parseMarkdown, parseSingleRecipe, recipeToMarkdown } from './recipe-utils'

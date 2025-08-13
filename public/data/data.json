@@ -32,6 +32,8 @@
         "yield": "5 adag"
       },
       "archived": false,
+      "createdAt": "1970-01-01-00:00",
+      "lastModified": "1970-01-01-00:00",
       "id": "kgnk24xa"
     },
     {
@@ -41,7 +43,7 @@
         "2 tojás",
         "3 dl tej",
         "3 dl szóda",
-        "csipet só"
+        "1 csipet só"
       ],
       "instructions": [
         "Felütjük a tojásokat, kicsit felverjük, majd hozzáadjuk a lisztet.",
@@ -49,15 +51,17 @@
         "Forró serpenyőbe öntünk annyi tésztát, hogy ne legyen túl vastag a palacsinta, majd mindkét oldalát pirosra sütjük."
       ],
       "tags": [
-        "34jkdsa9",
+        "gik6jce3",
         "ezpe49z0",
-        "gik6jce3"
+        "34jkdsa9"
       ],
       "metadata": {
         "totalTime": "0:30",
         "yield": "20 darab"
       },
       "archived": false,
+      "createdAt": "1970-01-01-00:00",
+      "lastModified": "2025-08-14-00:18",
       "id": "pdos32ns"
     }
   ],
@@ -86,6 +90,6 @@
   "userConfig": {
     "userId": "bsaros",
     "theme": "dark",
-    "language": "hu"
+    "language": "en"
   }
 }

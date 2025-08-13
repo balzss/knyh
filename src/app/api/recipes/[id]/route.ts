@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { serverDataPath } from '@/lib/utils'
+import { serverDataPath, formatTimestamp } from '@/lib/utils'
 import type { Recipe, DatabaseSchema } from '@/lib/types'
 
 const dataFilePath = path.join(process.cwd(), serverDataPath)
@@ -25,9 +25,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Create the updated recipe, ensuring the ID from the URL is preserved.
+    const prev = allData.recipes[recipeIndex]
     const updatedRecipe: Recipe = {
+      ...prev,
       ...updatedRecipeData,
       id: id,
+      createdAt: prev.createdAt,
+      lastModified: formatTimestamp(new Date()),
     }
 
     // Replace the old recipe with the new one.
@@ -84,8 +88,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     if (ids && Array.isArray(ids) && ids.length > 0) {
       // Handle multiple recipe updates
+      const now = formatTimestamp(new Date())
       updatedRecipes = updatedRecipes.map((recipe) =>
-        ids.includes(recipe.id) ? { ...recipe, archived } : recipe
+        ids.includes(recipe.id) ? { ...recipe, archived, lastModified: now } : recipe
       )
     } else {
       // Handle single recipe update based on URL id
@@ -98,6 +103,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       updatedRecipes[recipeIndex] = {
         ...updatedRecipes[recipeIndex],
         archived,
+        lastModified: formatTimestamp(new Date()),
       }
     }
 

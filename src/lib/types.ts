@@ -15,6 +15,8 @@ export type Recipe = {
   tags: string[]
   metadata: RecipeMetaData
   archived?: boolean
+  createdAt: string
+  lastModified: string
 }
 
 export type Tag = {

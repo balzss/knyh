@@ -13,6 +13,7 @@ import { PageLayout, HelpDialog, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
 import type { Recipe } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown } from '@/lib/recipe-utils'
+import { formatTimestamp } from '@/lib/utils'
 
 // (parsing helpers moved to '@/lib/recipe-utils')
 
@@ -48,6 +49,7 @@ export default function RawView({ initialRecipe }: RawViewProps) {
 
     if (isMultipleRecipes) {
       // Create multiple recipes
+      const now = formatTimestamp(new Date())
       const payloads = parsed.map((recipe) => ({
         title: recipe.title,
         ingredients: recipe.ingredients,
@@ -58,6 +60,8 @@ export default function RawView({ initialRecipe }: RawViewProps) {
           yield: recipe.metadata.yield || '',
         },
         archived: false,
+        createdAt: now,
+        lastModified: now,
       }))
 
       createRecipe.mutate(payloads, {
@@ -70,6 +74,7 @@ export default function RawView({ initialRecipe }: RawViewProps) {
       })
     } else if (firstRecipe) {
       // Single recipe logic
+      const now = formatTimestamp(new Date())
       const payload = {
         title: firstRecipe.title,
         ingredients: firstRecipe.ingredients,
@@ -80,6 +85,8 @@ export default function RawView({ initialRecipe }: RawViewProps) {
           yield: firstRecipe.metadata.yield || initialRecipe?.metadata.yield || '',
         },
         archived: initialRecipe?.archived ?? false,
+        createdAt: initialRecipe?.createdAt ?? now,
+        lastModified: now,
       }
 
       if (initialRecipe) {

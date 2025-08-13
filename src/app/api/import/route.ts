@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 import { z } from 'zod'
-import { serverDataPath } from '@/lib/utils'
+import { serverDataPath, DEFAULT_TIMESTAMP } from '@/lib/utils'
 import type { DatabaseSchema } from '@/lib/types'
 
 const dataFilePath = path.join(process.cwd(), serverDataPath)
@@ -15,6 +15,8 @@ const recipeSchema = z.object({
   tags: z.array(z.string()),
   metadata: z.object({ totalTime: z.string(), yield: z.string() }),
   archived: z.boolean().optional(),
+  createdAt: z.string().optional(),
+  lastModified: z.string().optional(),
 })
 
 const tagSchema = z.object({ id: z.string(), displayName: z.string() })
@@ -42,7 +44,14 @@ export async function POST(request: Request) {
       )
     }
 
-    const data: DatabaseSchema = parsed.data
+    const data: DatabaseSchema = {
+      ...parsed.data,
+      recipes: parsed.data.recipes.map((r) => ({
+        ...r,
+        createdAt: r.createdAt ?? DEFAULT_TIMESTAMP,
+        lastModified: r.lastModified ?? DEFAULT_TIMESTAMP,
+      })),
+    }
 
     // Uniqueness checks
     const recipeIds = new Set<string>()
