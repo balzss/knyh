@@ -49,11 +49,17 @@
     "archivedItems": "{count, plural, one {# item archived} other {# items archived}}",
     "undo": "Undo",
     "filter": "Filter",
-    "selectTag": "Select tag"
+  "selectTag": "Select tag",
+  "emptyTitle": "No recipes yet",
+  "emptyDescription": "Start by adding your first recipe.",
+  "emptyCta": "Add recipe"
   },
   "ArchivePage": {
-    "restore": "Restore",
-    "delete": "Delete"
+  "restore": "Restore",
+  "delete": "Delete",
+  "emptyTitle": "No archived recipes",
+  "emptyDescription": "Archived recipes will appear here.",
+  "emptyCta": "Browse recipes"
   },
   "RandomRecipePage": {
     "title": "Random recipe",

@@ -1,7 +1,6 @@
 {
   "recipes": [
     {
-      "id": "kgnk24xa",
       "title": "Rizses hús",
       "ingredients": [
         "5 dkg füstölt szalonna",
@@ -32,10 +31,10 @@
         "totalTime": "0:45",
         "yield": "5 adag"
       },
-      "archived": false
+      "archived": false,
+      "id": "kgnk24xa"
     },
     {
-      "id": "pdos32ns",
       "title": "Palacsinta",
       "ingredients": [
         "20 dkg liszt",
@@ -57,7 +56,9 @@
       "metadata": {
         "totalTime": "0:30",
         "yield": "20 darab"
-      }
+      },
+      "archived": false,
+      "id": "pdos32ns"
     }
   ],
   "tags": [
@@ -85,6 +86,6 @@
   "userConfig": {
     "userId": "bsaros",
     "theme": "dark",
-    "language": "en"
+    "language": "hu"
   }
 }

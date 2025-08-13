@@ -2,18 +2,20 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { ArchiveRestore, Trash2 } from 'lucide-react'
+import { Archive, ArchiveRestore, Trash2, BookOpenText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, RecipeCard, myToast } from '@/components/custom'
+import { AppSidebar, PageLayout, RecipeCard, myToast, EmptyState } from '@/components/custom'
 import { useRecipes } from '@/hooks/use-recipes'
 import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useTags } from '@/hooks/use-tags'
 import type { Recipe, Tag } from '@/lib/types'
 
-export default function Archive() {
+export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
   const { toggleSidebar } = useSidebar()
   const { recipes, loading } = useRecipes({ archived: true })
@@ -105,7 +107,23 @@ export default function Archive() {
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
-          {loading && <div>Loading...</div>}
+          {loading && (
+            <div className="col-span-full py-20 text-center text-muted-foreground">Loading...</div>
+          )}
+          {!loading && recipes.length === 0 && (
+            <EmptyState
+              title={t('emptyTitle')}
+              description={t('emptyDescription')}
+              icon={Archive}
+              action={
+                <Button asChild>
+                  <Link href="/" className="inline-flex items-center gap-2">
+                    <BookOpenText /> {t('emptyCta')}
+                  </Link>
+                </Button>
+              }
+            />
+          )}
           {recipes?.map((recipe: Recipe) => {
             const recipeTags = recipe.tags
               ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))

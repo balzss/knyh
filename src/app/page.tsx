@@ -6,15 +6,25 @@ import { useTranslations } from 'next-intl'
 
 import { AnimatePresence } from 'motion/react'
 import { useSidebar } from '@/components/ui/sidebar'
-import { Archive } from 'lucide-react'
+import { Archive, FilePlus, BookOpenText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { TopBar } from '@/components/TopBar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
-import { AppSidebar, RecipeCard, PageLayout, myToast, TagEditor } from '@/components/custom'
+import {
+  AppSidebar,
+  RecipeCard,
+  PageLayout,
+  myToast,
+  TagEditor,
+  EmptyState,
+} from '@/components/custom'
 import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
 export default function Home() {
   const t = useTranslations('HomePage')
+  const tNav = useTranslations('Navigation')
   const { toggleSidebar } = useSidebar()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -128,20 +138,35 @@ export default function Home() {
           />
         )}
         <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
-          {filteredRecipes?.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              selectionMode={selectionList.length > 0}
-              tags={recipe.tags
-                .map((tagId) => tags?.find((tag) => tag.id === tagId))
-                .filter((t) => !!t)}
-              recipeData={recipe}
-              isSelected={selectionList.includes(recipe.id)}
-              onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-              recipeUrl={`${window?.location.href}recipes/${recipe.id}`}
-              compact={selectedLayout === 'grid'}
+          {filteredRecipes && filteredRecipes.length > 0 ? (
+            filteredRecipes.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                selectionMode={selectionList.length > 0}
+                tags={recipe.tags
+                  .map((tagId) => tags?.find((tag) => tag.id === tagId))
+                  .filter((t) => !!t)}
+                recipeData={recipe}
+                isSelected={selectionList.includes(recipe.id)}
+                onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+                recipeUrl={`${window?.location.href}recipes/${recipe.id}`}
+                compact={selectedLayout === 'grid'}
+              />
+            ))
+          ) : (
+            <EmptyState
+              title={t('emptyTitle')}
+              description={t('emptyDescription')}
+              icon={BookOpenText}
+              action={
+                <Button asChild>
+                  <Link href="/recipes/new" className="inline-flex items-center gap-2">
+                    <FilePlus /> {tNav('new-recipe-button')}
+                  </Link>
+                </Button>
+              }
             />
-          ))}
+          )}
         </PageLayout>
       </main>
     </div>

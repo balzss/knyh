@@ -49,11 +49,17 @@
     "archivedItems": "{count, plural, one {# recept archiválva} other {# receptek archiválva}}",
     "undo": "Visszavonás",
     "filter": "Szűrő",
-    "selectTag": "Címke kiválasztása"
+  "selectTag": "Címke kiválasztása",
+  "emptyTitle": "Még nincsenek receptek",
+  "emptyDescription": "Kezdd az első recept hozzáadásával.",
+  "emptyCta": "Új recept"
   },
   "ArchivePage": {
-    "restore": "Visszaállítás",
-    "delete": "Törlés"
+  "restore": "Visszaállítás",
+  "delete": "Törlés",
+  "emptyTitle": "Nincsenek archivált receptek",
+  "emptyDescription": "Az archivált receptek itt fognak megjelenni.",
+  "emptyCta": "Receptek megtekintése"
   },
   "RandomRecipePage": {
     "title": "Random recept",
