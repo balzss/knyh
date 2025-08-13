@@ -140,8 +140,7 @@
     "logIn": "Bejelentkezés"
   },
   "ShoppingListPage": {
-    "title": "Bevásárló lista",
-    "noItems": "Még nincsenek tételek a bevásárlólistádon."
+    "title": "Bevásárló lista"
   },
   "YieldDialog": {
     "setYield": "Adag beállítása",

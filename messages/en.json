@@ -140,8 +140,7 @@
     "logIn": "Log in"
   },
   "ShoppingListPage": {
-    "title": "Shopping list",
-    "noItems": "No items in your shopping list yet."
+    "title": "Shopping list"
   },
   "YieldDialog": {
     "setYield": "Set yield",

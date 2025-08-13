@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
@@ -14,15 +14,17 @@ type ListItem = {
   value: string
   autoFocus?: boolean
   noAnimate?: boolean
+  checked?: boolean
 }
 
 type SortableListProps = {
-  label: string
+  label?: string
   addItemLabel: string
   items: string[]
   onItemsChange: (newItems: string[]) => void
   className?: string
   multiLine?: boolean
+  checkable?: boolean
 }
 
 export function SortableList({
@@ -32,6 +34,7 @@ export function SortableList({
   onItemsChange,
   className = '',
   multiLine,
+  checkable = false,
 }: SortableListProps) {
   const [internalItems, setInternalItems] = useState<ListItem[]>([])
   const inputRefs = useRef<{
@@ -43,20 +46,40 @@ export function SortableList({
   useEffect(() => {
     if (!items) return
     setInternalItems((currentInternalItems) => {
+      // If values match 1:1 in order, keep as-is to preserve focus/animations and checked states
       if (
         items.length === currentInternalItems.length &&
         items.every((item, i) => item === currentInternalItems[i].value)
       ) {
         return currentInternalItems
       }
-      return items.map((item) => ({ value: item, id: nanoid(), noAnimate: true }))
+      // Otherwise, rebuild while attempting to preserve checked flags by matching on value
+      const used = new Set<number>()
+      const rebuilt = items.map((val) => {
+        const idx = currentInternalItems.findIndex((it, i) => it.value === val && !used.has(i))
+        if (idx !== -1) {
+          used.add(idx)
+          const { checked } = currentInternalItems[idx]
+          return { value: val, id: nanoid(), noAnimate: true, checked }
+        }
+        return { value: val, id: nanoid(), noAnimate: true, checked: false }
+      })
+      return checkable ? sortByChecked(rebuilt) : rebuilt
     })
-  }, [items])
+  }, [items, checkable])
 
   // set internal state and notify the parent
+  const sortByChecked = (arr: ListItem[]) => {
+    // Stable partition: unchecked first, then checked
+    const unchecked = arr.filter((i) => !i.checked)
+    const checked = arr.filter((i) => i.checked)
+    return [...unchecked, ...checked]
+  }
+
   const updateItems = (newItems: ListItem[]) => {
-    setInternalItems(newItems)
-    onItemsChange(newItems.map((item) => item.value))
+    const next = checkable ? sortByChecked(newItems) : newItems
+    setInternalItems(next)
+    onItemsChange(next.map((item) => item.value))
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -86,7 +109,7 @@ export function SortableList({
   }
 
   const handleAddItem = () => {
-    updateItems([...internalItems, { id: nanoid(), value: '', autoFocus: true }])
+    updateItems([...internalItems, { id: nanoid(), value: '', autoFocus: true, checked: false }])
   }
 
   const handleKeydown = (
@@ -118,17 +141,28 @@ export function SortableList({
     }
   }
 
+  const handleToggleChecked = (itemId: string, nextChecked: boolean) => {
+    const updated = internalItems.map((it) =>
+      it.id === itemId ? { ...it, checked: nextChecked } : it
+    )
+    updateItems(updated)
+  }
+
   return (
-    <div className={`grid w-full items-center gap-2 ${className}`}>
-      <Label>{label}</Label>
+    <div className={`grid w-full items-center ${className}`}>
+      {label && <Label className="mb-2">{label}</Label>}
       <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToParentElement]} id="dnd-context">
-        <ul className="grid gap-2">
+        <motion.ul
+          className={`grid gap-2 ${internalItems.length > 0 ? 'mb-2' : ''}`}
+          layout="position"
+          transition={{ duration: 0.12, ease: 'easeOut' }}
+        >
           <SortableContext
             items={internalItems.map((i) => i.id)}
             strategy={verticalListSortingStrategy}
           >
             <AnimatePresence>
-              {internalItems.map(({ id, value, autoFocus, noAnimate }) => (
+              {internalItems.map(({ id, value, autoFocus, noAnimate, checked }) => (
                 <SortableInput
                   key={id}
                   id={id}
@@ -138,13 +172,16 @@ export function SortableList({
                   onRemoveSelf={() => handleRemoveItem(id)}
                   onKeyDown={(e) => handleKeydown(e, id)}
                   autoFocus={autoFocus}
-                  multiLine={multiLine}
+                  multiLine={checkable ? false : multiLine}
                   noAnimate={noAnimate}
+                  checkable={checkable}
+                  checked={!!checked}
+                  onCheckedChange={(c) => handleToggleChecked(id, c)}
                 />
               ))}
             </AnimatePresence>
           </SortableContext>
-        </ul>
+        </motion.ul>
       </DndContext>
       <Button
         type="button"

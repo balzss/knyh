@@ -5,6 +5,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import { IconButton } from '@/components/custom'
 
 interface SortableInputProps
@@ -14,6 +15,9 @@ interface SortableInputProps
   inputRef?: (el: HTMLInputElement | HTMLTextAreaElement | null) => void
   noAnimate?: boolean
   multiLine?: boolean
+  checkable?: boolean
+  checked?: boolean
+  onCheckedChange?: (checked: boolean) => void
 }
 
 export function SortableInput({
@@ -22,15 +26,21 @@ export function SortableInput({
   inputRef,
   noAnimate = false,
   multiLine,
+  checkable,
+  checked,
+  onCheckedChange,
   ...rest
 }: SortableInputProps) {
   const [hovered, setHovered] = useState<boolean>(false)
   const [focused, setFocused] = useState<boolean>(false)
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+  const style: React.CSSProperties = {}
+  if (transform) {
+    style.transform = CSS.Transform.toString(transform)
+  }
+  if (transition && transform) {
+    style.transition = transition
   }
 
   const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
@@ -56,7 +66,7 @@ export function SortableInput({
       {...attributes}
     >
       <motion.div
-        className="relative flex items-center max-w-2xl w-full"
+        className={`relative flex items-center max-w-2xl w-full`}
         {...(noAnimate
           ? {}
           : {
@@ -66,8 +76,22 @@ export function SortableInput({
             })}
         transition={{ duration: 0.15, ease: 'easeOut' }}
       >
-        <span className="p-2 absolute touch-none flex items-center cursor-move" {...listeners}>
-          <GripVertical size={16} className="w-6" />
+        <span className="p-2 absolute left-0 top-0 bottom-0 flex items-center gap-2">
+          <span className="touch-none flex items-center cursor-move" {...listeners}>
+            <GripVertical size={16} className="w-6" />
+          </span>
+          {checkable && (
+            <Checkbox
+              checked={!!checked}
+              onCheckedChange={(val) => onCheckedChange?.(!!val)}
+              className={
+                checked
+                  ? 'data-[state=checked]:bg-muted-foreground data-[state=checked]:text-black border-muted-foreground'
+                  : ''
+              }
+              id={`check-${id}`}
+            />
+          )}
         </span>
         {multiLine ? (
           <Textarea
@@ -84,10 +108,11 @@ export function SortableInput({
           <Input
             {...rest}
             autoComplete="off"
-            // Set isHovered to true when the input gains focus, and only set it to false when focus moves completely outside the
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            className="px-9"
+            className={`${checkable ? 'pl-[4.25rem] pr-3 border-0' : 'px-9'} ${
+              checked ? 'line-through text-muted-foreground' : ''
+            }`}
             ref={inputRef}
           />
         )}
