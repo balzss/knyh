@@ -86,7 +86,18 @@
   "RawView": {
     "badFormatting": "Rossz formázás",
     "emptyRecipeWarning": "Nem lehet üres receptet menteni",
-    "saveRecipe": "Recept mentése"
+    "saveRecipe": "Recept mentése",
+  "exampleRecipeSimple": "# Csokis Torta\n---\nyield: 8 adag\ntime: 01:30\n---\n\n- liszt 300 g\n- cukor 200 g\n- kakaó 50 g\n- tojás 3\n- tej 200 ml\n\n1. Száraz hozzávalók elkeverése.\n2. Tojás és tej hozzáadása.\n3. Sütés 180C ~45p.",
+  "placeholder": "# Csokis Torta\n---\nyield: 8 adag\ntime: 01:30\n---\n\n- liszt 300 g\n- cukor 200 g\n- kakaó 50 g\n- tojás 3\n- tej 200 ml\n\n1. Száraz hozzávalók elkeverése.\n2. Tojás és tej hozzáadása.\n3. Sütés 180C ~45p.",
+    "helpButton": "Súgó",
+  "helpTitle": "Markdown formátum",
+  "helpIntroSimple": "Minimál formátum: cím címsor, opcionális meta blokk, felsorolás hozzávalók, lépések soronként. Több recept új # címsorral.",
+  "ruleStartTitle": "Kezdd ezzel: # Recept Cím (kötelező).",
+  "ruleOptionalMeta": "Opcionális blokk a cím után --- között: yield, time.",
+  "ruleIngredientsSimple": "Hozzávalók: soronként egy - jellel.",
+  "ruleInstructionsSimple": "Üres sor, majd minden lépés külön sor (számozhatod vagy kihagyhatod).",
+  "ruleBulk": "Több: új recept egy új # címsorral.",
+  "hintTips": "A lépések megjelenítéskor számozódnak; saját számozás is rendben. Tartsd egyszerűen; extra üres sorok figyelmen kívül vannak hagyva."
   },
   "RecipeView": {
     "recipeDeleted": "Recept sikeresen törölve!",

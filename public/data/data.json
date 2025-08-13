@@ -58,6 +58,102 @@
         "yield": "20 darab",
         "totalTime": "0:30"
       }
+    },
+    {
+      "title": "Spaghetti Aglio e Olio",
+      "ingredients": [
+        "spaghetti 200 g",
+        "garlic 4 cloves (sliced)",
+        "olive oil 3 tbsp",
+        "red pepper flakes 1/2 tsp",
+        "parsley small handful",
+        "salt",
+        "black pepper"
+      ],
+      "instructions": [
+        "Boil pasta in salted water until al dente.",
+        "Gently heat olive oil, garlic, and pepper flakes (do not brown).",
+        "Add a ladle of pasta water, emulsify.",
+        "Toss in drained pasta, season, add parsley, serve."
+      ],
+      "tags": [],
+      "metadata": {
+        "totalTime": "00:15",
+        "yield": "2 servings"
+      },
+      "archived": true,
+      "id": "suic99bq"
+    },
+    {
+      "id": "xa0fdqwo",
+      "title": "Quick Peanut Butter Oat Balls",
+      "ingredients": [
+        "rolled oats 1 cup",
+        "peanut butter 1/2 cup",
+        "honey 3 tbsp",
+        "mini chocolate chips 1/4 cup",
+        "pinch of salt"
+      ],
+      "instructions": [
+        "Stir all ingredients.",
+        "Chill 10 minutes.",
+        "Roll into balls.",
+        "Refrigerate."
+      ],
+      "tags": [],
+      "metadata": {
+        "totalTime": "",
+        "yield": ""
+      },
+      "archived": true
+    },
+    {
+      "id": "6tdlo5sv",
+      "title": "Classic Pancakes",
+      "ingredients": [
+        "all-purpose flour 1 cup",
+        "baking powder 2 tsp",
+        "sugar 2 tbsp",
+        "salt 1/4 tsp",
+        "milk 3/4 cup",
+        "egg 1",
+        "melted butter 2 tbsp"
+      ],
+      "instructions": [
+        "Whisk dry ingredients.",
+        "Add milk, egg, butter; mix just until combined.",
+        "Rest 5 minutes.",
+        "Cook on medium skillet until bubbles set; flip; finish."
+      ],
+      "tags": [],
+      "metadata": {
+        "totalTime": "",
+        "yield": "8 pancakes"
+      },
+      "archived": true
+    },
+    {
+      "id": "2dpcx633",
+      "title": "Simple Tomato Salad",
+      "ingredients": [
+        "ripe tomatoes 3 (wedges)",
+        "red onion 1/4 (thin slices)",
+        "olive oil 2 tbsp",
+        "red wine vinegar 1 tbsp",
+        "salt",
+        "black pepper",
+        "fresh basil leaves"
+      ],
+      "instructions": [
+        "Slice vegetables and basil.",
+        "Toss with oil, vinegar, salt,"
+      ],
+      "tags": [],
+      "metadata": {
+        "totalTime": "00:05",
+        "yield": ""
+      },
+      "archived": true
     }
   ],
   "tags": [
@@ -83,7 +179,7 @@
     }
   ],
   "userConfig": {
-    "language": "hu",
+    "language": "en",
     "userId": "bsaros",
     "theme": "dark"
   }
