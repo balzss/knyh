@@ -27,7 +27,7 @@ import {
   BookOpenText,
   Dices,
 } from 'lucide-react'
-import { useTags, useTagMutations, useRecipes } from '@/hooks'
+import { useTags, useTagMutations, useRecipes, useLongPress } from '@/hooks'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -37,7 +37,7 @@ import {
 import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
 import { myToast } from '@/components/custom'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
 
@@ -53,6 +53,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const { recipes } = useRecipes()
   const { renameTag, deleteTag } = useTagMutations()
   const [tagToDelete, setTagToDelete] = useState<{ id: string; displayName: string } | null>(null)
+  const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
 
   const sidebarItems = (tags: Tag[]) => [
     {
@@ -156,23 +157,48 @@ export function AppSidebar({ path }: AppSidebarProps) {
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
-                            {item.subItems.map((subItem) => (
-                              <SidebarMenuSubItem
-                                key={subItem.id}
-                                className="flex items-center group/tagrow"
-                              >
+                            {item.subItems.map((subItem) => {
+                              const { bind, wasLongPress } = useLongPress(
+                                () => setMenuOpenForTag(subItem.id),
+                                { enabled: isMobile }
+                              )
+                              return (
+                                <SidebarMenuSubItem
+                                  key={subItem.id}
+                                  className="flex items-center group/tagrow"
+                                  {...bind}
+                                >
                                 <SidebarMenuSubButton asChild className="flex-1">
-                                  <Link href={subItem.href} onClick={() => setOpenMobile(false)}>
+                                  <Link
+                                    href={subItem.href}
+                                    onClick={(e) => {
+                                      if (wasLongPress()) {
+                                        e.preventDefault()
+                                        return
+                                      }
+                                      setOpenMobile(false)
+                                    }}
+                                  >
                                     <span>{subItem.displayName}</span>
                                   </Link>
                                 </SidebarMenuSubButton>
-                                <DropdownMenu>
+                                <DropdownMenu
+                                  open={menuOpenForTag === subItem.id}
+                                  onOpenChange={(open) => {
+                                    setMenuOpenForTag(open ? subItem.id : null)
+                                  }}
+                                >
                                   <DropdownMenuTrigger asChild>
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      // Show while hovered, focused, focused-visible, or when dropdown menu is open
-                                      className="h-6 w-6 ml-1 opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 data-[state=open]:opacity-100 transition-opacity"
+                                      // Always visible on mobile (touch), hover/focus/open on desktop
+                                      className={
+                                        `h-6 w-6 ml-1 transition-opacity ` +
+                                        (isMobile
+                                          ? 'opacity-100'
+                                          : 'opacity-0 group-hover/tagrow:opacity-100 focus:opacity-100 data-[state=open]:opacity-100')
+                                      }
                                     >
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>
@@ -214,8 +240,9 @@ export function AppSidebar({ path }: AppSidebarProps) {
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </SidebarMenuSubItem>
-                            ))}
+                                </SidebarMenuSubItem>
+                              )
+                            })}
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       </SidebarMenuItem>

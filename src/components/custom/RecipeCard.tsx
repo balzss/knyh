@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl'
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import Link from 'next/link'
 import {
   Archive,
@@ -18,10 +18,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
-import { useRecipeMutations, useConfirmDialog } from '@/hooks'
+import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
 
-// Constants
-const SELECTION_TIMEOUT_MS = 500
 
 type RecipeCardProps = {
   tags: Tag[]
@@ -48,29 +46,9 @@ export function RecipeCard({
   const { updateRecipe, deleteRecipe } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
-  const selectTimeout = useRef<NodeJS.Timeout | null>(null)
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (selectTimeout.current) {
-        clearTimeout(selectTimeout.current)
-      }
-    }
-  }, [])
-
-  const clearSelectTimeout = useCallback(() => {
-    if (selectTimeout.current) {
-      clearTimeout(selectTimeout.current)
-      selectTimeout.current = null
-    }
-  }, [])
-
-  const handleTouchStart = useCallback(() => {
-    selectTimeout.current = setTimeout(() => {
-      onSelect?.(!isSelected)
-    }, SELECTION_TIMEOUT_MS)
-  }, [onSelect, isSelected])
+  const { bind: longPressBind } = useLongPress(() => {
+    onSelect?.(!isSelected)
+  })
 
   const handleDeleteRecipe = useCallback(async () => {
     const confirmed = await confirmDelete({ name: recipeData.title, entity: t('delete') })
@@ -113,9 +91,7 @@ export function RecipeCard({
       }}
       className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
       tabIndex={0}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={clearSelectTimeout}
-      onTouchCancel={clearSelectTimeout}
+  {...longPressBind}
       role="article"
       aria-label={`Recipe: ${title}`}
     >
