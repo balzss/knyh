@@ -6,9 +6,10 @@ import { ArchiveRestore, Trash2 } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, RecipeCard } from '@/components/custom'
+import { AppSidebar, PageLayout, RecipeCard, myToast } from '@/components/custom'
 import { useRecipes } from '@/hooks/use-recipes'
 import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useTags } from '@/hooks/use-tags'
 import type { Recipe, Tag } from '@/lib/types'
 
@@ -17,7 +18,8 @@ export default function Archive() {
   const { toggleSidebar } = useSidebar()
   const { recipes, loading } = useRecipes({ archived: true })
   const { tags } = useTags()
-  const { updateRecipes } = useRecipeMutations()
+  const { updateRecipes, deleteRecipes } = useRecipeMutations()
+  const { confirmDelete } = useConfirmDialog()
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
@@ -32,6 +34,21 @@ export default function Archive() {
         },
       }
     )
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectionList.length === 0) return
+    // Reuse confirm dialog; show count in name
+    const confirmed = await confirmDelete({ name: `${selectionList.length} item(s)` })
+    if (!confirmed) return
+    deleteRecipes.mutate(selectionList, {
+      onSuccess: (ids) => {
+        myToast({
+          message: `${ids.length} recipe${ids.length === 1 ? '' : 's'} deleted`,
+        })
+        setSelectionList([])
+      },
+    })
   }
 
   const handleCardSelect = (id: string, selected: boolean) => {
@@ -63,6 +80,8 @@ export default function Archive() {
       <TopBarSelect
         onClearSelection={() => setSelectionList([])}
         selectionLength={selectionList.length}
+        onSelectAll={() => setSelectionList(recipes.map((r) => r.id))}
+        totalCount={recipes.length}
         selectActions={[
           {
             icon: <ArchiveRestore />,
@@ -72,7 +91,7 @@ export default function Archive() {
           {
             icon: <Trash2 />,
             tooltip: t('delete'),
-            onClick: () => console.log(selectionList.length + ' item deleted...'),
+            onClick: handleBulkDelete,
           },
         ]}
       />

@@ -96,5 +96,22 @@ export const useRecipeMutations = () => {
     onSuccess: invalidateRecipesQuery,
   })
 
-  return { createRecipe, updateRecipe, updateRecipes, deleteRecipe }
+  // BULK DELETE mutation (fallback to multiple single deletes until API supports batch)
+  const deleteRecipes = useMutation({
+    mutationFn: async (ids: string[]): Promise<string[]> => {
+      await Promise.all(
+        ids.map(async (id) => {
+          const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+          if (!response.ok) throw new Error('Failed to delete recipe')
+          // ignore body (or could await response.json())
+        })
+      )
+      return ids
+    },
+    onSuccess: () => {
+      invalidateRecipesQuery()
+    },
+  })
+
+  return { createRecipe, updateRecipe, updateRecipes, deleteRecipe, deleteRecipes }
 }

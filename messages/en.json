@@ -164,6 +164,7 @@
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
     "clearSelection": "Clear selection",
+  "selectAll": "Select all",
     "toggleSidebar": "Toggle sidebar",
     "loggedInAs": "Logged in as {username}",
     "signOut": "Sign Out",

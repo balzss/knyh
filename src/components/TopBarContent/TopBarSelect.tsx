@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { motion } from 'motion/react'
-import { X } from 'lucide-react'
+import { X, ListChecks } from 'lucide-react'
 import { IconButton } from '@/components/custom'
 
 type SelectAction = {
@@ -12,12 +12,16 @@ type SelectAction = {
 type TopBarSelectProps = {
   selectionLength: number
   onClearSelection: () => void
+  onSelectAll?: () => void
+  totalCount?: number
   selectActions: SelectAction[]
 }
 
 export function TopBarSelect({
   selectionLength,
   onClearSelection,
+  onSelectAll,
+  totalCount,
   selectActions,
 }: TopBarSelectProps) {
   const t = useTranslations('TopBar')
@@ -39,6 +43,16 @@ export function TopBarSelect({
       <span className="mr-auto sm:mr-4 font-bold">
         {selectionLength} {t('selectedItems')}
       </span>
+      {onSelectAll && (
+        <IconButton
+          iconSize="normal"
+          variant="ghost"
+          icon={<ListChecks />}
+          tooltip={t('selectAll')}
+          onClick={onSelectAll}
+          disabled={typeof totalCount === 'number' && selectionLength >= (totalCount || 0)}
+        />
+      )}
       {selectActions.map(({ icon, tooltip, onClick }, index) => (
         <IconButton
           key={index}

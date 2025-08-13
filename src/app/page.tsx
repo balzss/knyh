@@ -82,6 +82,8 @@ export default function Home() {
                 key="select"
                 onClearSelection={() => setSelectionList([])}
                 selectionLength={selectionList.length}
+                onSelectAll={() => setSelectionList(filteredRecipes.map((r) => r.id))}
+                totalCount={filteredRecipes.length}
                 selectActions={[
                   {
                     icon: <Archive />,
