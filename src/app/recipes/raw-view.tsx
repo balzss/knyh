@@ -7,7 +7,7 @@ import { FileWarning, Save, HelpCircle } from 'lucide-react'
 import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-markdown'
-import 'prismjs/themes/prism-dark.css'
+import './custom-prism-theme.css'
 import { Button } from '@/components/ui/button'
 import { PageLayout, HelpDialog, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
@@ -183,7 +183,7 @@ export default function RawView({ initialRecipe }: RawViewProps) {
         value={code}
         onValueChange={(code) => setCode(code)}
         highlight={(code) => highlight(code, languages.markdown, 'markdown')}
-        className="rounded-lg text-sm min-h-24"
+        className="min-h-80 text-sm md-editor"
         spellCheck
         style={{
           fontFamily: '"Noto Sans Mono", monospace',
