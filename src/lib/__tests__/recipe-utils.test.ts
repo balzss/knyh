@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { parseMarkdown, recipeToMarkdown } from '@/lib/recipe-utils'
+import type { Recipe } from '@/lib/types'
 
 describe('recipe-utils parseMarkdown', () => {
   it('parses a single minimal recipe', () => {
@@ -43,7 +44,7 @@ describe('recipe-utils parseMarkdown', () => {
 
 describe('recipe-utils recipeToMarkdown', () => {
   it('roundtrips recipe -> markdown -> recipe', () => {
-    const recipe = {
+    const recipe: Recipe = {
       id: 'r1',
       title: 'Roundtrip',
       ingredients: ['ing 1', 'ing 2'],
@@ -52,7 +53,7 @@ describe('recipe-utils recipeToMarkdown', () => {
       metadata: { yield: '3', totalTime: '15m' },
       archived: false,
     }
-    const md = recipeToMarkdown(recipe as any)
+    const md = recipeToMarkdown(recipe)
     const parsed = parseMarkdown(md)
     expect(parsed.length).toBe(1)
     const r = parsed[0]

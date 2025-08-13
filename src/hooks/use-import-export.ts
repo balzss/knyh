@@ -2,9 +2,17 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { clientDataPath } from '@/lib/utils'
-import type { DatabaseSchema } from '@/lib/types'
+import type { DatabaseSchema, UserConfig } from '@/lib/types'
+import { toast } from './use-toast'
 
-export function useImportExport() {
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+const importApiUrl = `${basePath}/api/import`
+
+type UseImportExportOptions = {
+  onConfigImported?: (config: UserConfig) => void
+}
+
+export function useImportExport(options: UseImportExportOptions = {}) {
   const queryClient = useQueryClient()
 
   const handleExport = async () => {
@@ -29,21 +37,30 @@ export function useImportExport() {
 
   const importMutation = useMutation({
     mutationFn: async (data: DatabaseSchema) => {
-      // This is where you would typically send the data to your server
-      // For now, we'll just log it and invalidate queries to refetch data
-      console.log('Imported data:', data)
-      alert('Coming soon...')
-      // Example of what you might do:
-      // await fetch('/api/import', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data),
-      // });
+      const res = await fetch(importApiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Import failed')
+      }
+      return res.json()
     },
-    onSuccess: () => {
+    onSuccess: (_resp, variables) => {
+      toast({ title: 'Import complete', description: 'Data imported successfully.' })
+      // Optimistically apply imported config (theme, etc.) before refetch.
+      if (variables?.userConfig && options.onConfigImported) {
+        options.onConfigImported(variables.userConfig)
+      }
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
       queryClient.invalidateQueries({ queryKey: ['tags'] })
       queryClient.invalidateQueries({ queryKey: ['userConfig'] })
+    },
+    onError: (error: unknown) => {
+      const msg = error instanceof Error ? error.message : 'Unknown error'
+      toast({ title: 'Import failed', description: msg })
     },
   })
 
@@ -60,11 +77,12 @@ export function useImportExport() {
           }
         } catch (error) {
           console.error('Failed to parse JSON:', error)
+          toast({ title: 'Invalid file', description: 'Could not parse JSON.' })
         }
       }
       reader.readAsText(file)
     }
   }
 
-  return { handleExport, handleImport }
+  return { handleExport, handleImport, importing: importMutation.isPending }
 }

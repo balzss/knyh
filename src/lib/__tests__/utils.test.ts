@@ -68,10 +68,10 @@ describe('getErrorMessage', () => {
     expect(getErrorMessage({ message: 'plain' })).toBe('plain')
   })
   it('falls back when message not string', () => {
-    expect(getErrorMessage({ message: 123 as any }, 'fallback')).toBe('fallback')
+    expect(getErrorMessage({ message: 123 }, 'fallback')).toBe('fallback')
   })
   it('falls back for primitive thrown value', () => {
-    expect(getErrorMessage('oops' as any, 'fb')).toBe('fb')
+    expect(getErrorMessage('oops', 'fb')).toBe('fb')
   })
 })
 

@@ -29,14 +29,27 @@ export default function SettingsPage() {
   const [mounted, setMounted] = useState(false)
   const { data: config, isLoading: configLoading } = useConfig()
   const updateConfig = useUpdateConfig()
-  const { handleExport, handleImport } = useImportExport()
+  const { handleExport, handleImport } = useImportExport({
+    onConfigImported: (imported) => {
+      // Apply theme immediately
+      if (imported.theme && imported.theme !== theme) setTheme(imported.theme as Theme)
+      // Reload only if language changed
+      if (config?.language && imported.language && imported.language !== config.language) {
+        window.location.reload()
+      }
+    },
+  })
 
   const handleThemeSelect = (newTheme: Theme) => {
+    const previous = theme as Theme | undefined
+    // Apply immediately (optimistic)
+    setTheme(newTheme)
     updateConfig.mutate(
       { theme: newTheme },
       {
-        onSuccess: () => {
-          setTheme(newTheme)
+        onError: () => {
+          // Revert if failed
+          if (previous && previous !== newTheme) setTheme(previous)
         },
       }
     )
