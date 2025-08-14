@@ -12,10 +12,17 @@ import {
   Timer,
   ArchiveRestore,
   Trash2,
+  Copy,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
@@ -42,17 +49,33 @@ export function RecipeCard({
   compact = true,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
-  const { updateRecipe, deleteRecipe } = useRecipeMutations()
+  const { updateRecipe, deleteRecipe, createRecipe } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
   const { bind: longPressBind } = useLongPress(() => {
     onSelect?.(!isSelected)
   })
 
   const handleDeleteRecipe = useCallback(async () => {
-    const confirmed = await confirmDelete({ name: recipeData.title, entity: t('delete') })
+    const confirmed = await confirmDelete({ name: recipeData.title })
     if (confirmed) deleteRecipe.mutate(recipeData.id)
-  }, [confirmDelete, recipeData.title, recipeData.id, deleteRecipe, t])
+  }, [confirmDelete, recipeData.title, recipeData.id, deleteRecipe])
+
+  const handleDuplicateRecipe = useCallback(async () => {
+    const { id, ...recipeDataWithoutId } = recipeData
+    const duplicatedRecipe = {
+      ...recipeDataWithoutId,
+      title: `${recipeData.title} (Copy)`,
+    }
+    createRecipe.mutate(duplicatedRecipe, {
+      onSuccess: () => {
+        myToast({
+          message: t('recipeDuplicated'),
+        })
+      },
+    })
+  }, [createRecipe, recipeData, t])
 
   const handleArchiveRecipe = useCallback(
     (archived: boolean = true) => {
@@ -114,7 +137,7 @@ export function RecipeCard({
           </div>
         </CardDescription>
         <div
-          className={`text-muted-foreground absolute top-0 right-0 ${isHovered || selectionMode ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-100 ease-in-out`}
+          className={`text-muted-foreground absolute top-0 right-0 ${(isHovered || selectionMode) && !isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} transition-all duration-100 ease-in-out`}
         >
           {onSelect && (
             <Button
@@ -148,7 +171,7 @@ export function RecipeCard({
         </div>
         {/** intentionally no created/modified display on cards */}
         <div
-          className={`flex gap-4 ${isHovered ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
+          className={`flex gap-4 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >
           {archivedMode ? (
             <>
@@ -184,7 +207,25 @@ export function RecipeCard({
                 iconSize="small"
                 onClick={() => handleArchiveRecipe()}
               />
-              <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} iconSize="small" />
+              <DropdownMenu onOpenChange={setIsDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <IconButton
+                    icon={<EllipsisVertical />}
+                    tooltip={t('moreOptions')}
+                    iconSize="small"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleDuplicateRecipe}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    {t('duplicate')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDeleteRecipe}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {t('delete')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>

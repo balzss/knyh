@@ -16,7 +16,7 @@ export interface ConfirmDialogContextType {
 }
 
 export interface UseConfirmDialogExtended extends ConfirmDialogContextType {
-  confirmDelete: (params: { name?: string; entity?: string }) => Promise<boolean>
+  confirmDelete: (params: { name?: string }) => Promise<boolean>
 }
 
 export function useConfirmDialog(): UseConfirmDialogExtended {
@@ -27,9 +27,9 @@ export function useConfirmDialog(): UseConfirmDialogExtended {
   const t = useTranslations('ConfirmDialog')
 
   const confirmDelete = useCallback(
-    async ({ name = '', entity = 'item' }: { name?: string; entity?: string }) => {
+    async ({ name = '' }: { name?: string }) => {
       return context.confirm({
-        title: t('deleteTitle', { entity }),
+        title: t('deleteTitle', { name }),
         description: t('deleteDescription', { name }),
         confirmText: t('deleteConfirmButton'),
         cancelText: t('cancelButton'),

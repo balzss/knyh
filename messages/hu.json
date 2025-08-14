@@ -39,9 +39,11 @@
     "edit": "Recept szerkesztése",
     "share": "Megosztás",
     "archive": "Archiválás",
+    "duplicate": "Másolás",
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
+    "recipeDuplicated": "Recept lemásolva",
     "undo": "Visszavonás"
   },
   "HomePage": {
@@ -187,7 +189,7 @@
     "maxCols": "Max oszlop: {cols}"
   },
   "ConfirmDialog": {
-    "deleteTitle": "{entity} törlése",
+    "deleteTitle": "{name} törlése",
     "deleteDescription": "Biztosan törölni szeretnéd a(z) \"{name}\" recepted? Ez a művelet nem vonható vissza.",
     "deleteConfirmButton": "Törlés",
     "cancelButton": "Mégse"

@@ -39,9 +39,11 @@
     "edit": "Edit Recipe",
     "share": "Share",
     "archive": "Archive",
+    "duplicate": "Duplicate",
     "moreOptions": "More Options",
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
+    "recipeDuplicated": "Recipe duplicated",
     "undo": "Undo"
   },
   "HomePage": {
@@ -187,7 +189,7 @@
     "maxCols": "Max cols: {cols}"
   },
   "ConfirmDialog": {
-    "deleteTitle": "Delete {entity}",
+    "deleteTitle": "Delete {name}",
     "deleteDescription": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
     "deleteConfirmButton": "Delete",
     "cancelButton": "Cancel"
