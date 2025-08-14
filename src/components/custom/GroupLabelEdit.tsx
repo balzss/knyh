@@ -61,7 +61,9 @@ export function GroupLabelEdit({
     if (labelRef.current?.textContent !== '' && isInErrorState) setIsInErrorState(false)
   }
 
-  const handleEditClick = () => {
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent form submission
+    e.stopPropagation() // Prevent event bubbling
     if (focused) {
       setFocused(false)
       onLabelChange(labelRef.current?.textContent as string)
@@ -73,6 +75,7 @@ export function GroupLabelEdit({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     if (e.key === 'Enter' || e.key === 'Escape') {
+      e.preventDefault() // Prevent form submission
       labelRef.current?.blur()
     }
   }
@@ -82,6 +85,7 @@ export function GroupLabelEdit({
       className="flex items-center min-h-10 gap-2 text-muted-foreground relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={(e) => e.stopPropagation()} // Prevent event bubbling
     >
       <span
         className={`transition-[padding] transition-100 min-w-[1rem] text-xl sm:mr-0 mr-auto focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:rounded-md py-1 ${focused ? 'p-1' : ''} ${isInErrorState ? 'focus:ring-destructive' : 'focus:ring-primary'}`}
@@ -107,7 +111,11 @@ export function GroupLabelEdit({
         <IconButton
           key={tooltip}
           icon={icon}
-          onClick={onClick}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onClick?.(e)
+          }}
           tooltip={tooltip}
           variant="ghost"
           iconSize="small"

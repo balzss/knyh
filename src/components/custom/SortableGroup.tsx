@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { SortableList, GroupLabelEdit } from '@/components/custom'
 import type { GroupData } from '@/lib/types'
 
-type SortableGroupProps = {
+type SortableGroupsProps = {
   data?: GroupData[]
   onDataChange?: (newData: GroupData[]) => void
   defaultLabel: string
@@ -12,16 +12,24 @@ type SortableGroupProps = {
 
 const defaultGroupData: GroupData[] = [{ label: '', items: [] }]
 
-export function SortableGroup({ data, onDataChange, defaultLabel }: SortableGroupProps) {
+export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGroupsProps) {
   const [groupData, setGroupData] = useState<GroupData[]>(() => {
-    return data && data.length > 0 ? data : defaultGroupData
+    // Always ensure at least one group is present
+    if (!data || data.length === 0) {
+      return defaultGroupData
+    }
+    return data
   })
 
   useEffect(() => {
     // This effect syncs the component if the parent passes down a new `data` prop.
-    // It's important for fully controlled behavior.
+    // Always ensure at least one group is present
     if (data) {
-      setGroupData(data)
+      if (data.length === 0) {
+        setGroupData(defaultGroupData)
+      } else {
+        setGroupData(data)
+      }
     }
   }, [data])
 
@@ -29,58 +37,48 @@ export function SortableGroup({ data, onDataChange, defaultLabel }: SortableGrou
   // Each handler now passes a function to setGroupData to avoid stale state.
 
   const handleGroupLabelChange = (index: number, newLabel: string) => {
-    setGroupData((currentData) => {
-      // <-- Use a function to get the latest state
-      const newData = currentData.map((group, i) =>
-        i === index ? { ...group, label: newLabel } : group
-      )
-      onDataChange?.(newData) // Notify parent from within the update
-      return newData
-    })
+    const newData = groupData.map((group, i) =>
+      i === index ? { ...group, label: newLabel } : group
+    )
+    setGroupData(newData)
+    onDataChange?.(newData)
   }
 
   const handleItemsChange = (index: number, newItems: string[]) => {
-    setGroupData((currentData) => {
-      // <-- Use a function to get the latest state
-      const newData = currentData.map((group, i) =>
-        i === index ? { ...group, items: newItems } : group
-      )
-      onDataChange?.(newData) // Notify parent from within the update
-      return newData
-    })
+    const newData = groupData.map((group, i) =>
+      i === index ? { ...group, items: newItems } : group
+    )
+    setGroupData(newData)
+    onDataChange?.(newData)
   }
 
   const handleMoveGroup = (currentIndex: number, newIndex: number) => {
-    setGroupData((currentData) => {
-      // <-- Use a function to get the latest state
-      const reorderedData = [...currentData]
-      const [itemToMove] = reorderedData.splice(currentIndex, 1)
-      reorderedData.splice(newIndex, 0, itemToMove)
-      onDataChange?.(reorderedData)
-      return reorderedData
-    })
+    const reorderedData = [...groupData]
+    const [itemToMove] = reorderedData.splice(currentIndex, 1)
+    reorderedData.splice(newIndex, 0, itemToMove)
+    setGroupData(reorderedData)
+    onDataChange?.(reorderedData)
   }
 
   const handleAddGroup = () => {
-    setGroupData((currentData) => {
-      // <-- Use a function to get the latest state
-      const updatedData = [...currentData]
-      if (updatedData.length === 1 && updatedData[0].label === '') {
-        updatedData[0].label = 'First Group'
-      }
-      const newData = [...updatedData, { label: 'New Group', items: [] }]
-      onDataChange?.(newData)
-      return newData
-    })
+    const updatedData = [...groupData]
+    if (updatedData.length === 1 && updatedData[0].label === '') {
+      // When adding the second group, give the first one a default label
+      updatedData[0].label = defaultLabel
+    }
+    const newData = [...updatedData, { label: 'New Group', items: [] }]
+    setGroupData(newData)
+    onDataChange?.(newData)
   }
 
   const handleRemoveGroup = (index: number) => {
-    setGroupData((currentData) => {
-      // <-- Use a function to get the latest state
-      const newData = currentData.filter((_, i) => i !== index)
-      onDataChange?.(newData)
-      return newData
-    })
+    // Prevent removing the last group - always keep at least one
+    if (groupData.length <= 1) {
+      return
+    }
+    const newData = groupData.filter((_, i) => i !== index)
+    setGroupData(newData)
+    onDataChange?.(newData)
   }
 
   // This value is correctly derived from state on each render.
@@ -118,7 +116,7 @@ export function SortableGroup({ data, onDataChange, defaultLabel }: SortableGrou
               />
             )}
             <SortableList
-              label={group.label || defaultLabel}
+              label={groupData.length === 1 ? defaultLabel : ''}
               addItemLabel="New ingredient"
               items={group.items}
               onItemsChange={(newItems) => handleItemsChange(index, newItems)}

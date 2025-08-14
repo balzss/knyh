@@ -1,9 +1,9 @@
 // Recipe parsing & serialization utilities extracted from raw-view for reuse.
-import type { Recipe } from './types'
+import type { Recipe, GroupData } from './types'
 
 export type ParsedRecipe = {
   title: string
-  ingredients: string[]
+  ingredients: GroupData[]
   instructions: string[]
   metadata: { yield: string; totalTime: string }
 }
@@ -107,7 +107,7 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
   if (!ingredients.length || !instructions.length) return null
   return {
     title,
-    ingredients,
+    ingredients: [{ label: '', items: ingredients }], // Convert string[] to GroupData[]
     instructions,
     metadata: { yield: yieldValue, totalTime: totalTimeValue },
   }
@@ -123,7 +123,10 @@ export function recipeToMarkdown(recipe: Recipe): string {
 
   const frontmatterBlock = frontmatter.length ? `\n---\n${frontmatter.join('\n')}\n---\n` : ''
 
-  const ingredients = recipe.ingredients.map((i) => `- ${i}`).join('\n')
+  const ingredients = recipe.ingredients
+    .flatMap((group) => group.items)
+    .map((i) => `- ${i}`)
+    .join('\n')
   const instructions = recipe.instructions.map((s, idx) => `${idx + 1}. ${s}`).join('\n')
   return `${header}${frontmatterBlock}\n${ingredients}\n\n${instructions}`
 }

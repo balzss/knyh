@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import {
   PageLayout,
   SortableList,
+  SortableGroups,
   TagEditor,
   YieldDialog,
   TotalTimeDialog,
@@ -21,7 +22,9 @@ import { useRecipeMutations, useTags } from '@/hooks'
 import type { Tag, Recipe } from '@/lib/types'
 import { formatTimestamp } from '@/lib/utils'
 
-type RecipeForm = Omit<Recipe, 'id' | 'tags'> & { tags: Tag[] }
+type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
+  tags: Tag[]
+}
 
 type FormViewProps = {
   initialRecipe?: Recipe
@@ -43,7 +46,11 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
     reset,
     formState: { isDirty, isValid },
   } = useForm<RecipeForm>({
-    defaultValues: { ...initialRecipe, tags: initialTags },
+    defaultValues: {
+      ...initialRecipe,
+      tags: initialTags,
+      ingredients: initialRecipe?.ingredients || [],
+    },
   })
 
   useEffect(() => {
@@ -108,11 +115,10 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
           control={control}
           name="ingredients"
           render={({ field }) => (
-            <SortableList
-              label={t('ingredients')}
-              addItemLabel={t('addIngredient')}
-              items={field.value}
-              onItemsChange={field.onChange}
+            <SortableGroups
+              data={field.value}
+              onDataChange={field.onChange}
+              defaultLabel={t('ingredients')}
             />
           )}
         />

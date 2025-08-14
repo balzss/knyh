@@ -166,30 +166,41 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           </div>
           <div className="flex flex-col gap-1">
             <h2 className="text-xl text-muted-foreground mt-4">{t('ingredients')}</h2>
-            <ul>
-              {recipe?.ingredients?.map((ingredient, index) => (
-                <li key={index} className="flex items-center space-x-2 text-md leading-8">
-                  <Checkbox
-                    id={`ingredient-${index}`}
-                    checked={checkedIngredients.has(index)}
-                    onCheckedChange={(checked) =>
-                      handleIngredientCheckChange(checked as boolean, index)
-                    }
-                    className={
-                      checkedIngredients.has(index)
-                        ? 'data-[state=checked]:bg-muted-foreground data-[state=checked]:text-black border-muted-foreground'
-                        : ''
-                    }
-                  />
-                  <label
-                    htmlFor={`ingredient-${index}`}
-                    className={`${checkedIngredients.has(index) ? 'text-muted-foreground line-through' : ''}`}
-                  >
-                    {ingredient.toString()}
-                  </label>
-                </li>
-              ))}
-            </ul>
+            {recipe?.ingredients?.map((group, groupIndex) => (
+              <div key={groupIndex} className="mb-4">
+                {group.label && <h3 className="font-medium text-lg mb-2">{group.label}</h3>}
+                <ul>
+                  {group.items.map((ingredient, itemIndex) => {
+                    const globalIndex = groupIndex * 1000 + itemIndex // Simple way to create unique indices
+                    return (
+                      <li
+                        key={globalIndex}
+                        className="flex items-center space-x-2 text-md leading-8"
+                      >
+                        <Checkbox
+                          id={`ingredient-${globalIndex}`}
+                          checked={checkedIngredients.has(globalIndex)}
+                          onCheckedChange={(checked) =>
+                            handleIngredientCheckChange(checked as boolean, globalIndex)
+                          }
+                          className={
+                            checkedIngredients.has(globalIndex)
+                              ? 'data-[state=checked]:bg-muted-foreground data-[state=checked]:text-black border-muted-foreground'
+                              : ''
+                          }
+                        />
+                        <label
+                          htmlFor={`ingredient-${globalIndex}`}
+                          className={`${checkedIngredients.has(globalIndex) ? 'text-muted-foreground line-through' : ''}`}
+                        >
+                          {ingredient}
+                        </label>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
           </div>
           <div className="flex flex-col gap-1">
             <h2 className="text-xl text-muted-foreground mt-4">{t('instructions')}</h2>
