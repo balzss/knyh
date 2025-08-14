@@ -81,13 +81,19 @@
     "recipeUpdated": "Recipe updated successfully!",
     "recipeCreated": "Recipe created successfully!",
     "recipeTitle": "Recipe title",
+    "recipeTitleRequired": "Recipe title is required",
     "ingredients": "Ingredients",
     "addIngredient": "Add ingredient",
     "instructions": "Instructions",
     "addInstruction": "Add instruction",
     "tags": "Tags",
     "addTag": "Add tag",
-    "saveRecipe": "Save recipe"
+    "saveRecipe": "Save recipe",
+    "unsavedChanges": "Unsaved Changes",
+    "unsavedChangesDescription": "You have unsaved changes. Are you sure you want to leave this page?",
+    "unsavedChangesWarning": "You have unsaved changes. Are you sure you want to leave?",
+    "leave": "Leave",
+    "stay": "Stay"
   },
   "RawView": {
     "badFormatting": "Bad formatting",

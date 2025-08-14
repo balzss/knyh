@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { ConfirmDialogProvider } from './ConfirmDialogProvider'
+import { NavigationGuardProvider } from './NavigationGuardProvider'
 
 const queryClient = new QueryClient()
 
@@ -43,8 +44,10 @@ export default function Providers({ children, i18n }: ProvidersProps) {
             disableTransitionOnChange
           >
             <ConfirmDialogProvider>
-              <SidebarProvider>{children}</SidebarProvider>
-              <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+              <NavigationGuardProvider>
+                <SidebarProvider>{children}</SidebarProvider>
+                <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+              </NavigationGuardProvider>
             </ConfirmDialogProvider>
           </ThemeProvider>
         </QueryClientProvider>

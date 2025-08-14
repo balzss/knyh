@@ -81,13 +81,19 @@
     "recipeUpdated": "Recept sikeresen frissítve!",
     "recipeCreated": "Recept sikeresen létrehozva!",
     "recipeTitle": "Recept neve",
+    "recipeTitleRequired": "A recept neve kötelező",
     "ingredients": "Hozzávalók",
     "addIngredient": "Új hozzávaló",
     "instructions": "Elkészítés",
     "addInstruction": "Következő lépés",
     "tags": "Címkék",
     "addTag": "Címke hozzáadása",
-    "saveRecipe": "Recept mentése"
+    "saveRecipe": "Recept mentése",
+    "unsavedChanges": "Nem mentett változások",
+    "unsavedChangesDescription": "Vannak nem mentett változásaid. Biztosan el akarod hagyni ezt az oldalt?",
+    "unsavedChangesWarning": "Vannak nem mentett változásaid. Biztosan el akarod hagyni?",
+    "leave": "Elhagy",
+    "stay": "Marad"
   },
   "RawView": {
     "badFormatting": "Rossz formázás",

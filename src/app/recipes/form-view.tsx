@@ -18,7 +18,7 @@ import {
   myToast,
 } from '@/components/custom'
 
-import { useRecipeMutations, useTags } from '@/hooks'
+import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import type { Tag, Recipe } from '@/lib/types'
 import { formatTimestamp } from '@/lib/utils'
 
@@ -44,22 +44,36 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
     control,
     handleSubmit,
     reset,
-    formState: { isDirty, isValid },
+    formState: { isDirty, isValid, errors },
   } = useForm<RecipeForm>({
     defaultValues: {
       ...initialRecipe,
       tags: initialTags,
       ingredients: initialRecipe?.ingredients || [],
     },
+    mode: 'onChange',
   })
 
   useEffect(() => {
     reset()
   }, [resetTrigger, reset])
 
+  // Block navigation when there are unsaved changes
+  useFormNavigationGuard({
+    isDirty,
+    message: {
+      title: t('unsavedChanges'),
+      description: t('unsavedChangesDescription'),
+      confirmText: t('leave'),
+      cancelText: t('stay'),
+    },
+  })
+
   const onSubmit: SubmitHandler<RecipeForm> = (submitData) => {
     if (!isValid) {
-      alert(t('invalidRecipeData'))
+      myToast({
+        message: t('invalidRecipeData'),
+      })
       return
     }
 
@@ -108,7 +122,18 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <div className="grid w-full items-center gap-2">
           <Label htmlFor="recipe-title">{t('recipeTitle')}</Label>
-          <Input type="text" autoComplete="off" {...register('title')} />
+          <Input
+            type="text"
+            autoComplete="off"
+            {...register('title', {
+              required: t('recipeTitleRequired'),
+              minLength: {
+                value: 1,
+                message: t('recipeTitleRequired'),
+              },
+            })}
+          />
+          {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
         </div>
 
         <Controller
