@@ -9,7 +9,7 @@ describe('recipe-utils parseMarkdown', () => {
     expect(parsed.length).toBe(1)
     const r = parsed[0]
     expect(r.title).toBe('Test Recipe')
-    expect(r.ingredients).toEqual(['item 1', 'item 2'])
+    expect(r.ingredients).toEqual([{ label: '', items: ['item 1', 'item 2'] }])
     expect(r.instructions).toEqual(['Do something', 'Do next'])
     expect(r.metadata).toEqual({ yield: '', totalTime: '' })
   })
@@ -40,6 +40,19 @@ describe('recipe-utils parseMarkdown', () => {
     expect(parsed.length).toBe(1)
     expect(parsed[0].title).toBe('Good One')
   })
+
+  it('handles ingredients as GroupData with empty label', () => {
+    const md = `# Test Recipe\n- ingredient 1\n- ingredient 2\n\n1. First step`
+    const parsed = parseMarkdown(md)
+    expect(parsed.length).toBe(1)
+    const r = parsed[0]
+    expect(r.ingredients).toEqual([
+      {
+        label: '',
+        items: ['ingredient 1', 'ingredient 2'],
+      },
+    ])
+  })
 })
 
 describe('recipe-utils recipeToMarkdown', () => {
@@ -47,11 +60,13 @@ describe('recipe-utils recipeToMarkdown', () => {
     const recipe: Recipe = {
       id: 'r1',
       title: 'Roundtrip',
-      ingredients: ['ing 1', 'ing 2'],
+      ingredients: [{ label: '', items: ['ing 1', 'ing 2'] }],
       instructions: ['Do A', 'Do B'],
       tags: [],
       metadata: { yield: '3', totalTime: '15m' },
       archived: false,
+      createdAt: '2025-01-01T00:00:00.000Z',
+      lastModified: '2025-01-01T00:00:00.000Z',
     }
     const md = recipeToMarkdown(recipe)
     const parsed = parseMarkdown(md)

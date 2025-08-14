@@ -1,52 +1,103 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
-import { z } from 'zod'
 import { serverDataPath, DEFAULT_TIMESTAMP } from '@/lib/utils'
-import type { DatabaseSchema } from '@/lib/types'
+import type { DatabaseSchema, Recipe, Tag, UserConfig, GroupData } from '@/lib/types'
 
 const dataFilePath = path.join(process.cwd(), serverDataPath)
 
-const recipeSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  ingredients: z.array(z.string()),
-  instructions: z.array(z.string()),
-  tags: z.array(z.string()),
-  metadata: z.object({ totalTime: z.string(), yield: z.string() }),
-  archived: z.boolean().optional(),
-  createdAt: z.string().optional(),
-  lastModified: z.string().optional(),
-})
+function isValidGroupData(obj: unknown): obj is GroupData {
+  if (typeof obj !== 'object' || obj === null) return false
+  const record = obj as Record<string, unknown>
+  return (
+    'label' in record &&
+    typeof record.label === 'string' &&
+    'items' in record &&
+    Array.isArray(record.items) &&
+    record.items.every((item: unknown) => typeof item === 'string')
+  )
+}
 
-const tagSchema = z.object({ id: z.string(), displayName: z.string() })
+function isValidRecipe(obj: unknown): obj is Recipe {
+  if (typeof obj !== 'object' || obj === null) return false
+  const record = obj as Record<string, unknown>
+  return (
+    'id' in record &&
+    typeof record.id === 'string' &&
+    'title' in record &&
+    typeof record.title === 'string' &&
+    'ingredients' in record &&
+    Array.isArray(record.ingredients) &&
+    record.ingredients.every(isValidGroupData) &&
+    'instructions' in record &&
+    Array.isArray(record.instructions) &&
+    record.instructions.every((inst: unknown) => typeof inst === 'string') &&
+    'tags' in record &&
+    Array.isArray(record.tags) &&
+    record.tags.every((tag: unknown) => typeof tag === 'string') &&
+    'metadata' in record &&
+    typeof record.metadata === 'object' &&
+    record.metadata !== null &&
+    'totalTime' in (record.metadata as Record<string, unknown>) &&
+    typeof (record.metadata as Record<string, unknown>).totalTime === 'string' &&
+    'yield' in (record.metadata as Record<string, unknown>) &&
+    typeof (record.metadata as Record<string, unknown>).yield === 'string' &&
+    (!('archived' in record) || typeof record.archived === 'boolean') &&
+    (!('createdAt' in record) || typeof record.createdAt === 'string') &&
+    (!('lastModified' in record) || typeof record.lastModified === 'string')
+  )
+}
 
-const userConfigSchema = z.object({
-  userId: z.string(),
-  theme: z.enum(['light', 'dark']),
-  language: z.string(),
-})
+function isValidTag(obj: unknown): obj is Tag {
+  if (typeof obj !== 'object' || obj === null) return false
+  const record = obj as Record<string, unknown>
+  return (
+    'id' in record &&
+    typeof record.id === 'string' &&
+    'displayName' in record &&
+    typeof record.displayName === 'string'
+  )
+}
 
-const databaseSchema = z.object({
-  recipes: z.array(recipeSchema),
-  tags: z.array(tagSchema),
-  userConfig: userConfigSchema,
-})
+function isValidUserConfig(obj: unknown): obj is UserConfig {
+  if (typeof obj !== 'object' || obj === null) return false
+  const record = obj as Record<string, unknown>
+  return (
+    'userId' in record &&
+    typeof record.userId === 'string' &&
+    'theme' in record &&
+    (record.theme === 'light' || record.theme === 'dark') &&
+    'language' in record &&
+    typeof record.language === 'string'
+  )
+}
+
+function isValidDatabaseSchema(obj: unknown): obj is DatabaseSchema {
+  if (typeof obj !== 'object' || obj === null) return false
+  const record = obj as Record<string, unknown>
+  return (
+    'recipes' in record &&
+    Array.isArray(record.recipes) &&
+    record.recipes.every(isValidRecipe) &&
+    'tags' in record &&
+    Array.isArray(record.tags) &&
+    record.tags.every(isValidTag) &&
+    'userConfig' in record &&
+    isValidUserConfig(record.userConfig)
+  )
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const parsed = databaseSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json(
-        { message: 'Invalid data format', issues: parsed.error.issues },
-        { status: 400 }
-      )
+
+    if (!isValidDatabaseSchema(body)) {
+      return NextResponse.json({ message: 'Invalid data format' }, { status: 400 })
     }
 
     const data: DatabaseSchema = {
-      ...parsed.data,
-      recipes: parsed.data.recipes.map((r) => ({
+      ...body,
+      recipes: body.recipes.map((r: Recipe) => ({
         ...r,
         createdAt: r.createdAt ?? DEFAULT_TIMESTAMP,
         lastModified: r.lastModified ?? DEFAULT_TIMESTAMP,

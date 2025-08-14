@@ -62,7 +62,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   }
 
   const handleDeleteRecipe = async () => {
-    const confirmed = await confirmDelete({ name: recipe?.title, entity: t('deleteRecipe') })
+    const confirmed = await confirmDelete({ name: recipe?.title })
     if (!confirmed) return
 
     deleteRecipe.mutate(recipeId, {

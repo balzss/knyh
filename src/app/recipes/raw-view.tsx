@@ -41,7 +41,10 @@ export default function RawView({ initialRecipe }: RawViewProps) {
 
   const isValid =
     parsed.length > 0 &&
-    parsed.every((r) => r.title && r.ingredients.length && r.instructions.length)
+    parsed.every(
+      (r) =>
+        r.title && r.ingredients.some((group) => group.items.length > 0) && r.instructions.length
+    )
   const isSaving = createRecipe.isPending || updateRecipe.isPending
 
   const handleSave = () => {
