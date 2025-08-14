@@ -63,7 +63,7 @@ export function RecipeCard({
   }, [confirmDelete, recipeData.title, recipeData.id, deleteRecipe])
 
   const handleDuplicateRecipe = useCallback(async () => {
-    const { id, ...recipeDataWithoutId } = recipeData
+    const { id: _id, ...recipeDataWithoutId } = recipeData
     const duplicatedRecipe = {
       ...recipeDataWithoutId,
       title: `${recipeData.title} (Copy)`,
