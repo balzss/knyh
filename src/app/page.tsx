@@ -18,6 +18,7 @@ import {
   myToast,
   TagEditor,
   EmptyState,
+  Loader,
 } from '@/components/custom'
 import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
 import type { Tag } from '@/lib/types'
@@ -29,9 +30,9 @@ export default function Home() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const { recipes } = useRecipes({ sort: 'random' })
+  const { recipes, loading } = useRecipes({ sort: 'random' })
   const { updateRecipes } = useRecipeMutations()
-  const { tags } = useTags()
+  const { tags, loading: tagsLoading } = useTags()
 
   const tagParam = searchParams.get('tag')?.split(',')
   const filterTags = tags.filter((t) => tagParam?.includes(t.id))
@@ -138,7 +139,8 @@ export default function Home() {
           />
         )}
         <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
-          {filteredRecipes && filteredRecipes.length > 0 ? (
+          {(loading || tagsLoading) && <Loader />}
+          {!loading && !tagsLoading && filteredRecipes && filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
@@ -153,7 +155,7 @@ export default function Home() {
                 compact={selectedLayout === 'grid'}
               />
             ))
-          ) : (
+          ) : !loading && !tagsLoading ? (
             <EmptyState
               title={t('emptyTitle')}
               description={t('emptyDescription')}
@@ -166,7 +168,7 @@ export default function Home() {
                 </Button>
               }
             />
-          )}
+          ) : null}
         </PageLayout>
       </main>
     </div>

@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, RecipeCard, myToast, EmptyState } from '@/components/custom'
+import { AppSidebar, PageLayout, RecipeCard, myToast, EmptyState, Loader } from '@/components/custom'
 import { useRecipes } from '@/hooks/use-recipes'
 import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
@@ -19,7 +19,7 @@ export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
   const { toggleSidebar } = useSidebar()
   const { recipes, loading } = useRecipes({ archived: true })
-  const { tags } = useTags()
+  const { tags, loading: tagsLoading } = useTags()
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
   const [selectionList, setSelectionList] = useState<string[]>([])
@@ -107,10 +107,8 @@ export default function ArchivePage() {
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>
-          {loading && (
-            <div className="col-span-full py-20 text-center text-muted-foreground">Loading...</div>
-          )}
-          {!loading && recipes.length === 0 && (
+          {(loading || tagsLoading) && <Loader />}
+          {!loading && !tagsLoading && recipes.length === 0 && (
             <EmptyState
               title={t('emptyTitle')}
               description={t('emptyDescription')}
@@ -124,7 +122,7 @@ export default function ArchivePage() {
               }
             />
           )}
-          {recipes?.map((recipe: Recipe) => {
+          {!loading && !tagsLoading && recipes.length > 0 && recipes.map((recipe: Recipe) => {
             const recipeTags = recipe.tags
               ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))
               : []
