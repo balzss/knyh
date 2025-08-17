@@ -1,15 +1,17 @@
 # Copilot Instructions for KNYH Recipe Manager
 
 ## Project Overview
-KNYH is a Next.js 15 recipe management app with static data export capabilities. It uses a **file-based data architecture** where all recipes, tags, and user config are stored in `/public/data/data.json` and loaded client-side via TanStack Query.
+KNYH is a Next.js 15 recipe management app with **dual architecture** supporting both SQLite database operations and static data export capabilities. It intelligently switches between SQLite (dev/production) and JSON (static export) based on the build environment.
 
 ## Key Architecture Patterns
 
-### Data Layer
-- **Single Source of Truth**: `/public/data/data.json` contains the complete `DatabaseSchema` (recipes, tags, userConfig)
-- **Client-side Loading**: All data fetched via `clientDataPath` using React Query in `useRecipes()` and `useTags()` hooks
-- **No Backend**: App can be statically exported (`npm run export`) for GitHub Pages deployment
-- **Immutable Updates**: Use `useRecipeMutations()` for optimistic updates that sync to local storage
+### Data Layer - Dual Architecture
+- **SQLite Mode**: Development and production use SQLite database (`/data/recipes.db`) with API routes
+- **JSON Mode**: Static exports use JSON file (`/public/data/data.json`) for GitHub Pages deployment
+- **Environment Detection**: `src/lib/data-config.ts` determines data mode based on `NEXT_OUTPUT_MODE`
+- **Dynamic Data Source**: Hooks automatically switch between `/api/data` (SQLite) and JSON file (static)
+- **Migration Scripts**: `scripts/migrate-to-sqlite.mjs` and `scripts/export-to-json.mjs` for data conversion
+- **Type Safety**: Dedicated SQLite row interfaces (`RecipeRow`, `TagRow`, `ConfigRow`) in `database.ts`
 
 ### Component Architecture
 - **Barrel Exports**: Components exported from `/src/components/custom/index.ts` 
@@ -32,8 +34,10 @@ KNYH is a Next.js 15 recipe management app with static data export capabilities.
 
 ### Running the App
 ```bash
-npm run dev                 # Development server at localhost:3000/knyh
-npm run export             # Static export for deployment
+npm run dev                 # Development server (SQLite mode) at localhost:3000/knyh
+npm run export             # Static export (JSON mode) for deployment
+npm run migrate:sqlite     # Convert JSON data to SQLite database
+npm run export:json        # Convert SQLite data to JSON for static export
 ```
 
 ### Adding New Components

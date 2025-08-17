@@ -25,7 +25,8 @@
 *.pem
 
 # SQLite database
-/data/
+/data/*
+!/data/recipes.db
 
 # debug
 npm-debug.log*
