@@ -1,15 +1,6 @@
 import { NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
-import { generateId, serverDataPath, formatTimestamp } from '@/lib/utils'
-import type { DatabaseSchema } from '@/lib/types'
-
-const dataFilePath = path.join(process.cwd(), serverDataPath)
-
-async function getAllData(): Promise<DatabaseSchema> {
-  const fileContents = await fs.readFile(dataFilePath, 'utf8')
-  return JSON.parse(fileContents)
-}
+import { createRecipe, updateRecipe, getAllRecipes } from '@/lib/database'
+import type { Recipe } from '@/lib/types'
 
 export async function POST(request: Request) {
   try {
@@ -31,19 +22,11 @@ export async function POST(request: Request) {
       )
     }
 
-    const allData = await getAllData()
-
-    const now = formatTimestamp(new Date())
-    const newRecipes = payload.map((recipeData) => ({
-      id: generateId(),
-      ...recipeData,
-      createdAt: recipeData.createdAt ?? now,
-      lastModified: recipeData.lastModified ?? now,
-    }))
-
-    const updatedRecipes = [...allData.recipes, ...newRecipes]
-    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
+    const newRecipes: Recipe[] = []
+    for (const recipeData of payload) {
+      const newRecipe = createRecipe(recipeData)
+      newRecipes.push(newRecipe)
+    }
 
     return NextResponse.json(newRecipes, { status: 201 })
   } catch (error) {
@@ -70,23 +53,15 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: 'Update data must be an object.' }, { status: 400 })
     }
 
-    const allData = await getAllData()
-
-    const now = formatTimestamp(new Date())
-    const updatedRecipes = allData.recipes.map((recipe) => {
-      if (ids.includes(recipe.id)) {
-        return { ...recipe, ...data, lastModified: now }
+    const updatedRecipes: Recipe[] = []
+    for (const id of ids) {
+      const updatedRecipe = updateRecipe(id, data)
+      if (updatedRecipe) {
+        updatedRecipes.push(updatedRecipe)
       }
-      return recipe
-    })
+    }
 
-    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
-
-    return NextResponse.json(
-      updatedRecipes.filter((r) => ids.includes(r.id)),
-      { status: 200 }
-    )
+    return NextResponse.json(updatedRecipes, { status: 200 })
   } catch (error) {
     console.error(error)
     if (error instanceof SyntaxError) {

@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
-import { generateId, serverDataPath } from '@/lib/utils'
-import type { DatabaseSchema, Tag } from '@/lib/types'
-
-const dataFilePath = path.join(process.cwd(), serverDataPath)
-
-async function getAllData(): Promise<DatabaseSchema> {
-  const fileContents = await fs.readFile(dataFilePath, 'utf8')
-  return JSON.parse(fileContents)
-}
+import { createTag, getAllTags } from '@/lib/database'
+import { generateId } from '@/lib/utils'
+import type { Tag } from '@/lib/types'
 
 export async function POST(request: Request) {
   try {
@@ -21,9 +13,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Cannot create from empty array.' }, { status: 400 })
     }
 
-    const allData = await getAllData()
-
-    const existingNames = new Set(allData.tags.map((t) => t.displayName.toLowerCase()))
+    const existingTags = getAllTags()
+    const existingNames = new Set(existingTags.map((t) => t.displayName.toLowerCase()))
 
     const newTags: Tag[] = []
     for (const tagData of payloadArray) {
@@ -40,12 +31,11 @@ export async function POST(request: Request) {
       if (existingNames.has(name.toLowerCase())) {
         return NextResponse.json({ message: `Tag '${name}' already exists.` }, { status: 409 })
       }
-      newTags.push({ id: generateId(), displayName: name })
+      
+      const newTag = createTag({ id: generateId(), displayName: name })
+      newTags.push(newTag)
       existingNames.add(name.toLowerCase())
     }
-
-    const updatedData: DatabaseSchema = { ...allData, tags: [...allData.tags, ...newTags] }
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
 
     return NextResponse.json(Array.isArray(payload) ? newTags : newTags[0], { status: 201 })
   } catch (error) {

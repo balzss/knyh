@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { clientDataPath } from '@/lib/utils'
+import { isStaticExport } from '@/lib/data-config'
 import type { DatabaseSchema } from '@/lib/types'
 
 type UseTagsProps = {
@@ -16,7 +17,13 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
     queryKey: ['tags'],
 
     queryFn: async (): Promise<DatabaseSchema> => {
-      const response = await fetch(clientDataPath)
+      // Use different endpoints based on build mode
+      const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+      const endpoint = isStaticExport 
+        ? clientDataPath  // Static JSON file for static exports
+        : `${basePath}/api/data`  // API endpoint for SQLite in dev/production
+      
+      const response = await fetch(endpoint)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }

@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
-import { serverDataPath, DEFAULT_TIMESTAMP } from '@/lib/utils'
+import { importFromJson } from '@/lib/database'
+import { DEFAULT_TIMESTAMP } from '@/lib/utils'
 import type { DatabaseSchema, Recipe, Tag, UserConfig, GroupData } from '@/lib/types'
-
-const dataFilePath = path.join(process.cwd(), serverDataPath)
 
 function isValidGroupData(obj: unknown): obj is GroupData {
   if (typeof obj !== 'object' || obj === null) return false
@@ -123,7 +120,9 @@ export async function POST(request: Request) {
       tagIds.add(t.id)
     }
 
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf8')
+    // Import into SQLite database
+    importFromJson(data)
+    
     return NextResponse.json({ message: 'Import successful' }, { status: 200 })
   } catch (error) {
     console.error('Import failed', error)

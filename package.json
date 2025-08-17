@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "NEXT_OUTPUT_MODE=export next build",
+    "export": "npm run export:json && NEXT_OUTPUT_MODE=export next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-  "test": "vitest",
-  "test:ci": "vitest run --reporter=dot --coverage=false"
+    "test": "vitest",
+    "test:ci": "vitest run --reporter=dot --coverage=false",
+    "migrate": "node scripts/migrate-to-sqlite.mjs",
+    "export:json": "node scripts/export-to-json.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -47,6 +49,8 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@tanstack/react-query": "^5.83.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -90,6 +94,7 @@
     "postcss": "^8",
     "prettier": "3.5.3",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.4",
     "typescript": "^5",
     "vitest": "^2.1.4"
   }

@@ -1,46 +1,27 @@
 import { NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
-import { serverDataPath, formatTimestamp } from '@/lib/utils'
-import type { Recipe, DatabaseSchema } from '@/lib/types'
-
-const dataFilePath = path.join(process.cwd(), serverDataPath)
-
-async function getAllData(): Promise<DatabaseSchema> {
-  const fileContents = await fs.readFile(dataFilePath, 'utf8')
-  return JSON.parse(fileContents)
-}
+import { getRecipeById, updateRecipe, deleteRecipe } from '@/lib/database'
+import type { Recipe } from '@/lib/types'
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
   try {
     const updatedRecipeData: Omit<Recipe, 'id'> = await request.json()
-    const allData = await getAllData()
-
-    const recipeIndex = allData.recipes.findIndex((recipe) => recipe.id === id)
-
-    if (recipeIndex === -1) {
+    
+    const existingRecipe = getRecipeById(id)
+    if (!existingRecipe) {
       return NextResponse.json({ message: 'Recipe not found' }, { status: 404 })
     }
 
-    // Create the updated recipe, ensuring the ID from the URL is preserved.
-    const prev = allData.recipes[recipeIndex]
-    const updatedRecipe: Recipe = {
-      ...prev,
+    // Update the recipe while preserving createdAt
+    const updatedRecipe = updateRecipe(id, {
       ...updatedRecipeData,
-      id: id,
-      createdAt: prev.createdAt,
-      lastModified: formatTimestamp(new Date()),
-    }
+      createdAt: existingRecipe.createdAt
+    })
 
-    // Replace the old recipe with the new one.
-    const updatedRecipes = allData.recipes.map((prevRecipe, index) =>
-      index === recipeIndex ? updatedRecipe : prevRecipe
-    )
-    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
-    // Write the entire updated array back to the file.
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
+    if (!updatedRecipe) {
+      return NextResponse.json({ message: 'Failed to update recipe' }, { status: 500 })
+    }
 
     return NextResponse.json(updatedRecipe, { status: 200 })
   } catch (error) {
@@ -56,19 +37,15 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   const { id } = await params
 
   try {
-    const allData = await getAllData()
-
-    const recipeExists = allData.recipes.some((recipe) => recipe.id === id)
+    const recipeExists = getRecipeById(id)
     if (!recipeExists) {
       return NextResponse.json({ message: 'Recipe not found' }, { status: 404 })
     }
 
-    // Filter out the recipe to be deleted
-    const updatedRecipes = allData.recipes.filter((recipe) => recipe.id !== id)
-    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
-
-    // Write the new array back to the file
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
+    const success = deleteRecipe(id)
+    if (!success) {
+      return NextResponse.json({ message: 'Failed to delete recipe' }, { status: 500 })
+    }
 
     return NextResponse.json({ message: 'Recipe deleted successfully' }, { status: 200 })
   } catch (error) {
@@ -82,35 +59,31 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   try {
     const { archived, ids }: { archived: boolean; ids?: string[] } = await request.json()
-    const allData = await getAllData()
-
-    let updatedRecipes = [...allData.recipes]
 
     if (ids && Array.isArray(ids) && ids.length > 0) {
       // Handle multiple recipe updates
-      const now = formatTimestamp(new Date())
-      updatedRecipes = updatedRecipes.map((recipe) =>
-        ids.includes(recipe.id) ? { ...recipe, archived, lastModified: now } : recipe
-      )
+      const updatedRecipes: Recipe[] = []
+      for (const recipeId of ids) {
+        const updatedRecipe = updateRecipe(recipeId, { archived })
+        if (updatedRecipe) {
+          updatedRecipes.push(updatedRecipe)
+        }
+      }
+      return NextResponse.json({ message: 'Recipe(s) updated successfully', updatedRecipes }, { status: 200 })
     } else {
       // Handle single recipe update based on URL id
-      const recipeIndex = updatedRecipes.findIndex((recipe) => recipe.id === id)
-
-      if (recipeIndex === -1) {
+      const existingRecipe = getRecipeById(id)
+      if (!existingRecipe) {
         return NextResponse.json({ message: 'Recipe not found' }, { status: 404 })
       }
 
-      updatedRecipes[recipeIndex] = {
-        ...updatedRecipes[recipeIndex],
-        archived,
-        lastModified: formatTimestamp(new Date()),
+      const updatedRecipe = updateRecipe(id, { archived })
+      if (!updatedRecipe) {
+        return NextResponse.json({ message: 'Failed to update recipe' }, { status: 500 })
       }
+
+      return NextResponse.json({ message: 'Recipe updated successfully' }, { status: 200 })
     }
-
-    const updatedData: DatabaseSchema = { ...allData, recipes: updatedRecipes }
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2))
-
-    return NextResponse.json({ message: 'Recipe(s) updated successfully' }, { status: 200 })
   } catch (error) {
     console.error(error)
     if (error instanceof SyntaxError) {

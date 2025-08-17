@@ -1,17 +1,46 @@
 {
   "recipes": [
     {
+      "id": "b4qlnl2a",
+      "title": "Test Recipe",
+      "ingredients": [
+        {
+          "label": "",
+          "items": [
+            "Test ingredient"
+          ]
+        }
+      ],
+      "instructions": [
+        "Test instruction"
+      ],
+      "tags": [],
+      "metadata": {
+        "totalTime": "0:15",
+        "yield": "1 serving"
+      },
+      "archived": false,
+      "createdAt": "2025-08-17-15:30",
+      "lastModified": "2025-08-17-15:30"
+    },
+    {
+      "id": "kgnk24xa",
       "title": "Rizses hús",
       "ingredients": [
-        "5 dkg füstölt szalonna",
-        "1 nagyobb fej vöröshagyma",
-        "4 gerezd fokhagyma",
-        "1 kg sertéslapocka vagy -comb (felkockázva)",
-        "2 ek sűrített paradicsom",
-        "Só, bors, vegeta ízlés szerint",
-        "2 tk őrölt kömény",
-        "1 ek pirospaprika",
-        "300 g rizs"
+        {
+          "label": "",
+          "items": [
+            "5 dkg füstölt szalonna",
+            "1 nagyobb fej vöröshagyma",
+            "4 gerezd fokhagyma",
+            "1 kg sertéslapocka vagy -comb (felkockázva)",
+            "2 ek sűrített paradicsom",
+            "Só, bors, vegeta ízlés szerint",
+            "2 tk őrölt kömény",
+            "1 ek pirospaprika",
+            "300 g rizs"
+          ]
+        }
       ],
       "instructions": [
         "A szalonnát felkockázom, és egy nagyobb lábasban elkezdem pirítani.",
@@ -33,17 +62,22 @@
       },
       "archived": false,
       "createdAt": "1970-01-01-00:00",
-      "lastModified": "1970-01-01-00:00",
-      "id": "kgnk24xa"
+      "lastModified": "1970-01-01-00:00"
     },
     {
+      "id": "pdos32ns",
       "title": "Palacsinta",
       "ingredients": [
-        "20 dkg liszt",
-        "2 tojás",
-        "3 dl tej",
-        "3 dl szóda",
-        "1 csipet só"
+        {
+          "label": "",
+          "items": [
+            "20 dkg liszt",
+            "2 tojás",
+            "3 dl tej",
+            "3 dl szóda",
+            "1 csipet só"
+          ]
+        }
       ],
       "instructions": [
         "Felütjük a tojásokat, kicsit felverjük, majd hozzáadjuk a lisztet.",
@@ -61,23 +95,10 @@
       },
       "archived": false,
       "createdAt": "1970-01-01-00:00",
-      "lastModified": "2025-08-14-00:18",
-      "id": "pdos32ns"
+      "lastModified": "2025-08-14-00:18"
     }
   ],
   "tags": [
-    {
-      "id": "gik6jce3",
-      "displayName": "magyar"
-    },
-    {
-      "id": "b8qx3p9k",
-      "displayName": "főétel"
-    },
-    {
-      "id": "87j4qybw",
-      "displayName": "egytálétel"
-    },
     {
       "id": "ezpe49z0",
       "displayName": "alaprecept"
@@ -85,6 +106,18 @@
     {
       "id": "34jkdsa9",
       "displayName": "desszert"
+    },
+    {
+      "id": "87j4qybw",
+      "displayName": "egytálétel"
+    },
+    {
+      "id": "b8qx3p9k",
+      "displayName": "főétel"
+    },
+    {
+      "id": "gik6jce3",
+      "displayName": "magyar"
     }
   ],
   "userConfig": {
