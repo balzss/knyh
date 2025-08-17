@@ -8,7 +8,14 @@ import Link from 'next/link'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, RecipeCard, myToast, EmptyState, Loader } from '@/components/custom'
+import {
+  AppSidebar,
+  PageLayout,
+  RecipeCard,
+  myToast,
+  EmptyState,
+  Loader,
+} from '@/components/custom'
 import { useRecipes } from '@/hooks/use-recipes'
 import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
@@ -122,22 +129,25 @@ export default function ArchivePage() {
               }
             />
           )}
-          {!loading && !tagsLoading && recipes.length > 0 && recipes.map((recipe: Recipe) => {
-            const recipeTags = recipe.tags
-              ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))
-              : []
-            return (
-              <RecipeCard
-                key={recipe.id}
-                selectionMode={selectionList.length > 0}
-                recipeData={recipe}
-                tags={recipeTags}
-                isSelected={selectionList.includes(recipe.id)}
-                onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-                archivedMode
-              />
-            )
-          })}
+          {!loading &&
+            !tagsLoading &&
+            recipes.length > 0 &&
+            recipes.map((recipe: Recipe) => {
+              const recipeTags = recipe.tags
+                ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))
+                : []
+              return (
+                <RecipeCard
+                  key={recipe.id}
+                  selectionMode={selectionList.length > 0}
+                  recipeData={recipe}
+                  tags={recipeTags}
+                  isSelected={selectionList.includes(recipe.id)}
+                  onSelect={(selected) => handleCardSelect(recipe.id, selected)}
+                  archivedMode
+                />
+              )
+            })}
         </PageLayout>
       </main>
     </div>

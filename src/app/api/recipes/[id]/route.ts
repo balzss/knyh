@@ -7,7 +7,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   try {
     const updatedRecipeData: Omit<Recipe, 'id'> = await request.json()
-    
+
     const existingRecipe = getRecipeById(id)
     if (!existingRecipe) {
       return NextResponse.json({ message: 'Recipe not found' }, { status: 404 })
@@ -16,7 +16,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     // Update the recipe while preserving createdAt
     const updatedRecipe = updateRecipe(id, {
       ...updatedRecipeData,
-      createdAt: existingRecipe.createdAt
+      createdAt: existingRecipe.createdAt,
     })
 
     if (!updatedRecipe) {
@@ -69,7 +69,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
           updatedRecipes.push(updatedRecipe)
         }
       }
-      return NextResponse.json({ message: 'Recipe(s) updated successfully', updatedRecipes }, { status: 200 })
+      return NextResponse.json(
+        { message: 'Recipe(s) updated successfully', updatedRecipes },
+        { status: 200 }
+      )
     } else {
       // Handle single recipe update based on URL id
       const existingRecipe = getRecipeById(id)

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createRecipe, updateRecipe, getAllRecipes } from '@/lib/database'
+import { createRecipe, updateRecipe } from '@/lib/database'
 import type { Recipe } from '@/lib/types'
 
 export async function POST(request: Request) {

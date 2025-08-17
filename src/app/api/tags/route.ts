@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       if (existingNames.has(name.toLowerCase())) {
         return NextResponse.json({ message: `Tag '${name}' already exists.` }, { status: 409 })
       }
-      
+
       const newTag = createTag({ id: generateId(), displayName: name })
       newTags.push(newTag)
       existingNames.add(name.toLowerCase())

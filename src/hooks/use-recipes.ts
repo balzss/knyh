@@ -31,10 +31,10 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     queryFn: async (): Promise<DatabaseSchema> => {
       // Use different endpoints based on build mode
       const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-      const endpoint = isStaticExport 
-        ? clientDataPath  // Static JSON file for static exports
-        : `${basePath}/api/data`  // API endpoint for SQLite in dev/production
-      
+      const endpoint = isStaticExport
+        ? clientDataPath // Static JSON file for static exports
+        : `${basePath}/api/data` // API endpoint for SQLite in dev/production
+
       const response = await fetch(endpoint)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

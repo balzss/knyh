@@ -3,6 +3,30 @@ import path from 'path'
 import fs from 'fs'
 import type { Recipe, Tag, UserConfig, DatabaseSchema, GroupData } from './types'
 
+// SQLite row types
+interface RecipeRow {
+  id: string
+  title: string
+  ingredients: string
+  instructions: string
+  tags: string
+  total_time: string
+  yield: string
+  archived: number
+  created_at: string
+  last_modified: string
+}
+
+interface TagRow {
+  id: string
+  display_name: string
+}
+
+interface ConfigRow {
+  key: string
+  value: string
+}
+
 // Database setup
 const dbPath = path.join(process.cwd(), 'data', 'recipes.db')
 
@@ -65,12 +89,12 @@ export function createRecipe(recipe: Omit<Recipe, 'id'>): Recipe {
   const db = getDb()
   const id = generateId()
   const now = new Date().toISOString().slice(0, 16).replace('T', '-').replace(':', '-')
-  
+
   const stmt = db.prepare(`
     INSERT INTO recipes (id, title, ingredients, instructions, tags, total_time, yield, archived, created_at, last_modified)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
-  
+
   stmt.run(
     id,
     recipe.title,
@@ -83,23 +107,23 @@ export function createRecipe(recipe: Omit<Recipe, 'id'>): Recipe {
     recipe.createdAt || now,
     recipe.lastModified || now
   )
-  
+
   return {
     ...recipe,
     id,
     createdAt: recipe.createdAt || now,
-    lastModified: recipe.lastModified || now
+    lastModified: recipe.lastModified || now,
   }
 }
 
 export function updateRecipe(id: string, updates: Partial<Omit<Recipe, 'id'>>): Recipe | null {
   const db = getDb()
   const now = new Date().toISOString().slice(0, 16).replace('T', '-').replace(':', '-')
-  
+
   // Build dynamic update query
   const updateFields: string[] = []
-  const values: any[] = []
-  
+  const values: (string | number)[] = []
+
   if (updates.title !== undefined) {
     updateFields.push('title = ?')
     values.push(updates.title)
@@ -130,23 +154,23 @@ export function updateRecipe(id: string, updates: Partial<Omit<Recipe, 'id'>>): 
     updateFields.push('archived = ?')
     values.push(updates.archived ? 1 : 0)
   }
-  
+
   updateFields.push('last_modified = ?')
   values.push(now)
   values.push(id)
-  
+
   const stmt = db.prepare(`
     UPDATE recipes 
     SET ${updateFields.join(', ')}
     WHERE id = ?
   `)
-  
+
   const result = stmt.run(...values)
-  
+
   if (result.changes === 0) {
     return null
   }
-  
+
   return getRecipeById(id)
 }
 
@@ -160,10 +184,10 @@ export function deleteRecipe(id: string): boolean {
 export function getRecipeById(id: string): Recipe | null {
   const db = getDb()
   const stmt = db.prepare('SELECT * FROM recipes WHERE id = ?')
-  const row = stmt.get(id) as any
-  
+  const row = stmt.get(id) as RecipeRow | undefined
+
   if (!row) return null
-  
+
   return {
     id: row.id,
     title: row.title,
@@ -172,20 +196,20 @@ export function getRecipeById(id: string): Recipe | null {
     tags: JSON.parse(row.tags) as string[],
     metadata: {
       totalTime: row.total_time,
-      yield: row.yield
+      yield: row.yield,
     },
     archived: Boolean(row.archived),
     createdAt: row.created_at,
-    lastModified: row.last_modified
+    lastModified: row.last_modified,
   }
 }
 
 export function getAllRecipes(): Recipe[] {
   const db = getDb()
   const stmt = db.prepare('SELECT * FROM recipes ORDER BY created_at DESC')
-  const rows = stmt.all() as any[]
-  
-  return rows.map(row => ({
+  const rows = stmt.all() as RecipeRow[]
+
+  return rows.map((row) => ({
     id: row.id,
     title: row.title,
     ingredients: JSON.parse(row.ingredients) as GroupData[],
@@ -193,11 +217,11 @@ export function getAllRecipes(): Recipe[] {
     tags: JSON.parse(row.tags) as string[],
     metadata: {
       totalTime: row.total_time,
-      yield: row.yield
+      yield: row.yield,
     },
     archived: Boolean(row.archived),
     createdAt: row.created_at,
-    lastModified: row.last_modified
+    lastModified: row.last_modified,
   }))
 }
 
@@ -211,16 +235,16 @@ export function createTag(tag: Tag): Tag {
 
 export function updateTag(id: string, updates: Partial<Omit<Tag, 'id'>>): Tag | null {
   const db = getDb()
-  
+
   if (updates.displayName !== undefined) {
     const stmt = db.prepare('UPDATE tags SET display_name = ? WHERE id = ?')
     const result = stmt.run(updates.displayName, id)
-    
+
     if (result.changes === 0) {
       return null
     }
   }
-  
+
   return getTagById(id)
 }
 
@@ -234,24 +258,24 @@ export function deleteTag(id: string): boolean {
 export function getTagById(id: string): Tag | null {
   const db = getDb()
   const stmt = db.prepare('SELECT * FROM tags WHERE id = ?')
-  const row = stmt.get(id) as any
-  
+  const row = stmt.get(id) as TagRow | undefined
+
   if (!row) return null
-  
+
   return {
     id: row.id,
-    displayName: row.display_name
+    displayName: row.display_name,
   }
 }
 
 export function getAllTags(): Tag[] {
   const db = getDb()
   const stmt = db.prepare('SELECT * FROM tags ORDER BY display_name')
-  const rows = stmt.all() as any[]
-  
-  return rows.map(row => ({
+  const rows = stmt.all() as TagRow[]
+
+  return rows.map((row) => ({
     id: row.id,
-    displayName: row.display_name
+    displayName: row.display_name,
   }))
 }
 
@@ -259,31 +283,31 @@ export function getAllTags(): Tag[] {
 export function getUserConfig(): UserConfig {
   const db = getDb()
   const stmt = db.prepare('SELECT * FROM user_config')
-  const rows = stmt.all() as any[]
-  
-  const config: Partial<UserConfig> = {}
+  const rows = stmt.all() as ConfigRow[]
+
+  const config: Record<string, string> = {}
   for (const row of rows) {
-    config[row.key as keyof UserConfig] = row.value
+    config[row.key] = row.value
   }
-  
-  // Provide defaults
+
+  // Provide defaults with proper type casting
   return {
     userId: config.userId || 'user',
     theme: (config.theme as 'light' | 'dark') || 'dark',
-    language: config.language || 'en'
+    language: config.language || 'en',
   }
 }
 
 export function updateUserConfig(updates: Partial<UserConfig>): UserConfig {
   const db = getDb()
   const stmt = db.prepare('INSERT OR REPLACE INTO user_config (key, value) VALUES (?, ?)')
-  
+
   for (const [key, value] of Object.entries(updates)) {
     if (value !== undefined) {
       stmt.run(key, value)
     }
   }
-  
+
   return getUserConfig()
 }
 
@@ -292,25 +316,25 @@ export function exportToJson(): DatabaseSchema {
   return {
     recipes: getAllRecipes(),
     tags: getAllTags(),
-    userConfig: getUserConfig()
+    userConfig: getUserConfig(),
   }
 }
 
 // Import data from JSON (for migration)
 export function importFromJson(data: DatabaseSchema): void {
   const db = getDb()
-  
+
   // Clear existing data
   db.exec('DELETE FROM recipes')
   db.exec('DELETE FROM tags')
   db.exec('DELETE FROM user_config')
-  
+
   // Import recipes
   const recipeStmt = db.prepare(`
     INSERT INTO recipes (id, title, ingredients, instructions, tags, total_time, yield, archived, created_at, last_modified)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
-  
+
   for (const recipe of data.recipes) {
     recipeStmt.run(
       recipe.id,
@@ -325,13 +349,13 @@ export function importFromJson(data: DatabaseSchema): void {
       recipe.lastModified
     )
   }
-  
+
   // Import tags
   const tagStmt = db.prepare('INSERT INTO tags (id, display_name) VALUES (?, ?)')
   for (const tag of data.tags) {
     tagStmt.run(tag.id, tag.displayName)
   }
-  
+
   // Import user config
   const configStmt = db.prepare('INSERT INTO user_config (key, value) VALUES (?, ?)')
   for (const [key, value] of Object.entries(data.userConfig)) {

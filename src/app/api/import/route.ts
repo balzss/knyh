@@ -122,7 +122,7 @@ export async function POST(request: Request) {
 
     // Import into SQLite database
     importFromJson(data)
-    
+
     return NextResponse.json({ message: 'Import successful' }, { status: 200 })
   } catch (error) {
     console.error('Import failed', error)

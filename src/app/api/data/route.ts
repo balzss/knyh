@@ -7,9 +7,6 @@ export async function GET() {
     return NextResponse.json(data)
   } catch (error) {
     console.error('Failed to export data:', error)
-    return NextResponse.json(
-      { message: 'Failed to load data' },
-      { status: 500 }
-    )
+    return NextResponse.json({ message: 'Failed to load data' }, { status: 500 })
   }
 }
