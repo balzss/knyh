@@ -25,6 +25,8 @@ type SortableListProps = {
   className?: string
   multiLine?: boolean
   checkable?: boolean
+  onItemCheckedChange?: (item: string, checked: boolean) => void
+  checkedItems?: string[] // Items that should be checked
 }
 
 export function SortableList({
@@ -35,6 +37,8 @@ export function SortableList({
   className = '',
   multiLine,
   checkable = false,
+  onItemCheckedChange,
+  checkedItems = [],
 }: SortableListProps) {
   const [internalItems, setInternalItems] = useState<ListItem[]>([])
   const inputRefs = useRef<{
@@ -45,28 +49,35 @@ export function SortableList({
   // only update internal state if it doesn't match with the current one
   useEffect(() => {
     if (!items) return
+    const checkedSet = new Set(checkedItems)
+
     setInternalItems((currentInternalItems) => {
-      // If values match 1:1 in order, keep as-is to preserve focus/animations and checked states
-      if (
+      // Check if both values and checked states match to avoid unnecessary rebuilds
+      const valuesMatch =
         items.length === currentInternalItems.length &&
         items.every((item, i) => item === currentInternalItems[i].value)
-      ) {
+      const checkedStatesMatch = currentInternalItems.every(
+        (item) => checkedSet.has(item.value) === item.checked
+      )
+
+      if (valuesMatch && checkedStatesMatch) {
         return currentInternalItems
       }
-      // Otherwise, rebuild while attempting to preserve checked flags by matching on value
+
+      // Otherwise, rebuild while attempting to preserve animation states
       const used = new Set<number>()
       const rebuilt = items.map((val) => {
         const idx = currentInternalItems.findIndex((it, i) => it.value === val && !used.has(i))
         if (idx !== -1) {
           used.add(idx)
-          const { checked } = currentInternalItems[idx]
-          return { value: val, id: nanoid(), noAnimate: true, checked }
+          // Use the external checked state, not the internal one
+          return { value: val, id: nanoid(), noAnimate: true, checked: checkedSet.has(val) }
         }
-        return { value: val, id: nanoid(), noAnimate: true, checked: false }
+        return { value: val, id: nanoid(), noAnimate: true, checked: checkedSet.has(val) }
       })
       return checkable ? sortByChecked(rebuilt) : rebuilt
     })
-  }, [items, checkable])
+  }, [items, checkable, checkedItems])
 
   // set internal state and notify the parent
   const sortByChecked = (arr: ListItem[]) => {
@@ -146,6 +157,12 @@ export function SortableList({
       it.id === itemId ? { ...it, checked: nextChecked } : it
     )
     updateItems(updated)
+
+    // Call the callback with the item value and checked state
+    const item = internalItems.find((it) => it.id === itemId)
+    if (item && onItemCheckedChange) {
+      onItemCheckedChange(item.value, nextChecked)
+    }
   }
 
   return (

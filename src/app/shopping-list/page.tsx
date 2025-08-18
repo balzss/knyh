@@ -17,6 +17,7 @@ export default function ShoppingList() {
 
   // Track the current state of items including their checked status
   const [items, setItems] = useState<string[]>([])
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
   const checkedStateRef = useRef<Map<string, boolean>>(new Map())
 
   // Update items when data loads from the database
@@ -24,12 +25,17 @@ export default function ShoppingList() {
     if (!loading && shoppingList) {
       const newItems = shoppingList.map((item) => item.text)
       const newCheckedStates = new Map<string, boolean>()
+      const newCheckedItems: string[] = []
 
       shoppingList.forEach((item) => {
         newCheckedStates.set(item.text, item.checked)
+        if (item.checked) {
+          newCheckedItems.push(item.text)
+        }
       })
 
       setItems(newItems)
+      setCheckedItems(newCheckedItems)
       checkedStateRef.current = newCheckedStates
     }
   }, [shoppingList, loading])
@@ -61,9 +67,39 @@ export default function ShoppingList() {
     [updateShoppingList]
   )
 
-  // Note: The SortableList component manages checked states internally.
-  // For now, we're persisting the basic structure. To sync checked states,
-  // we'd need to modify SortableList to expose checked state changes.
+  // Handle checked state changes from SortableList
+  const handleItemCheckedChange = useCallback(
+    (item: string, checked: boolean) => {
+      // Update local state immediately
+      checkedStateRef.current.set(item, checked)
+      setCheckedItems(
+        (prev) =>
+          checked
+            ? [...prev.filter((i) => i !== item), item] // Add if not present
+            : prev.filter((i) => i !== item) // Remove if present
+      )
+
+      // Clear existing timeout and set a new one to debounce saves
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current)
+      }
+
+      updateTimeoutRef.current = setTimeout(() => {
+        const newShoppingList: ShoppingListItem[] = items.map((text) => ({
+          text,
+          checked: checkedStateRef.current.get(text) || false,
+        }))
+
+        updateShoppingList.mutateAsync(newShoppingList).catch((error) => {
+          console.error('Failed to update shopping list:', error)
+        })
+      }, 300) // Shorter debounce for checked state changes
+    },
+    [items, updateShoppingList]
+  )
+
+  // Note: We're now syncing both item changes and checked state changes
+  // with proper debouncing for optimal user experience.
 
   if (loading) {
     return (
@@ -105,6 +141,8 @@ export default function ShoppingList() {
             addItemLabel="Add item"
             items={items}
             onItemsChange={handleItemsChange}
+            onItemCheckedChange={handleItemCheckedChange}
+            checkedItems={checkedItems}
             checkable
           />
         </PageLayout>
