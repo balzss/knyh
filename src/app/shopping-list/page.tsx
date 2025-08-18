@@ -72,12 +72,18 @@ export default function ShoppingList() {
     (item: string, checked: boolean) => {
       // Update local state immediately
       checkedStateRef.current.set(item, checked)
-      setCheckedItems(
-        (prev) =>
-          checked
-            ? [...prev.filter((i) => i !== item), item] // Add if not present
-            : prev.filter((i) => i !== item) // Remove if present
-      )
+
+      // Only update React state if the checked state actually changed
+      setCheckedItems((prev) => {
+        const isCurrentlyChecked = prev.includes(item)
+        if (checked === isCurrentlyChecked) {
+          return prev // No change needed
+        }
+
+        return checked
+          ? [...prev, item] // Add if not present
+          : prev.filter((i) => i !== item) // Remove if present
+      })
 
       // Clear existing timeout and set a new one to debounce saves
       if (updateTimeoutRef.current) {

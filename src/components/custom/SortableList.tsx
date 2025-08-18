@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { Plus } from 'lucide-react'
@@ -45,39 +45,58 @@ export function SortableList({
     [key: string]: HTMLInputElement | HTMLTextAreaElement | null
   }>({})
 
+  // Memoize the checked set to prevent unnecessary re-computations
+  const checkedSet = useMemo(() => new Set(checkedItems), [checkedItems])
+
   // sync external prop changes to our internal state without breaking animations or focus
   // only update internal state if it doesn't match with the current one
   useEffect(() => {
     if (!items) return
-    const checkedSet = new Set(checkedItems)
 
     setInternalItems((currentInternalItems) => {
-      // Check if both values and checked states match to avoid unnecessary rebuilds
+      // Check if values match 1:1 in order to avoid unnecessary rebuilds
       const valuesMatch =
         items.length === currentInternalItems.length &&
         items.every((item, i) => item === currentInternalItems[i].value)
-      const checkedStatesMatch = currentInternalItems.every(
-        (item) => checkedSet.has(item.value) === item.checked
-      )
 
-      if (valuesMatch && checkedStatesMatch) {
-        return currentInternalItems
+      // If values match, just update checked states without rebuilding
+      if (valuesMatch) {
+        const checkedStatesMatch = currentInternalItems.every(
+          (item) => checkedSet.has(item.value) === item.checked
+        )
+
+        if (checkedStatesMatch) {
+          return currentInternalItems // No changes needed
+        }
+
+        // Only update checked states, preserve IDs and other properties
+        return currentInternalItems.map((item) => ({
+          ...item,
+          checked: checkedSet.has(item.value),
+        }))
       }
 
-      // Otherwise, rebuild while attempting to preserve animation states
+      // Only rebuild when items array has actually changed
+      // Try to preserve existing items and their IDs when possible
       const used = new Set<number>()
       const rebuilt = items.map((val) => {
         const idx = currentInternalItems.findIndex((it, i) => it.value === val && !used.has(i))
         if (idx !== -1) {
           used.add(idx)
-          // Use the external checked state, not the internal one
-          return { value: val, id: nanoid(), noAnimate: true, checked: checkedSet.has(val) }
+          // Preserve the existing item but update checked state
+          return {
+            ...currentInternalItems[idx],
+            value: val, // Make sure value is current
+            checked: checkedSet.has(val),
+            noAnimate: true,
+          }
         }
+        // New item - generate new ID
         return { value: val, id: nanoid(), noAnimate: true, checked: checkedSet.has(val) }
       })
       return checkable ? sortByChecked(rebuilt) : rebuilt
     })
-  }, [items, checkable, checkedItems])
+  }, [items, checkable, checkedSet])
 
   // set internal state and notify the parent
   const sortByChecked = (arr: ListItem[]) => {
@@ -120,7 +139,10 @@ export function SortableList({
   }
 
   const handleAddItem = () => {
-    updateItems([...internalItems, { id: nanoid(), value: '', autoFocus: true, checked: false }])
+    updateItems([
+      ...internalItems,
+      { id: nanoid(), value: '', autoFocus: true, checked: false, noAnimate: false },
+    ])
   }
 
   const handleKeydown = (
