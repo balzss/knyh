@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getUserConfig, updateUserConfig } from '@/lib/database'
 import type { UserConfig } from '@/lib/types'
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   const config = getUserConfig()
   return NextResponse.json(config)

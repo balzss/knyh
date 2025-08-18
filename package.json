@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:localStorage": "NEXT_OUTPUT_MODE=export next dev",
     "build": "next build",
     "export": "npm run export:json && NEXT_OUTPUT_MODE=export next build",
     "start": "next start",

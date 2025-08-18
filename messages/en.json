@@ -44,7 +44,8 @@
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
     "recipeDuplicated": "Recipe duplicated",
-    "undo": "Undo"
+    "undo": "Undo",
+    "localStorageRecipe": "This recipe is stored locally in your browser"
   },
   "HomePage": {
     "archive": "Archive",
@@ -123,9 +124,13 @@
     "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",
     "ingredients": "Ingredients",
-  "instructions": "Instructions",
-  "lastModified": "Last modified",
-  "created": "Created"
+    "instructions": "Instructions",
+    "lastModified": "Last modified",
+    "created": "Created",
+    "recipeNotFound": "Recipe not found",
+    "recipeNotFoundDesc": "The recipe you're looking for doesn't exist or may have been deleted.",
+    "backToHome": "Back to home",
+    "recipeArchived": "Recipe archived"
   },
   "LoginPage": {
     "signIn": "Sign in",

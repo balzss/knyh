@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { exportToJson } from '@/lib/database'
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   try {
     const data = exportToJson()

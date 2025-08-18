@@ -13,10 +13,12 @@ import {
   ArchiveRestore,
   Trash2,
   Copy,
+  CloudOff,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +28,7 @@ import {
 import { IconButton, myToast, ShareDialog } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
+import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/data-config'
 
 type RecipeCardProps = {
   tags: Tag[]
@@ -100,6 +103,8 @@ export function RecipeCard({
 
   const { title, metadata, id } = recipeData
 
+  const isLocalRecipe = id.startsWith('local_')
+
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}
@@ -119,14 +124,28 @@ export function RecipeCard({
     >
       <CardHeader className={`relative ${compact ? 'p-3 sm:p-6' : ''}`}>
         <CardTitle>
-          <h3>
-            <Link
-              href={`/recipes/${id}`}
-              className="hover:underline break-words hyphens-auto leading-7"
-            >
-              {title}
-            </Link>
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="flex-1 flex items-center gap-2">
+              {isLocalRecipe && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <CloudOff size={20} className="text-muted-foreground flex-shrink-0" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t('localStorageRecipe')}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <Link
+                href={getRecipeViewUrl(id)}
+                className="hover:underline break-words hyphens-auto leading-7"
+              >
+                {title}
+              </Link>
+            </h3>
+          </div>
         </CardTitle>
         <CardDescription className="flex gap-3 items-center select-none sm:select-text">
           <div className="flex gap-1 items-center">
@@ -194,13 +213,15 @@ export function RecipeCard({
                 icon={<Pencil />}
                 tooltip={t('edit')}
                 iconSize="small"
-                href={`/recipes/${id}/edit`}
+                href={getRecipeEditUrl(id)}
               />
-              <ShareDialog
-                recipeId={title.replaceAll(' ', '-').toLowerCase()}
-                trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
-                recipeUrl={recipeUrl}
-              />
+              {!isLocalRecipe && (
+                <ShareDialog
+                  recipeId={title.replaceAll(' ', '-').toLowerCase()}
+                  trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
+                  recipeUrl={recipeUrl}
+                />
+              )}
               <IconButton
                 icon={<Archive />}
                 tooltip={t('archive')}

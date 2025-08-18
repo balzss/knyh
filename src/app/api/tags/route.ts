@@ -3,6 +3,8 @@ import { createTag, getAllTags } from '@/lib/database'
 import { generateId } from '@/lib/utils'
 import type { Tag } from '@/lib/types'
 
+export const dynamic = 'force-static'
+
 export async function POST(request: Request) {
   try {
     const payload = await request.json()

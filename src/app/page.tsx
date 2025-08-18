@@ -22,6 +22,7 @@ import {
 } from '@/components/custom'
 import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
 import type { Tag } from '@/lib/types'
+import { getRecipeViewUrl } from '@/lib/data-config'
 
 export default function Home() {
   const t = useTranslations('HomePage')
@@ -151,7 +152,7 @@ export default function Home() {
                 recipeData={recipe}
                 isSelected={selectionList.includes(recipe.id)}
                 onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-                recipeUrl={`${window?.location.href}recipes/${recipe.id}`}
+                recipeUrl={`${window?.location.origin}${getRecipeViewUrl(recipe.id)}`}
                 compact={selectedLayout === 'grid'}
               />
             ))

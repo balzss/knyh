@@ -44,7 +44,8 @@
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
     "recipeDuplicated": "Recept lemásolva",
-    "undo": "Visszavonás"
+    "undo": "Visszavonás",
+    "localStorageRecipe": "Ez a recept helyileg van tárolva a böngésződben"
   },
   "HomePage": {
     "archive": "Archiválás",
@@ -123,9 +124,13 @@
     "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
-  "instructions": "Elkészítés",
-  "lastModified": "Utoljára módosítva",
-  "created": "Létrehozva"
+    "instructions": "Elkészítés",
+    "lastModified": "Utoljára módosítva",
+    "created": "Létrehozva",
+    "recipeNotFound": "Recept nem található",
+    "recipeNotFoundDesc": "A keresett recept nem létezik vagy törölve lett.",
+    "backToHome": "Vissza a főoldalra",
+    "recipeArchived": "Recept archiválva"
   },
   "LoginPage": {
     "signIn": "Bejelentkezés",

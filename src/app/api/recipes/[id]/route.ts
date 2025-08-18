@@ -1,6 +1,27 @@
 import { NextResponse } from 'next/server'
 import { getRecipeById, updateRecipe, deleteRecipe } from '@/lib/database'
-import type { Recipe } from '@/lib/types'
+import type { Recipe, DatabaseSchema } from '@/lib/types'
+import fs from 'fs'
+import path from 'path'
+import { serverDataPath } from '@/lib/utils'
+
+export const dynamic = 'force-static'
+
+// Generate static params for all existing recipes
+export async function generateStaticParams() {
+  try {
+    const filePath = path.join(process.cwd(), serverDataPath)
+    const fileContent = fs.readFileSync(filePath, 'utf8')
+    const allData: DatabaseSchema = JSON.parse(fileContent)
+
+    return allData.recipes.map((recipe) => ({
+      id: recipe.id,
+    }))
+  } catch (error) {
+    console.error('Error reading recipes for static params:', error)
+    return []
+  }
+}
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

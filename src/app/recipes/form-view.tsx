@@ -17,6 +17,7 @@ import {
   TotalTimeDialog,
   myToast,
 } from '@/components/custom'
+import { getRecipeViewUrl } from '@/lib/data-config'
 
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import type { Tag, Recipe } from '@/lib/types'
@@ -95,7 +96,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         },
         {
           onSuccess: (updatedRecipe) => {
-            router.push(`/recipes/${updatedRecipe.id}`)
+            router.push(getRecipeViewUrl(updatedRecipe.id))
             myToast({
               message: t('recipeUpdated'),
             })
@@ -107,7 +108,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         { ...formattedSubmitData, createdAt: now, lastModified: now },
         {
           onSuccess: (newlyCreatedRecipes) => {
-            router.push(`/recipes/${newlyCreatedRecipes[0].id}`)
+            router.push(getRecipeViewUrl(newlyCreatedRecipes[0].id))
             myToast({
               message: t('recipeCreated'),
             })

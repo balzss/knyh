@@ -11,6 +11,33 @@ export const dataMode = useDatabase ? 'sqlite' : 'localStorage'
 
 console.log(`🔧 Data mode: ${dataMode} (static export: ${isStaticExport}, dev: ${isDevelopment})`)
 
+// Recipe URL generation
+export const getRecipeViewUrl = (recipeId: string): string => {
+  // For localStorage recipes (starting with 'local_'), use query parameter route
+  if (recipeId.startsWith('local_')) {
+    return `/recipe?id=${recipeId}`
+  }
+
+  // For existing recipes from JSON, use the original dynamic route structure
+  if (isStaticExport || isClientStaticExport()) {
+    return `/recipes/view/${recipeId}`
+  }
+  return `/recipes/${recipeId}`
+}
+
+export const getRecipeEditUrl = (recipeId: string): string => {
+  // For localStorage recipes (starting with 'local_'), use query parameter route
+  if (recipeId.startsWith('local_')) {
+    return `/edit-recipe?id=${recipeId}`
+  }
+
+  // For existing recipes from JSON, use the original dynamic route structure
+  if (isStaticExport || isClientStaticExport()) {
+    return `/recipes/edit/${recipeId}`
+  }
+  return `/recipes/${recipeId}/edit`
+}
+
 // Client-side runtime detection for static exports
 export const isClientStaticExport = () => {
   // If we know it's a static export at build time, use that

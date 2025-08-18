@@ -3,6 +3,8 @@ import { importFromJson } from '@/lib/database'
 import { DEFAULT_TIMESTAMP } from '@/lib/utils'
 import type { DatabaseSchema, Recipe, Tag, UserConfig, GroupData } from '@/lib/types'
 
+export const dynamic = 'force-static'
+
 function isValidGroupData(obj: unknown): obj is GroupData {
   if (typeof obj !== 'object' || obj === null) return false
   const record = obj as Record<string, unknown>

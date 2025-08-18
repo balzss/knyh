@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createRecipe, updateRecipe } from '@/lib/database'
 import type { Recipe } from '@/lib/types'
 
+export const dynamic = 'force-static'
+
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
