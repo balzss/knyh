@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 import { Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { SortableInput } from '@/components/custom'
@@ -44,6 +44,15 @@ export function SortableList({
   const inputRefs = useRef<{
     [key: string]: HTMLInputElement | HTMLTextAreaElement | null
   }>({})
+
+  // Configure sensors for better drag detection
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Require 8px of movement before dragging starts
+      },
+    })
+  )
 
   // Memoize the checked set to prevent unnecessary re-computations
   const checkedSet = useMemo(() => new Set(checkedItems), [checkedItems])
@@ -175,10 +184,47 @@ export function SortableList({
   }
 
   const handleToggleChecked = (itemId: string, nextChecked: boolean) => {
-    const updated = internalItems.map((it) =>
+    // Update the checked state first
+    const updatedItems = internalItems.map((it) =>
       it.id === itemId ? { ...it, checked: nextChecked } : it
     )
-    updateItems(updated)
+
+    if (checkable) {
+      // Calculate where the item should move to
+      const itemIndex = updatedItems.findIndex((it) => it.id === itemId)
+      let targetIndex: number
+
+      if (nextChecked) {
+        // Move checked item to the FIRST position among checked items
+        // Find the index of the first checked item (excluding the one we're checking)
+        const firstCheckedIndex = updatedItems.findIndex((it) => it.checked && it.id !== itemId)
+        if (firstCheckedIndex === -1) {
+          // No other checked items, put it at the end
+          targetIndex = updatedItems.length - 1
+        } else {
+          // Put it right before the first checked item
+          targetIndex = firstCheckedIndex
+        }
+      } else {
+        // Move unchecked item to the LAST position among unchecked items
+        // Count all items that will be unchecked (including this one)
+        const allUncheckedItems = updatedItems.filter((it) => !it.checked || it.id === itemId)
+        targetIndex = allUncheckedItems.length - 1
+      }
+
+      // Only animate if the item actually needs to move
+      if (itemIndex !== targetIndex) {
+        const reorderedItems = arrayMove(updatedItems, itemIndex, targetIndex)
+        setInternalItems(reorderedItems)
+        onItemsChange(reorderedItems.map((item) => item.value))
+      } else {
+        setInternalItems(updatedItems)
+        onItemsChange(updatedItems.map((item) => item.value))
+      }
+    } else {
+      setInternalItems(updatedItems)
+      onItemsChange(updatedItems.map((item) => item.value))
+    }
 
     // Call the callback with the item value and checked state
     const item = internalItems.find((it) => it.id === itemId)
@@ -190,17 +236,22 @@ export function SortableList({
   return (
     <div className={`grid w-full items-center ${className}`}>
       {label && <Label className="mb-2">{label}</Label>}
-      <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToParentElement]} id="dnd-context">
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToParentElement]}
+        id="dnd-context"
+      >
         <motion.ul
           className={`grid gap-2 ${internalItems.length > 0 ? 'mb-2' : ''}`}
-          layout="position"
-          transition={{ duration: 0.12, ease: 'easeOut' }}
+          layout
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <SortableContext
             items={internalItems.map((i) => i.id)}
             strategy={verticalListSortingStrategy}
           >
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {internalItems.map(({ id, value, autoFocus, noAnimate, checked }) => (
                 <SortableInput
                   key={id}

@@ -33,11 +33,14 @@ export function SortableInput({
 }: SortableInputProps) {
   const [hovered, setHovered] = useState<boolean>(false)
   const [focused, setFocused] = useState<boolean>(false)
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  })
 
   const style: React.CSSProperties = {}
   if (transform) {
     style.transform = CSS.Transform.toString(transform)
+    style.zIndex = 1000 // Ensure dragged item appears on top
   }
   if (transition && transform) {
     style.transition = transition
@@ -51,6 +54,7 @@ export function SortableInput({
 
   return (
     <motion.li
+      layoutId={isDragging ? undefined : id}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       {...(noAnimate
