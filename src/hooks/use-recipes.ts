@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { shuffleArray, clientDataPath } from '@/lib/utils'
-import { isStaticExport } from '@/lib/data-config'
+import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import type { DatabaseSchema } from '@/lib/types'
 
 type UseRecipesOptions = {
@@ -29,9 +29,10 @@ export const useRecipes = (options?: UseRecipesOptions) => {
 
     // The query function handles the actual data fetching.
     queryFn: async (): Promise<DatabaseSchema> => {
-      // Use different endpoints based on build mode
+      // Use different endpoints based on build mode and runtime detection
       const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-      const endpoint = isStaticExport
+      const shouldUseJson = isStaticExport || isClientStaticExport()
+      const endpoint = shouldUseJson
         ? clientDataPath // Static JSON file for static exports
         : `${basePath}/api/data` // API endpoint for SQLite in dev/production
 

@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_OUTPUT_MODE: process.env.NEXT_OUTPUT_MODE,
   },
 }
 
