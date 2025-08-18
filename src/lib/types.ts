@@ -30,8 +30,14 @@ export type UserConfig = {
   language: string
 }
 
+export type ShoppingListItem = {
+  text: string
+  checked: boolean
+}
+
 export type DatabaseSchema = {
   recipes: Recipe[]
   tags: Tag[]
   userConfig: UserConfig
+  shoppingList: ShoppingListItem[]
 }

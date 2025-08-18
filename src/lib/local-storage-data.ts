@@ -5,7 +5,7 @@
  * It's used when the app is in static export mode and cannot use SQLite database.
  */
 
-import { DatabaseSchema, Recipe, Tag, UserConfig } from './types'
+import { DatabaseSchema, Recipe, Tag, UserConfig, ShoppingListItem } from './types'
 import { clientDataPath } from './utils'
 
 const STORAGE_KEY = 'knyh-data'
@@ -49,6 +49,7 @@ async function getData(): Promise<DatabaseSchema> {
         theme: 'light',
         language: 'en',
       },
+      shoppingList: [],
     }
   }
 }
@@ -213,6 +214,22 @@ export const localStorageConfig = {
     data.userConfig = { ...data.userConfig, ...updates }
     saveData(data)
     return data.userConfig
+  },
+}
+
+/**
+ * Shopping List operations
+ */
+export const localStorageShoppingList = {
+  async getAll(): Promise<ShoppingListItem[]> {
+    const data = await getData()
+    return data.shoppingList || []
+  },
+
+  async update(items: ShoppingListItem[]): Promise<void> {
+    const data = await getData()
+    data.shoppingList = items
+    saveData(data)
   },
 }
 

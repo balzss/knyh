@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 import fs from 'fs'
-import type { Recipe, Tag, UserConfig, DatabaseSchema, GroupData } from './types'
+import type { Recipe, Tag, UserConfig, DatabaseSchema, GroupData, ShoppingListItem } from './types'
 
 // SQLite row types
 interface RecipeRow {
@@ -77,10 +77,20 @@ function initializeDb(database: Database.Database) {
     )
   `)
 
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS shopping_list (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      text TEXT NOT NULL,
+      checked INTEGER DEFAULT 0,
+      sort_order INTEGER NOT NULL
+    )
+  `)
+
   // Create indexes for better performance
   database.exec(`
     CREATE INDEX IF NOT EXISTS idx_recipes_archived ON recipes(archived);
     CREATE INDEX IF NOT EXISTS idx_recipes_created_at ON recipes(created_at);
+    CREATE INDEX IF NOT EXISTS idx_shopping_list_order ON shopping_list(sort_order);
   `)
 }
 
@@ -311,12 +321,41 @@ export function updateUserConfig(updates: Partial<UserConfig>): UserConfig {
   return getUserConfig()
 }
 
+// Shopping list operations
+export function getShoppingList(): ShoppingListItem[] {
+  const db = getDb()
+  const stmt = db.prepare('SELECT text, checked FROM shopping_list ORDER BY sort_order ASC')
+  const rows = stmt.all() as { text: string; checked: number }[]
+
+  return rows.map((row) => ({
+    text: row.text,
+    checked: Boolean(row.checked),
+  }))
+}
+
+export function updateShoppingList(items: ShoppingListItem[]): void {
+  const db = getDb()
+
+  // Clear existing items
+  db.exec('DELETE FROM shopping_list')
+
+  // Insert new items
+  const stmt = db.prepare('INSERT INTO shopping_list (text, checked, sort_order) VALUES (?, ?, ?)')
+
+  db.transaction(() => {
+    items.forEach((item, index) => {
+      stmt.run(item.text, item.checked ? 1 : 0, index)
+    })
+  })()
+}
+
 // Export all data as JSON (for static builds)
 export function exportToJson(): DatabaseSchema {
   return {
     recipes: getAllRecipes(),
     tags: getAllTags(),
     userConfig: getUserConfig(),
+    shoppingList: getShoppingList(),
   }
 }
 
@@ -328,6 +367,7 @@ export function importFromJson(data: DatabaseSchema): void {
   db.exec('DELETE FROM recipes')
   db.exec('DELETE FROM tags')
   db.exec('DELETE FROM user_config')
+  db.exec('DELETE FROM shopping_list')
 
   // Import recipes
   const recipeStmt = db.prepare(`
@@ -360,6 +400,16 @@ export function importFromJson(data: DatabaseSchema): void {
   const configStmt = db.prepare('INSERT INTO user_config (key, value) VALUES (?, ?)')
   for (const [key, value] of Object.entries(data.userConfig)) {
     configStmt.run(key, value)
+  }
+
+  // Import shopping list
+  if (data.shoppingList) {
+    const shoppingStmt = db.prepare(
+      'INSERT INTO shopping_list (text, checked, sort_order) VALUES (?, ?, ?)'
+    )
+    data.shoppingList.forEach((item, index) => {
+      shoppingStmt.run(item.text, item.checked ? 1 : 0, index)
+    })
   }
 }
 
