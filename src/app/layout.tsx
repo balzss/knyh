@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getLocale, getMessages } from 'next-intl/server'
 import Providers from '@/providers'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import './globals.css'
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -24,7 +25,10 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
-        <Providers i18n={{ locale, messages }}>{children}</Providers>
+        <Providers i18n={{ locale, messages }}>
+          <ServiceWorkerRegistration />
+          {children}
+        </Providers>
       </body>
     </html>
   )

@@ -125,7 +125,13 @@ export function RecipeCard({
       <CardHeader className={`relative ${compact ? 'p-3 sm:p-6' : ''}`}>
         <CardTitle>
           <div className="flex items-center gap-2">
-            <h3 className="flex-1 flex items-center gap-2">
+            <h3 className="flex-1 flex items-center gap-3">
+              <Link
+                href={getRecipeViewUrl(id)}
+                className="hover:underline break-words hyphens-auto leading-7"
+              >
+                {title}
+              </Link>
               {isLocalRecipe && (
                 <TooltipProvider>
                   <Tooltip>
@@ -138,12 +144,6 @@ export function RecipeCard({
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <Link
-                href={getRecipeViewUrl(id)}
-                className="hover:underline break-words hyphens-auto leading-7"
-              >
-                {title}
-              </Link>
             </h3>
           </div>
         </CardTitle>
@@ -188,7 +188,6 @@ export function RecipeCard({
             </Badge>
           ))}
         </div>
-        {/** intentionally no created/modified display on cards */}
         <div
           className={`flex gap-4 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >

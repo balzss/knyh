@@ -32,8 +32,7 @@ export function useUpdateConfig() {
     },
     onSuccess: (updatedConfig) => {
       // Update the cached config - need to update the full database schema in cache
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['userConfig'], (oldData: any) => {
+      queryClient.setQueryData(['userConfig'], (oldData: UserConfig) => {
         if (oldData && typeof oldData === 'object' && 'userConfig' in oldData) {
           // If we have the full DatabaseSchema cached, update just the userConfig part
           return { ...oldData, userConfig: updatedConfig }
