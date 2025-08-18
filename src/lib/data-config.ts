@@ -2,11 +2,12 @@
 export const isStaticExport = process.env.NEXT_OUTPUT_MODE === 'export'
 export const isDevelopment = process.env.NODE_ENV === 'development'
 
-// Use SQLite in development/production, JSON for static exports
+// Use SQLite in development/production, localStorage for static exports
 export const useDatabase =
   !isStaticExport && (isDevelopment || process.env.NODE_ENV === 'production')
 
-export const dataMode = useDatabase ? 'sqlite' : 'json'
+// Data modes: 'sqlite' for server-side DB, 'localStorage' for client-side persistence in static exports
+export const dataMode = useDatabase ? 'sqlite' : 'localStorage'
 
 console.log(`🔧 Data mode: ${dataMode} (static export: ${isStaticExport}, dev: ${isDevelopment})`)
 

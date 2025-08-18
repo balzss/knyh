@@ -1,4 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { localStorageRecipes } from '@/lib/local-storage-data'
 import type { Recipe } from '@/lib/types'
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -21,6 +23,9 @@ type UpdateRecipesPayload = {
 export const useRecipeMutations = () => {
   const queryClient = useQueryClient()
 
+  // Helper to determine if we should use localStorage
+  const shouldUseLocalStorage = () => isStaticExport || isClientStaticExport()
+
   // A helper to invalidate the recipes query after any successful mutation
   const invalidateRecipesQuery = () => {
     queryClient.invalidateQueries({ queryKey: ['recipes'] })
@@ -29,23 +34,27 @@ export const useRecipeMutations = () => {
   // CREATE mutation
   const createRecipe = useMutation({
     mutationFn: async (payload: CreateRecipePayload | CreateRecipePayload[]): Promise<Recipe[]> => {
-      // Ensure the body is always an array to match the API contract
-      const body = Array.isArray(payload) ? payload : [payload]
+      if (shouldUseLocalStorage()) {
+        // Use localStorage for static exports
+        const recipes = Array.isArray(payload) ? payload : [payload]
+        return localStorageRecipes.create(recipes)
+      } else {
+        // Use API for SQLite mode
+        const body = Array.isArray(payload) ? payload : [payload]
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
 
-      if (!response.ok) {
-        // Pass along the specific error message from the API
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || 'Failed to create recipe(s)')
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.message || 'Failed to create recipe(s)')
+        }
+
+        return response.json()
       }
-
-      // The API returns an array of the created recipes
-      return response.json()
     },
     onSuccess: invalidateRecipesQuery,
   })
@@ -53,15 +62,21 @@ export const useRecipeMutations = () => {
   // UPDATE mutation
   const updateRecipe = useMutation({
     mutationFn: async ({ id, data }: UpdateRecipePayload): Promise<Recipe> => {
-      const response = await fetch(`${apiUrl}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to update recipe')
+      if (shouldUseLocalStorage()) {
+        // Use localStorage for static exports
+        return localStorageRecipes.update(id, data)
+      } else {
+        // Use API for SQLite mode
+        const response = await fetch(`${apiUrl}/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!response.ok) {
+          throw new Error('Failed to update recipe')
+        }
+        return response.json()
       }
-      return response.json()
     },
     onSuccess: invalidateRecipesQuery,
   })
@@ -69,15 +84,21 @@ export const useRecipeMutations = () => {
   // BULK UPDATE mutation
   const updateRecipes = useMutation({
     mutationFn: async ({ ids, data }: UpdateRecipesPayload): Promise<Recipe[]> => {
-      const response = await fetch(apiUrl, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids, data }),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to update recipes')
+      if (shouldUseLocalStorage()) {
+        // Use localStorage for static exports
+        return localStorageRecipes.updateMany(ids, data)
+      } else {
+        // Use API for SQLite mode
+        const response = await fetch(apiUrl, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids, data }),
+        })
+        if (!response.ok) {
+          throw new Error('Failed to update recipes')
+        }
+        return response.json()
       }
-      return response.json()
     },
     onSuccess: invalidateRecipesQuery,
   })
@@ -85,13 +106,20 @@ export const useRecipeMutations = () => {
   // DELETE mutation
   const deleteRecipe = useMutation({
     mutationFn: async (recipeId: string): Promise<{ message: string }> => {
-      const response = await fetch(`${apiUrl}/${recipeId}`, {
-        method: 'DELETE',
-      })
-      if (!response.ok) {
-        throw new Error('Failed to delete recipe')
+      if (shouldUseLocalStorage()) {
+        // Use localStorage for static exports
+        await localStorageRecipes.delete(recipeId)
+        return { message: 'Recipe deleted successfully' }
+      } else {
+        // Use API for SQLite mode
+        const response = await fetch(`${apiUrl}/${recipeId}`, {
+          method: 'DELETE',
+        })
+        if (!response.ok) {
+          throw new Error('Failed to delete recipe')
+        }
+        return response.json()
       }
-      return response.json()
     },
     onSuccess: invalidateRecipesQuery,
   })
@@ -99,14 +127,21 @@ export const useRecipeMutations = () => {
   // BULK DELETE mutation (fallback to multiple single deletes until API supports batch)
   const deleteRecipes = useMutation({
     mutationFn: async (ids: string[]): Promise<string[]> => {
-      await Promise.all(
-        ids.map(async (id) => {
-          const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
-          if (!response.ok) throw new Error('Failed to delete recipe')
-          // ignore body (or could await response.json())
-        })
-      )
-      return ids
+      if (shouldUseLocalStorage()) {
+        // Use localStorage for static exports
+        await localStorageRecipes.deleteMany(ids)
+        return ids
+      } else {
+        // Use API for SQLite mode
+        await Promise.all(
+          ids.map(async (id) => {
+            const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+            if (!response.ok) throw new Error('Failed to delete recipe')
+            // ignore body (or could await response.json())
+          })
+        )
+        return ids
+      }
     },
     onSuccess: () => {
       invalidateRecipesQuery()

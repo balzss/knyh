@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { clientDataPath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema } from '@/lib/types'
 
 type UseTagsProps = {
@@ -17,18 +17,22 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
     queryKey: ['tags'],
 
     queryFn: async (): Promise<DatabaseSchema> => {
-      // Use different endpoints based on build mode and runtime detection
-      const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-      const shouldUseJson = isStaticExport || isClientStaticExport()
-      const endpoint = shouldUseJson
-        ? clientDataPath // Static JSON file for static exports
-        : `${basePath}/api/data` // API endpoint for SQLite in dev/production
+      // Use different data sources based on build mode and runtime detection
+      const shouldUseLocalStorage = isStaticExport || isClientStaticExport()
 
-      const response = await fetch(endpoint)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      if (shouldUseLocalStorage) {
+        // Use localStorage for static exports (supports mutations)
+        return getLocalStorageData()
+      } else {
+        // Use API endpoint for SQLite in dev/production
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+        const endpoint = `${basePath}/api/data`
+        const response = await fetch(endpoint)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
       }
-      return response.json()
     },
 
     select: useCallback(

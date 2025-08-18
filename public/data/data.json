@@ -1,29 +1,6 @@
 {
   "recipes": [
     {
-      "id": "b4qlnl2a",
-      "title": "Test Recipe",
-      "ingredients": [
-        {
-          "label": "",
-          "items": [
-            "Test ingredient"
-          ]
-        }
-      ],
-      "instructions": [
-        "Test instruction"
-      ],
-      "tags": [],
-      "metadata": {
-        "totalTime": "0:15",
-        "yield": "1 serving"
-      },
-      "archived": false,
-      "createdAt": "2025-08-17-15:30",
-      "lastModified": "2025-08-17-15:30"
-    },
-    {
       "id": "kgnk24xa",
       "title": "Rizses hús",
       "ingredients": [
