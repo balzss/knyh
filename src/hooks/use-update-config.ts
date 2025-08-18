@@ -30,9 +30,23 @@ export function useUpdateConfig() {
         return res.json()
       }
     },
-    onSuccess: (data) => {
-      // Update the cached config
-      queryClient.setQueryData(['userConfig'], data)
+    onSuccess: (updatedConfig) => {
+      // Update the cached config - need to update the full database schema in cache
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueryData(['userConfig'], (oldData: any) => {
+        if (oldData && typeof oldData === 'object' && 'userConfig' in oldData) {
+          // If we have the full DatabaseSchema cached, update just the userConfig part
+          return { ...oldData, userConfig: updatedConfig }
+        }
+        // Otherwise, just cache the config directly (fallback)
+        return updatedConfig
+      })
+
+      // For language changes in localStorage mode, trigger a page reload
+      // This ensures the new language is properly loaded
+      if (shouldUseLocalStorage() && 'language' in updatedConfig) {
+        window.location.reload()
+      }
     },
   })
 }

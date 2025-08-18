@@ -18,6 +18,7 @@ import {
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
 import { useConfig, useUpdateConfig, useImportExport } from '@/hooks'
+import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 
 type Theme = 'dark' | 'light'
 type Language = 'hu' | 'en'
@@ -60,8 +61,16 @@ export default function SettingsPage() {
       { language },
       {
         onSuccess: () => {
-          // reload page to load new language
-          window.location.reload()
+          // For static exports, trigger a custom event to update the provider
+          const shouldUseLocalStorageLanguage = isStaticExport || isClientStaticExport()
+
+          if (shouldUseLocalStorageLanguage) {
+            // Dispatch custom event to trigger language change in provider
+            window.dispatchEvent(new Event('languageChange'))
+          } else {
+            // reload page to load new language for SQLite mode
+            window.location.reload()
+          }
         },
       }
     )

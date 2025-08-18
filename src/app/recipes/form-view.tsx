@@ -172,7 +172,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
               buttonLabel={t('addTag')}
               tags={field.value}
               onTagChange={field.onChange}
-              allowCreate={!initialRecipe}
+              allowCreate
             />
           )}
         />
