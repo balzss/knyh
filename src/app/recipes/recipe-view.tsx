@@ -3,22 +3,18 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import {
-  Users,
-  Timer,
-  X,
-  Pen,
-  EllipsisVertical,
-  Share2,
-  Presentation,
-  Trash2,
-  Archive,
-} from 'lucide-react'
+import { Users, Timer, X, Pen, EllipsisVertical, Share2, Trash2, Archive } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   AppSidebar,
   PageLayout,
@@ -167,11 +163,6 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             />
             <div className="flex gap-2 items-center">
               <IconButton
-                icon={<Presentation />}
-                tooltip={t('presentationMode')}
-                onClick={() => {}}
-              />
-              <IconButton
                 icon={<Pen />}
                 tooltip={t('editRecipe')}
                 href={getRecipeEditUrl(recipeId)}
@@ -181,21 +172,21 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 trigger={<IconButton icon={<Share2 />} tooltip={t('shareRecipe')} />}
                 recipeUrl={'https://placeholder.url'}
               />
-              <IconButton
-                icon={<Archive />}
-                tooltip={t('archiveRecipe')}
-                onClick={handleArchiveRecipe}
-              />
-              <IconButton
-                icon={<Trash2 />}
-                tooltip={t('deleteRecipe')}
-                onClick={handleDeleteRecipe}
-              />
-              <IconButton
-                icon={<EllipsisVertical />}
-                tooltip={t('moreOptions')}
-                onClick={() => {}}
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleArchiveRecipe}>
+                    <Archive className="mr-2 h-4 w-4" />
+                    {t('archiveRecipe')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDeleteRecipe}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {t('deleteRecipe')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         }
