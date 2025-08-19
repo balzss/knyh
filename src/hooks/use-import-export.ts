@@ -2,6 +2,8 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { clientDataPath } from '@/lib/utils'
+import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema, UserConfig } from '@/lib/types'
 import { toast } from './use-toast'
 
@@ -17,8 +19,23 @@ export function useImportExport(options: UseImportExportOptions = {}) {
 
   const handleExport = async () => {
     try {
-      const response = await fetch(clientDataPath)
-      const data = await response.json()
+      let data: DatabaseSchema
+
+      // Check if we're in static export mode and should use localStorage data
+      const shouldUseLocalStorage = isStaticExport || isClientStaticExport()
+
+      if (shouldUseLocalStorage) {
+        // Export from localStorage (includes locally created recipes)
+        data = await getLocalStorageData()
+      } else {
+        // Export from API/database (SQLite mode)
+        const response = await fetch(clientDataPath)
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data: ${response.status}`)
+        }
+        data = await response.json()
+      }
+
       const json = JSON.stringify(data, null, 2)
       const blob = new Blob([json], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
@@ -32,21 +49,35 @@ export function useImportExport(options: UseImportExportOptions = {}) {
       URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Failed to export data:', error)
+      toast({
+        title: 'Export failed',
+        description: 'Could not export data. Please try again.',
+        variant: 'destructive',
+      })
     }
   }
 
   const importMutation = useMutation({
     mutationFn: async (data: DatabaseSchema) => {
-      const res = await fetch(importApiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err.message || 'Import failed')
+      const shouldUseLocalStorage = isStaticExport || isClientStaticExport()
+
+      if (shouldUseLocalStorage) {
+        // Import to localStorage (static export mode)
+        localStorage.setItem('knyh-data', JSON.stringify(data))
+        return { success: true }
+      } else {
+        // Import via API (SQLite mode)
+        const res = await fetch(importApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.message || 'Import failed')
+        }
+        return res.json()
       }
-      return res.json()
     },
     onSuccess: (_resp, variables) => {
       toast({ title: 'Import complete', description: 'Data imported successfully.' })

@@ -143,7 +143,7 @@ export default function ShoppingList() {
       <AppSidebar path="/shopping-list" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <SortableList
               addItemLabel={t('addItem')}
               items={uncheckedItems}
