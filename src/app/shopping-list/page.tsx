@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
-import { SortableList } from '@/components/custom'
+import { SortableList, CheckedItemsList } from '@/components/custom'
 import { useShoppingList, useShoppingListMutations } from '@/hooks'
 import type { ShoppingListItem } from '@/lib/types'
 
@@ -15,97 +15,97 @@ export default function ShoppingList() {
   const { shoppingList, loading } = useShoppingList()
   const { updateShoppingList } = useShoppingListMutations()
 
-  // Track the current state of items including their checked status
-  const [items, setItems] = useState<string[]>([])
+  // Track unchecked and checked items separately
+  const [uncheckedItems, setUncheckedItems] = useState<string[]>([])
   const [checkedItems, setCheckedItems] = useState<string[]>([])
-  const checkedStateRef = useRef<Map<string, boolean>>(new Map())
 
   // Update items when data loads from the database
   useEffect(() => {
     if (!loading && shoppingList) {
-      const newItems = shoppingList.map((item) => item.text)
-      const newCheckedStates = new Map<string, boolean>()
-      const newCheckedItems: string[] = []
+      const unchecked: string[] = []
+      const checked: string[] = []
 
       shoppingList.forEach((item) => {
-        newCheckedStates.set(item.text, item.checked)
         if (item.checked) {
-          newCheckedItems.push(item.text)
+          checked.push(item.text)
+        } else {
+          unchecked.push(item.text)
         }
       })
 
-      setItems(newItems)
-      setCheckedItems(newCheckedItems)
-      checkedStateRef.current = newCheckedStates
+      setUncheckedItems(unchecked)
+      setCheckedItems(checked)
     }
   }, [shoppingList, loading])
 
   // Debounce the database updates
   const updateTimeoutRef = useRef<NodeJS.Timeout>()
 
-  // Handle items change from SortableList
-  const handleItemsChange = useCallback(
-    (newItems: string[]) => {
-      setItems(newItems)
-
+  const saveToDatabase = useCallback(
+    (unchecked: string[], checked: string[]) => {
       // Clear existing timeout and set a new one to debounce saves
       if (updateTimeoutRef.current) {
         clearTimeout(updateTimeoutRef.current)
       }
 
       updateTimeoutRef.current = setTimeout(() => {
-        const newShoppingList: ShoppingListItem[] = newItems.map((text) => ({
-          text,
-          checked: checkedStateRef.current.get(text) || false,
-        }))
+        const newShoppingList: ShoppingListItem[] = [
+          ...unchecked.map((text) => ({ text, checked: false })),
+          ...checked.map((text) => ({ text, checked: true })),
+        ]
 
         updateShoppingList.mutateAsync(newShoppingList).catch((error) => {
           console.error('Failed to update shopping list:', error)
         })
-      }, 500) // 500ms debounce
+      }, 300)
     },
     [updateShoppingList]
   )
 
-  // Handle checked state changes from SortableList
-  const handleItemCheckedChange = useCallback(
-    (item: string, checked: boolean) => {
-      // Update local state immediately
-      checkedStateRef.current.set(item, checked)
-
-      // Only update React state if the checked state actually changed
-      setCheckedItems((prev) => {
-        const isCurrentlyChecked = prev.includes(item)
-        if (checked === isCurrentlyChecked) {
-          return prev // No change needed
-        }
-
-        return checked
-          ? [...prev, item] // Add if not present
-          : prev.filter((i) => i !== item) // Remove if present
-      })
-
-      // Clear existing timeout and set a new one to debounce saves
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current)
-      }
-
-      updateTimeoutRef.current = setTimeout(() => {
-        const newShoppingList: ShoppingListItem[] = items.map((text) => ({
-          text,
-          checked: checkedStateRef.current.get(text) || false,
-        }))
-
-        updateShoppingList.mutateAsync(newShoppingList).catch((error) => {
-          console.error('Failed to update shopping list:', error)
-        })
-      }, 300) // Shorter debounce for checked state changes
+  // Handle unchecked items change from SortableList
+  const handleUncheckedItemsChange = useCallback(
+    (newItems: string[]) => {
+      setUncheckedItems(newItems)
+      saveToDatabase(newItems, checkedItems)
     },
-    [items, updateShoppingList]
+    [checkedItems, saveToDatabase]
   )
 
-  // Note: We're now syncing both item changes and checked state changes
-  // with proper debouncing for optimal user experience.
+  // Handle checking an item (move from unchecked to checked)
+  const handleItemChecked = useCallback(
+    (item: string) => {
+      const newUncheckedItems = uncheckedItems.filter((i) => i !== item)
+      const newCheckedItems = [...checkedItems, item]
+
+      setUncheckedItems(newUncheckedItems)
+      setCheckedItems(newCheckedItems)
+      saveToDatabase(newUncheckedItems, newCheckedItems)
+    },
+    [uncheckedItems, checkedItems, saveToDatabase]
+  )
+
+  // Handle unchecking an item (move from checked to unchecked)
+  const handleItemUnchecked = useCallback(
+    (item: string) => {
+      const newCheckedItems = checkedItems.filter((i) => i !== item)
+      const newUncheckedItems = [...uncheckedItems, item]
+
+      setCheckedItems(newCheckedItems)
+      setUncheckedItems(newUncheckedItems)
+      saveToDatabase(newUncheckedItems, newCheckedItems)
+    },
+    [checkedItems, uncheckedItems, saveToDatabase]
+  )
+
+  // Handle removing a checked item completely
+  const handleCheckedItemRemoved = useCallback(
+    (item: string) => {
+      const newCheckedItems = checkedItems.filter((i) => i !== item)
+      setCheckedItems(newCheckedItems)
+      saveToDatabase(uncheckedItems, newCheckedItems)
+    },
+    [checkedItems, uncheckedItems, saveToDatabase]
+  )
 
   if (loading) {
     return (
@@ -143,14 +143,25 @@ export default function ShoppingList() {
       <AppSidebar path="/shopping-list" />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
-          <SortableList
-            addItemLabel="Add item"
-            items={items}
-            onItemsChange={handleItemsChange}
-            onItemCheckedChange={handleItemCheckedChange}
-            checkedItems={checkedItems}
-            checkable
-          />
+          <div className="space-y-6">
+            <SortableList
+              addItemLabel={t('addItem')}
+              items={uncheckedItems}
+              onItemsChange={handleUncheckedItemsChange}
+              showCheckboxes={true}
+              onItemChecked={handleItemChecked}
+            />
+
+            {checkedItems.length > 0 && (
+              <CheckedItemsList
+                items={checkedItems}
+                onItemUnchecked={handleItemUnchecked}
+                onItemRemoved={handleCheckedItemRemoved}
+                checkedItemsLabel={t('checkedItems')}
+                removeItemTooltip={t('removeItem')}
+              />
+            )}
+          </div>
         </PageLayout>
       </main>
     </div>

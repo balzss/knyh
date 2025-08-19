@@ -155,7 +155,10 @@
     "logIn": "Log in"
   },
   "ShoppingListPage": {
-    "title": "Shopping list"
+    "title": "Shopping list",
+    "addItem": "Add item",
+    "checkedItems": "Checked items",
+    "removeItem": "Remove item"
   },
   "YieldDialog": {
     "setYield": "Set yield",

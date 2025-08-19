@@ -15,9 +15,8 @@ interface SortableInputProps
   inputRef?: (el: HTMLInputElement | HTMLTextAreaElement | null) => void
   noAnimate?: boolean
   multiLine?: boolean
-  checkable?: boolean
-  checked?: boolean
-  onCheckedChange?: (checked: boolean) => void
+  showCheckbox?: boolean
+  onItemChecked?: () => void
 }
 
 export function SortableInput({
@@ -26,9 +25,8 @@ export function SortableInput({
   inputRef,
   noAnimate = false,
   multiLine,
-  checkable,
-  checked,
-  onCheckedChange,
+  showCheckbox = false,
+  onItemChecked,
   ...rest
 }: SortableInputProps) {
   const [hovered, setHovered] = useState<boolean>(false)
@@ -84,15 +82,10 @@ export function SortableInput({
           <span className="touch-none flex items-center cursor-move" {...listeners}>
             <GripVertical size={16} className="w-6" />
           </span>
-          {checkable && (
+          {showCheckbox && (
             <Checkbox
-              checked={!!checked}
-              onCheckedChange={(val) => onCheckedChange?.(!!val)}
-              className={
-                checked
-                  ? 'data-[state=checked]:bg-muted-foreground data-[state=checked]:text-black border-muted-foreground'
-                  : ''
-              }
+              checked={false}
+              onCheckedChange={() => onItemChecked?.()}
               id={`check-${id}`}
             />
           )}
@@ -114,9 +107,7 @@ export function SortableInput({
             autoComplete="off"
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
-            className={`${checkable ? 'pl-[4.25rem] pr-3 border-0' : 'px-9'} ${
-              checked ? 'line-through text-muted-foreground' : ''
-            }`}
+            className={showCheckbox ? 'pl-[4.25rem] pr-3 border-0' : 'px-9'}
             ref={inputRef}
           />
         )}

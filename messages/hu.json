@@ -155,7 +155,10 @@
     "logIn": "Bejelentkezés"
   },
   "ShoppingListPage": {
-    "title": "Bevásárló lista"
+    "title": "Bevásárló lista",
+    "addItem": "Tétel hozzáadása",
+    "checkedItems": "Kipipált tételek",
+    "removeItem": "Tétel eltávolítása"
   },
   "YieldDialog": {
     "setYield": "Adag beállítása",

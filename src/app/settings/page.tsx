@@ -88,7 +88,7 @@ export default function SettingsPage() {
         onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
-            <span className="mr-4 font-bold ">Settings</span>
+            <span className="mr-4 font-bold ">{t('settings')}</span>
           </div>
         }
       />
