@@ -15,7 +15,7 @@ console.log(`🔧 Data mode: ${dataMode} (static export: ${isStaticExport}, dev:
 export const getRecipeViewUrl = (recipeId: string): string => {
   // For localStorage recipes (starting with 'local_'), use query parameter route
   if (recipeId.startsWith('local_')) {
-    return `/recipe?id=${recipeId}`
+    return `/recipes?id=${recipeId}`
   }
 
   // For existing recipes from JSON, use the original dynamic route structure

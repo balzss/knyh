@@ -1,4 +1,4 @@
-import RecipeView from './recipe-view'
+import RecipeView from '../recipe-view'
 import fs from 'fs'
 import path from 'path'
 import { serverDataPath } from '@/lib/utils'

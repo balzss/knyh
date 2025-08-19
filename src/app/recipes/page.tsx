@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import RecipeView from '../recipes/view/[...id]/recipe-view'
+import RecipeView from './recipe-view'
 
 export default function RecipePage() {
   const searchParams = useSearchParams()
