@@ -61,3 +61,27 @@ export function formatTimestamp(date: Date = new Date()): string {
 
 // Re-export recipe parsing utilities (barrel style)
 export { parseMarkdown, parseSingleRecipe, recipeToMarkdown } from './recipe-utils'
+
+/**
+ * Generates initials from a name or fallback identifier
+ * @param name The user's name
+ * @param fallback Fallback identifier (like userId)
+ * @returns Up to 2 initials in uppercase
+ */
+export function generateInitials(name?: string, fallback?: string): string {
+  const source = name || fallback || 'User'
+
+  // Split by spaces and take first letter of each word (max 2)
+  const words = source.trim().split(/\s+/)
+  const initials = words
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('')
+
+  // If we only have one word, take first 2 characters
+  if (initials.length === 1 && source.length > 1) {
+    return source.slice(0, 2).toUpperCase()
+  }
+
+  return initials || 'U'
+}

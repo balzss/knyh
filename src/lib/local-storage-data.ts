@@ -22,22 +22,35 @@ function generateId(): string {
  */
 async function getData(): Promise<DatabaseSchema> {
   try {
-    // First try to get data from localStorage
+    // Always fetch the JSON file to get the user name
+    const response = await fetch(clientDataPath)
+    let jsonData: DatabaseSchema | null = null
+    if (response.ok) {
+      jsonData = await response.json()
+    }
+
+    // Try to get data from localStorage for other data
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
-      return JSON.parse(stored)
+      const localData = JSON.parse(stored)
+      // Use JSON data for user name, localStorage for everything else
+      return {
+        ...localData,
+        userConfig: {
+          ...localData.userConfig,
+          name: jsonData?.userConfig?.name || localData.userConfig?.name || 'Local User',
+        },
+      }
     }
 
-    // Fallback to static JSON file on first load
-    const response = await fetch(clientDataPath)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch initial data: ${response.status}`)
+    // If no localStorage data, use JSON data as initial data and store it
+    if (jsonData) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(jsonData))
+      return jsonData
     }
-    const data: DatabaseSchema = await response.json()
 
-    // Store the initial data in localStorage for future use
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-    return data
+    // Final fallback if both fail
+    throw new Error('No data source available')
   } catch (error) {
     console.error('Failed to load data:', error)
     // Return empty schema as fallback
@@ -45,7 +58,7 @@ async function getData(): Promise<DatabaseSchema> {
       recipes: [],
       tags: [],
       userConfig: {
-        userId: 'local-user',
+        name: 'Local User',
         theme: 'light',
         language: 'en',
       },

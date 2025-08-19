@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
@@ -7,9 +9,27 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 
 export default function LoginPage() {
   const t = useTranslations('LoginPage')
+  const router = useRouter()
+
+  // Redirect to home if in static mode
+  useEffect(() => {
+    const isStaticMode = isStaticExport || isClientStaticExport()
+    if (isStaticMode) {
+      router.replace('/')
+    }
+  }, [router])
+
+  // Check if we're in static mode (client-side check for render)
+  const isStaticMode = isStaticExport || isClientStaticExport()
+
+  // Don't render anything in static mode (while redirecting)
+  if (isStaticMode) {
+    return null
+  }
   return (
     <div className="flex w-full items-start justify-center m-3 mt-16">
       <Card className="max-w-sm w-full flex flex-col items-center">

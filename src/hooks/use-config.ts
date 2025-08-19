@@ -4,18 +4,21 @@ import { useQuery } from '@tanstack/react-query'
 import type { DatabaseSchema } from '@/lib/types'
 import { clientDataPath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
-import { getLocalStorageData } from '@/lib/local-storage-data'
 
 export function useConfig() {
   return useQuery({
     queryKey: ['userConfig'],
     queryFn: async (): Promise<DatabaseSchema> => {
       // Use different data sources based on build mode and runtime detection
-      const shouldUseLocalStorage = isStaticExport || isClientStaticExport()
+      const shouldUseStaticJson = isStaticExport || isClientStaticExport()
 
-      if (shouldUseLocalStorage) {
-        // Use localStorage for static exports (supports mutations)
-        return getLocalStorageData()
+      if (shouldUseStaticJson) {
+        // Use static JSON file directly for static exports
+        const response = await fetch(clientDataPath)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
       } else {
         // Use API endpoint for SQLite in dev/production
         const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''

@@ -25,8 +25,8 @@ export type Tag = {
 }
 
 export type UserConfig = {
-  userId: string
-  theme: 'light' | 'dark'
+  name: string
+  theme: string
   language: string
 }
 

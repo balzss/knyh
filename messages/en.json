@@ -188,6 +188,7 @@
     "clearSelection": "Clear selection",
     "selectAll": "Select all",
     "toggleSidebar": "Toggle sidebar",
+    "loading": "Loading...",
     "loggedInAs": "Logged in as {username}",
     "signOut": "Sign Out",
     "filterAndViewOptions": "Filter and view options",

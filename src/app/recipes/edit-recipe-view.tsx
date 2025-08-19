@@ -54,6 +54,13 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
         hideSidebarToggleMobile
         customTopbarContent={
           <div className="flex items-center gap-2">
+            <IconButton
+              iconSize="normal"
+              variant="ghost"
+              icon={<X />}
+              tooltip={t('close')}
+              onClick={handleClosePage}
+            />
             <span className="mr-auto sm:mr-4 font-bold">
               {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
             </span>
@@ -77,13 +84,6 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<X />}
-              tooltip={t('close')}
-              onClick={handleClosePage}
-            />
           </div>
         }
       />

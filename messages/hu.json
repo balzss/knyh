@@ -188,6 +188,7 @@
     "clearSelection": "Kijelölés megszűntetése",
     "selectAll": "Összes kijelölése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
+    "loading": "Betöltés...",
     "loggedInAs": "Bejelentkezve mint {username}",
     "signOut": "Kijelentkezés",
     "filterAndViewOptions": "Szűrő és nézet opciók",

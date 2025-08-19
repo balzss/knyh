@@ -302,7 +302,7 @@ export function getUserConfig(): UserConfig {
 
   // Provide defaults with proper type casting
   return {
-    userId: config.userId || 'user',
+    name: config.name || 'Demo User',
     theme: (config.theme as 'light' | 'dark') || 'dark',
     language: config.language || 'en',
   }
