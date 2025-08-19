@@ -161,6 +161,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               onClick={handleClosePage}
               className="mr-auto sm:mr-4 "
             />
+            <span className="mr-4 font-bold ">{recipe.title}</span>
             <div className="flex gap-2 items-center">
               <IconButton
                 icon={<Pen />}

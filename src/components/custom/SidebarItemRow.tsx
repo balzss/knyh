@@ -48,9 +48,16 @@ export function SidebarItemRow({
         onClick={(e) => {
           if (wasLongPress()) {
             e.preventDefault()
+            e.stopPropagation()
             return
           }
           onNavigate()
+        }}
+        onPointerDown={(e) => {
+          // Reset long press state when starting a new interaction
+          if (!isMobile) {
+            e.preventDefault()
+          }
         }}
       >
         <span>{displayName}</span>

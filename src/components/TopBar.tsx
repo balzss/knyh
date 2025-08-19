@@ -14,7 +14,7 @@ export function TopBar({
   hideSidebarToggleMobile = false,
 }: TopBarProps) {
   return (
-    <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-b bg-background p-3">
+    <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-0 border-b bg-background p-3">
       <IconButton
         className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}

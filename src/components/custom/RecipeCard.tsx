@@ -56,7 +56,7 @@ export function RecipeCard({
   const { confirmDelete } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
-  const { bind: longPressBind } = useLongPress(() => {
+  const { bind: longPressBind, wasLongPress } = useLongPress(() => {
     onSelect?.(!isSelected)
   })
 
@@ -129,6 +129,13 @@ export function RecipeCard({
               <Link
                 href={getRecipeViewUrl(id)}
                 className="hover:underline break-words hyphens-auto leading-7"
+                onClick={(e) => {
+                  if (wasLongPress()) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    return
+                  }
+                }}
               >
                 {title}
               </Link>
@@ -163,7 +170,10 @@ export function RecipeCard({
               variant="ghost"
               size="icon"
               className={`h-8 w-8 mr-1.5 ${isSelected ? 'text-primary hover:text-primary' : ''}`}
-              onClick={() => onSelect(!isSelected)}
+              onClick={(e) => {
+                e.stopPropagation()
+                onSelect(!isSelected)
+              }}
             >
               {isSelected ? <CircleCheckBig /> : <Circle />}
             </Button>
