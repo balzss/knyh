@@ -152,6 +152,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                           <SidebarMenuSub>
                             {item.subItems.map((subItem) => (
                               <SidebarItemRow
+                                alwaysShowActionsOnMobile={false}
                                 key={subItem.id}
                                 href={subItem.href}
                                 displayName={subItem.displayName}

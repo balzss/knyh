@@ -198,7 +198,7 @@
     "maxCols": "Max cols: {cols}"
   },
   "ConfirmDialog": {
-    "deleteTitle": "Delete {name}",
+    "deleteTitle": "Delete \"{name}\"",
     "deleteDescription": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
     "deleteConfirmButton": "Delete",
     "cancelButton": "Cancel"
