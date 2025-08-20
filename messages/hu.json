@@ -6,7 +6,9 @@
     "shopping-list": "Bevásárló lista",
     "archive": "Archívum",
     "settings": "Beállítások",
-    "new-recipe-button": "Új recept"
+    "new-recipe-button": "Új recept",
+    "github": "GitHub",
+    "docs": "Dokumentáció"
   },
   "TagActions": {
     "renameTag": "Címke átnevezése",

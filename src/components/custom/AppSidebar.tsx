@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarHeader,
   SidebarMenuSub,
+  SidebarFooter,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -24,10 +25,12 @@ import {
   ShoppingCart,
   BookOpenText,
   Dices,
+  Github,
+  BookOpen,
+  ExternalLink,
 } from 'lucide-react'
-import { useTags, useTagMutations, useRecipes } from '@/hooks'
+import { useTags, useTagMutations, useRecipes, useConfirmDialog } from '@/hooks'
 import { SidebarItemRow } from '@/components/custom/SidebarItemRow'
-import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
 import { myToast } from '@/components/custom'
 import { useState } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -45,7 +48,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const { tags } = useTags()
   const { recipes } = useRecipes()
   const { renameTag, deleteTag } = useTagMutations()
-  const [tagToDelete, setTagToDelete] = useState<{ id: string; displayName: string } | null>(null)
+  const { confirmDelete } = useConfirmDialog()
   const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
 
   const sidebarItems = (tags: Tag[]) => [
@@ -187,11 +190,21 @@ export function AppSidebar({ path }: AppSidebarProps) {
                                     key: 'delete',
                                     label: tTag('removeTag'),
                                     icon: <Trash2 className="h-4 w-4" />,
-                                    onSelect: () =>
-                                      setTagToDelete({
-                                        id: subItem.id,
-                                        displayName: subItem.displayName,
-                                      }),
+                                    onSelect: async () => {
+                                      const confirmed = await confirmDelete({
+                                        name: subItem.displayName,
+                                      })
+                                      if (confirmed) {
+                                        deleteTag.mutate(subItem.id, {
+                                          onSuccess: () => {
+                                            myToast({ message: tTag('tagDeleted') })
+                                          },
+                                          onError: (e: unknown) => {
+                                            myToast({ message: getErrorMessage(e, 'Error') })
+                                          },
+                                        })
+                                      }
+                                    },
                                   },
                                 ]}
                               />
@@ -218,30 +231,35 @@ export function AppSidebar({ path }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      {tagToDelete && (
-        <ConfirmDialog
-          open={!!tagToDelete}
-          onOpenChange={(open) => {
-            if (!open) setTagToDelete(null)
-          }}
-          title={tTag('deleteTagDialogTitle')}
-          description={tTag('deleteTagDialogDescription', {
-            name: tagToDelete.displayName,
-            count: recipes?.filter((r) => r.tags.includes(tagToDelete.id)).length || 0,
-          })}
-          confirmText={deleteTag.isPending ? tTag('deleting') : tTag('delete')}
-          onConfirm={() => {
-            deleteTag.mutate(tagToDelete.id, {
-              onSuccess: () => {
-                myToast({ message: tTag('tagDeleted') })
-              },
-              onError: (e: unknown) => {
-                myToast({ message: getErrorMessage(e, 'Error') })
-              },
-            })
-          }}
-        />
-      )}
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="text-muted-foreground">
+              <Link href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
+                <Github className="h-4 w-4" />
+                <span>{t('github')}</span>
+                <ExternalLink className="h-3 w-3 ml-auto" />
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="text-muted-foreground">
+              <Link
+                href="https://github.com/balzss/knyh#readme"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>{t('docs')}</span>
+                <ExternalLink className="h-3 w-3 ml-auto" />
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <div className="px-2 py-1 text-xs text-muted-foreground text-center">
+          v{process.env.NEXT_PUBLIC_APP_VERSION}
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

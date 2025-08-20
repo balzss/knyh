@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 import withSerwistInit from '@serwist/next'
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
+const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'))
 
 const basePath = '/knyh'
 
@@ -21,6 +25,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_OUTPUT_MODE: process.env.NEXT_OUTPUT_MODE,
+    NEXT_PUBLIC_APP_VERSION: packageJson.version,
   },
 }
 

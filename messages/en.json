@@ -6,7 +6,9 @@
     "shopping-list": "Shopping list",
     "archive": "Archive",
     "settings": "Settings",
-    "new-recipe-button": "New recipe"
+    "new-recipe-button": "New recipe",
+    "github": "GitHub",
+    "docs": "Documentation"
   },
   "TagActions": {
     "renameTag": "Rename tag",
