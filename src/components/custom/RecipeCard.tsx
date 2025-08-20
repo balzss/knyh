@@ -25,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconButton, myToast, ShareDialog } from '@/components/custom'
+import { IconButton, myToast, ShareDialog, Highlight } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/data-config'
@@ -39,6 +39,7 @@ type RecipeCardProps = {
   recipeData: Recipe
   recipeUrl?: string
   compact?: boolean
+  highlight?: string
 }
 
 export function RecipeCard({
@@ -50,6 +51,7 @@ export function RecipeCard({
   recipeData,
   recipeUrl = '',
   compact = true,
+  highlight,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
   const { updateRecipe, deleteRecipe, createRecipe } = useRecipeMutations()
@@ -102,7 +104,6 @@ export function RecipeCard({
   )
 
   const { title, metadata, id } = recipeData
-
   const isLocalRecipe = id.startsWith('local_')
 
   return (
@@ -137,7 +138,7 @@ export function RecipeCard({
                   }
                 }}
               >
-                {title}
+                <Highlight text={title} term={highlight} />
               </Link>
               {isLocalRecipe && (
                 <TooltipProvider>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useDeferredValue, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
@@ -37,14 +37,26 @@ export default function Home() {
 
   const tagParam = searchParams.get('tag')?.split(',')
   const filterTags = tags.filter((t) => tagParam?.includes(t.id))
-  const filteredRecipes = filterTags.length
+  const tagFilteredRecipes = filterTags.length
     ? recipes.filter((r) => tagParam?.every((t) => r.tags.includes(t)))
     : recipes
 
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const deferredSearchQuery = useDeferredValue(searchQuery)
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
   const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
+
+  // Debounced and memoized filter by search query (accent-insensitive title match)
+  const filteredRecipes = useMemo(() => {
+    // Regex to strip diacritical marks for accent-insensitive search
+    const diacriticsRegex = /[\u0300-\u036f]/g
+    const normalize = (str: string) =>
+      str.toLowerCase().normalize('NFD').replace(diacriticsRegex, '')
+    return tagFilteredRecipes.filter((r) =>
+      normalize(r.title).includes(normalize(deferredSearchQuery))
+    )
+  }, [tagFilteredRecipes, deferredSearchQuery])
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -145,6 +157,7 @@ export default function Home() {
             filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
+                highlight={searchQuery}
                 selectionMode={selectionList.length > 0}
                 tags={recipe.tags
                   .map((tagId) => tags?.find((tag) => tag.id === tagId))
