@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useDeferredValue, useMemo } from 'react'
+import { useState, useDeferredValue, useMemo, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
@@ -20,8 +20,9 @@ import {
   EmptyState,
   Loader,
 } from '@/components/custom'
-import { useRecipes, useTags, useRecipeMutations } from '@/hooks'
+import { useRecipes, useTags, useRecipeMutations, useConfig, useUpdateConfig } from '@/hooks'
 import type { Tag } from '@/lib/types'
+import type { SortOption } from '@/hooks/use-recipes'
 import { getRecipeViewUrl } from '@/lib/data-config'
 
 export default function Home() {
@@ -31,7 +32,18 @@ export default function Home() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const { recipes, loading } = useRecipes({ sort: 'random' })
+  const { data: userConfig, isLoading: configLoading } = useConfig()
+  const updateConfig = useUpdateConfig()
+
+  const [sortOption, setSortOption] = useState<SortOption>(
+    (userConfig?.defaultSort as SortOption) || 'random'
+  )
+  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>(
+    userConfig?.defaultLayout || 'list'
+  )
+  const [layoutGridCols, setLayoutGridCols] = useState<number>(userConfig?.defaultGridCols || 5)
+
+  const { recipes, loading } = useRecipes({ sort: sortOption })
   const { updateRecipes } = useRecipeMutations()
   const { tags, loading: tagsLoading } = useTags()
 
@@ -47,8 +59,21 @@ export default function Home() {
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
-  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
-  const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
+
+  // Sync state with loaded config
+  useEffect(() => {
+    if (userConfig && !configLoading) {
+      if (userConfig.defaultSort) {
+        setSortOption(userConfig.defaultSort as SortOption)
+      }
+      if (userConfig.defaultLayout) {
+        setSelectedLayout(userConfig.defaultLayout)
+      }
+      if (userConfig.defaultGridCols) {
+        setLayoutGridCols(userConfig.defaultGridCols)
+      }
+    }
+  }, [userConfig, configLoading])
 
   // Debounced and memoized filter by search query (accent-insensitive title match)
   const filteredRecipes = useMemo(() => {
@@ -74,6 +99,21 @@ export default function Home() {
   const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
     setSelectedLayout(selectedValue)
     setLayoutGridCols(gridCols)
+
+    // Save to userConfig
+    updateConfig.mutate({
+      defaultLayout: selectedValue,
+      defaultGridCols: gridCols,
+    })
+  }
+
+  const handleSortChange = (newSortOption: SortOption) => {
+    setSortOption(newSortOption)
+
+    // Save to userConfig
+    updateConfig.mutate({
+      defaultSort: newSortOption,
+    })
   }
 
   const handleTagFilterChange = (newTags: Tag[]) => {
@@ -102,6 +142,8 @@ export default function Home() {
                 selectedLayout={selectedLayout}
                 onLayoutChange={handleLayoutChange}
                 layoutGridCols={layoutGridCols}
+                sortOption={sortOption}
+                onSortChange={handleSortChange}
               />
             )}
             {topBarMode === 'select' && (

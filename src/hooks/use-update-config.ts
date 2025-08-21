@@ -40,12 +40,6 @@ export function useUpdateConfig() {
         // Otherwise, just cache the config directly (fallback)
         return updatedConfig
       })
-
-      // For language changes in localStorage mode, trigger a page reload
-      // This ensures the new language is properly loaded
-      if (shouldUseLocalStorage() && 'language' in updatedConfig) {
-        window.location.reload()
-      }
     },
   })
 }

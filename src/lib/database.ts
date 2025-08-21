@@ -114,15 +114,15 @@ export function createRecipe(recipe: Omit<Recipe, 'id'>): Recipe {
     recipe.metadata.totalTime,
     recipe.metadata.yield,
     recipe.archived ? 1 : 0,
-    recipe.createdAt || now,
-    recipe.lastModified || now
+    now, // Always use current timestamp for created_at
+    now // Always use current timestamp for last_modified
   )
 
   return {
     ...recipe,
     id,
-    createdAt: recipe.createdAt || now,
-    lastModified: recipe.lastModified || now,
+    createdAt: now,
+    lastModified: now,
   }
 }
 
@@ -305,6 +305,9 @@ export function getUserConfig(): UserConfig {
     name: config.name || 'Demo User',
     theme: (config.theme as 'light' | 'dark') || 'dark',
     language: config.language || 'en',
+    defaultSort: config.defaultSort,
+    defaultLayout: (config.defaultLayout as 'grid' | 'list') || undefined,
+    defaultGridCols: config.defaultGridCols ? parseInt(config.defaultGridCols, 10) : undefined,
   }
 }
 

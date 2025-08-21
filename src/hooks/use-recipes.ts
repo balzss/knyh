@@ -5,11 +5,13 @@ import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema } from '@/lib/types'
 
+export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' | 'updated-desc'
+
 type UseRecipesOptions = {
   // An array of recipe IDs to fetch. If undefined, all recipes are considered.
   ids?: string[]
-  // The sorting strategy. Currently supports 'random'.
-  sort?: 'random'
+  // The sorting strategy. Supports various options.
+  sort?: SortOption
   // If true, returns only archived recipes. If false or undefined, returns only unarchived recipes.
   archived?: boolean
 }
@@ -65,8 +67,8 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     },
   })
 
-  // The random sort is a "view concern" and is handled separately to avoid
-  // re-shuffling on every render.
+  // The sorting is a "view concern" and is handled separately to avoid
+  // re-shuffling/re-sorting on every render.
   const processedRecipes = useMemo(() => {
     if (!recipes) return []
 
@@ -75,6 +77,22 @@ export const useRecipes = (options?: UseRecipesOptions) => {
         // This shuffle will only re-run if the `recipes` array reference
         // or the sort option changes.
         return shuffleArray(recipes)
+      case 'title-asc':
+        return [...recipes].sort((a, b) => a.title.localeCompare(b.title))
+      case 'title-desc':
+        return [...recipes].sort((a, b) => b.title.localeCompare(a.title))
+      case 'updated-asc':
+        return [...recipes].sort((a, b) => {
+          const dateA = new Date(a.lastModified || 0).getTime()
+          const dateB = new Date(b.lastModified || 0).getTime()
+          return dateA - dateB
+        })
+      case 'updated-desc':
+        return [...recipes].sort((a, b) => {
+          const dateA = new Date(a.lastModified || 0).getTime()
+          const dateB = new Date(b.lastModified || 0).getTime()
+          return dateB - dateA
+        })
       default:
         return recipes
     }

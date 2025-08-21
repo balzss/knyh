@@ -28,6 +28,9 @@ export type UserConfig = {
   name: string
   theme: string
   language: string
+  defaultSort?: string
+  defaultLayout?: 'grid' | 'list'
+  defaultGridCols?: number
 }
 
 export type ShoppingListItem = {
