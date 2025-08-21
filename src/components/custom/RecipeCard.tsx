@@ -135,6 +135,11 @@ export function RecipeCard({
                     return
                   }
                 }}
+                onContextMenu={(e) => {
+                  if (selectionMode) {
+                    e.preventDefault()
+                  }
+                }}
               >
                 <Highlight text={title} term={highlight} />
               </Link>

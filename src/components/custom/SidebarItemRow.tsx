@@ -62,6 +62,11 @@ export function SidebarItemRow({
               e.preventDefault()
             }
           }}
+          onContextMenu={(e) => {
+            if (isMobile) {
+              e.preventDefault()
+            }
+          }}
         >
           <span>{displayName}</span>
         </Link>

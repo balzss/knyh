@@ -23,9 +23,9 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
   const t = useTranslations('TotalTimeDialog')
   const [open, setOpen] = useState<boolean>(false)
 
-  const [initialHours, initialMinutes] = totalTimeValue?.split(':')
-  const [hours, setHours] = useState<string>(initialHours || '')
-  const [minutes, setMinutes] = useState<string>(initialMinutes || '')
+  const [initialHours, initialMinutes] = (totalTimeValue || ':').split(':')
+  const [hours, setHours] = useState<string>(initialHours)
+  const [minutes, setMinutes] = useState<string>(initialMinutes)
 
   const handleOpenChange = (prevOpen: boolean) => {
     setOpen(prevOpen)
