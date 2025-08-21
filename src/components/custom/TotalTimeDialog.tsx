@@ -22,8 +22,11 @@ type TotalTimeDialogProps = {
 export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: TotalTimeDialogProps) {
   const t = useTranslations('TotalTimeDialog')
   const [open, setOpen] = useState<boolean>(false)
-  const [hours, setHours] = useState<string>('')
-  const [minutes, setMinutes] = useState<string>('')
+
+  const [initialHours, initialMinutes] = totalTimeValue?.split(':')
+  const [hours, setHours] = useState<string>(initialHours || '')
+  const [minutes, setMinutes] = useState<string>(initialMinutes || '')
+
   const handleOpenChange = (prevOpen: boolean) => {
     setOpen(prevOpen)
     if (!prevOpen) {

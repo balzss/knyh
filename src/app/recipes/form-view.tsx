@@ -50,7 +50,6 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
     defaultValues: {
       ...initialRecipe,
       tags: initialTags,
-      ingredients: initialRecipe?.ingredients || [],
     },
     mode: 'onChange',
   })

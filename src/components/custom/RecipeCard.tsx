@@ -38,7 +38,6 @@ type RecipeCardProps = {
   archivedMode?: boolean
   recipeData: Recipe
   recipeUrl?: string
-  compact?: boolean
   highlight?: string
 }
 
@@ -50,7 +49,6 @@ export function RecipeCard({
   archivedMode = false,
   recipeData,
   recipeUrl = '',
-  compact = true,
   highlight,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
@@ -123,7 +121,7 @@ export function RecipeCard({
       role="article"
       aria-label={`Recipe: ${title}`}
     >
-      <CardHeader className={`relative ${compact ? 'p-3 sm:p-6' : ''}`}>
+      <CardHeader className="relative p-3 sm:p-6">
         <CardTitle>
           <div className="flex items-center gap-2">
             <h3 className="flex-1 flex items-center gap-3">
@@ -181,9 +179,7 @@ export function RecipeCard({
           )}
         </div>
       </CardHeader>
-      <CardFooter
-        className={`flex flex-col gap-4 items-start pb-3 mt-auto ${compact ? 'p-3 sm:p-6' : ''} pt-0 sm:pt-0`}
-      >
+      <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto p-3 sm:p-6 pt-0 sm:pt-0">
         <div className="flex gap-2 flex-wrap">
           {tags.map((tag) => (
             <Badge

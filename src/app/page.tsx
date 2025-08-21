@@ -169,7 +169,6 @@ export default function Home() {
                 isSelected={selectionList.includes(recipe.id)}
                 onSelect={(selected) => handleCardSelect(recipe.id, selected)}
                 recipeUrl={`${window?.location.origin}${getRecipeViewUrl(recipe.id)}`}
-                compact={selectedLayout === 'grid'}
               />
             ))
           ) : !loading && !tagsLoading ? (

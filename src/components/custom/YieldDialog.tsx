@@ -21,7 +21,7 @@ type YieldDialogProps = {
 export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps) {
   const t = useTranslations('YieldDialog')
   const [open, setOpen] = useState<boolean>(false)
-  const [value, setValue] = useState<string>('')
+  const [value, setValue] = useState<string>(yieldValue)
   const handleOpenChange = (prevOpen: boolean) => {
     setOpen(prevOpen)
     if (!prevOpen) setValue(yieldValue)

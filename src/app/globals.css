@@ -105,7 +105,19 @@ body {
   }
 }
 
+/* TODO: Remove this workaround once Chrome Android fixes the password manager popup issue */
+/* This prevents search input decorations when using type="search" as workaround for Android Chrome */
+/* password manager popup appearing on non-password inputs */
 input[type=search]::-webkit-search-cancel-button,
-input[type=search]::-webkit-search-decoration {
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
   -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Additional fallback for other browsers */
+input[type=search] {
+  appearance: none;
+  -moz-appearance: none;
 }
