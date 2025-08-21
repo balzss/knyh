@@ -12,7 +12,7 @@ export function Highlight({ text, term = '' }: HighlightProps) {
     <>
       {segments.map((seg, idx) =>
         seg.match ? (
-          <mark key={idx} className="bg-primary/20 text-primary-foreground">
+          <mark key={idx} className="bg-primary/30 text-foreground">
             {seg.text}
           </mark>
         ) : (

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
@@ -28,12 +29,11 @@ import {
   Github,
   BookOpen,
   ExternalLink,
+  Pencil,
+  Trash2,
 } from 'lucide-react'
 import { useTags, useTagMutations, useRecipes, useConfirmDialog } from '@/hooks'
-import { SidebarItemRow } from '@/components/custom/SidebarItemRow'
-import { myToast } from '@/components/custom'
-import { useState } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
+import { myToast, SidebarItemRow } from '@/components/custom'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
 
@@ -51,11 +51,27 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const { confirmDelete } = useConfirmDialog()
   const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
 
+  // Extract tags from URL parameters if present
+  const getSelectedTagsFromPath = (currentPath?: string) => {
+    if (!currentPath) return []
+    try {
+      const url = new URL(currentPath, 'http://localhost')
+      const tagParam = url.searchParams.get('tag')
+      return tagParam ? tagParam.split(',') : []
+    } catch {
+      return []
+    }
+  }
+
+  const selectedTagIds = getSelectedTagsFromPath(path)
+
   const sidebarItems = (tags: Tag[]) => [
     {
       displayName: t('recipes'),
       icon: <BookOpenText />,
       href: '/',
+      // Only highlight recipes when on root path without tag filter
+      isActive: path === '/' && selectedTagIds.length === 0,
     },
     {
       displayName: t('tags'),
@@ -67,6 +83,8 @@ export function AppSidebar({ path }: AppSidebarProps) {
           displayName,
           href: `/?tag=${id}`,
           usageCount,
+          // Highlight this tag if it's selected
+          isActive: selectedTagIds.includes(id),
         }
       }),
     },
@@ -163,6 +181,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                                 open={menuOpenForTag === subItem.id}
                                 onOpenChange={(open) => setMenuOpenForTag(open ? subItem.id : null)}
                                 onNavigate={() => setOpenMobile(false)}
+                                isActive={subItem.isActive}
                                 actions={[
                                   {
                                     key: 'rename',
@@ -218,7 +237,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
 
                 return (
                   <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive={path === item.href}>
+                    <SidebarMenuButton asChild isActive={item.isActive ?? path === item.href}>
                       <Link href={item.href} onClick={() => setOpenMobile(false)}>
                         {item.icon}
                         <span>{item.displayName}</span>

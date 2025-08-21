@@ -5,6 +5,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from '@/components/ui/dropdown-menu'
+import { SidebarMenuSubButton } from '@/components/ui/sidebar'
 import { MoreVertical } from 'lucide-react'
 import { useLongPress } from '@/hooks'
 import { useTranslations } from 'next-intl'
@@ -25,6 +26,7 @@ interface SidebarItemRowProps {
   onNavigate: () => void
   actions: SidebarAction[]
   alwaysShowActionsOnMobile?: boolean
+  isActive?: boolean
 }
 
 export function SidebarItemRow({
@@ -36,32 +38,34 @@ export function SidebarItemRow({
   onNavigate,
   actions,
   alwaysShowActionsOnMobile = true,
+  isActive = false,
 }: SidebarItemRowProps) {
   const tTag = useTranslations('TagActions')
   const { bind, wasLongPress } = useLongPress(() => onOpenChange(true), { enabled: isMobile })
 
   return (
     <div className="flex items-center gap-1 group/tagrow w-full" {...bind}>
-      <Link
-        href={href}
-        className="flex-1"
-        onClick={(e) => {
-          if (wasLongPress()) {
-            e.preventDefault()
-            e.stopPropagation()
-            return
-          }
-          onNavigate()
-        }}
-        onPointerDown={(e) => {
-          // Reset long press state when starting a new interaction
-          if (!isMobile) {
-            e.preventDefault()
-          }
-        }}
-      >
-        <span>{displayName}</span>
-      </Link>
+      <SidebarMenuSubButton asChild isActive={isActive} className="flex-1">
+        <Link
+          href={href}
+          onClick={(e) => {
+            if (wasLongPress()) {
+              e.preventDefault()
+              e.stopPropagation()
+              return
+            }
+            onNavigate()
+          }}
+          onPointerDown={(e) => {
+            // Reset long press state when starting a new interaction
+            if (!isMobile) {
+              e.preventDefault()
+            }
+          }}
+        >
+          <span>{displayName}</span>
+        </Link>
+      </SidebarMenuSubButton>
       <DropdownMenu open={open} onOpenChange={(o) => onOpenChange(o)}>
         <DropdownMenuTrigger asChild>
           <Button

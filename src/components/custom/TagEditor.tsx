@@ -78,7 +78,7 @@ export function TagEditor({
         {tags.map((tag) => (
           <Badge
             key={tag.id}
-            className="flex pl-5 pr-2 rounded-3xl gap-1 text-sm"
+            className="flex pl-5 pr-2 rounded-3xl gap-1 text-sm h-9"
             variant="outline"
           >
             {tag.displayName}
@@ -150,14 +150,6 @@ export function TagEditor({
             </Command>
           </PopoverContent>
         </Popover>
-        {tags && tags?.length > 0 && (
-          <IconButton
-            icon={<X />}
-            tooltip="Clear selected tags"
-            onClick={() => onTagChange([])}
-            variant="outline"
-          />
-        )}
       </div>
     </div>
   )

@@ -41,6 +41,9 @@ export default function Home() {
     ? recipes.filter((r) => tagParam?.every((t) => r.tags.includes(t)))
     : recipes
 
+  // Construct the current path with search parameters for the sidebar
+  const currentPath = '/' + (searchParams.toString() ? `?${searchParams.toString()}` : '')
+
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
@@ -140,7 +143,7 @@ export default function Home() {
           </AnimatePresence>
         }
       />
-      <AppSidebar path="/" />
+      <AppSidebar path={currentPath} />
       <main className="w-full mt-14">
         {tagParam && (
           <TagEditor
