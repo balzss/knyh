@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { localStorageShoppingList } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 import type { ShoppingListItem } from '@/lib/types'
 
 /**
@@ -19,7 +20,6 @@ export const useShoppingList = () => {
       if (shouldUseLocalStorage) {
         return localStorageShoppingList.getAll()
       } else {
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
         const endpoint = `${basePath}/api/shopping-list`
         const response = await fetch(endpoint)
         if (!response.ok) {
@@ -45,7 +45,6 @@ export const useShoppingListMutations = () => {
       if (shouldUseLocalStorage) {
         return localStorageShoppingList.update(items)
       } else {
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
         const response = await fetch(`${basePath}/api/shopping-list`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

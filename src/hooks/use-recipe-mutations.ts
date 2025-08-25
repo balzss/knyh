@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { localStorageRecipes } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 import type { Recipe } from '@/lib/types'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 const apiUrl = `${basePath}/api/recipes`
 
 // The type for creating a recipe (all fields except the server-generated id)

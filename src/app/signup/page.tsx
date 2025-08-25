@@ -4,16 +4,31 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { signUp } from '@/lib/auth-client'
+
+type SignupForm = {
+  email: string
+  password: string
+}
 
 export default function SignupPage() {
   const t = useTranslations('SignupPage')
   const router = useRouter()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<SignupForm>({
+    mode: 'onChange',
+  })
 
   // Redirect to home if in static mode
   useEffect(() => {
@@ -22,6 +37,22 @@ export default function SignupPage() {
       router.replace('/')
     }
   }, [router])
+
+  const onSubmit: SubmitHandler<SignupForm> = ({ email, password }) => {
+    const name = email.split('@')[0]
+    signUp.email(
+      {
+        name,
+        email,
+        password,
+      },
+      {
+        onError: ({ error }) => {
+          console.log(error)
+        },
+      }
+    )
+  }
 
   // Check if we're in static mode (client-side check for render)
   const isStaticMode = isStaticExport || isClientStaticExport()
@@ -38,32 +69,54 @@ export default function SignupPage() {
           <CardTitle>{t('createAccount')}</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow w-full gap-4 flex flex-col">
-          <div>
-            <Label htmlFor="email">{t('email')}</Label>
-            <Input id="email" type="email" />
-          </div>
-          <div>
-            <Label htmlFor="password">{t('password')}</Label>
-            <Input id="password" type="password" />
-          </div>
-          <Button asChild>
-            <Link href="/">{t('register')}</Link>
-          </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t"></span>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="email">{t('email')}</Label>
+              <Input
+                id="email"
+                type="email"
+                {...register('email', {
+                  required: 'email is required!!',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Entered value does not match email format',
+                  },
+                })}
+              />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                {t('orContinueWith')}
-              </span>
+            <div>
+              <Label htmlFor="password">{t('password')}</Label>
+              <Input
+                id="password"
+                type="password"
+                {...register('password', {
+                  required: 'required',
+                  minLength: {
+                    value: 6,
+                    message: 'min length is 6',
+                  },
+                })}
+              />
             </div>
-          </div>
-          <Button variant="outline">
+            <Button type="submit" disabled={!isValid}>
+              {t('register')}
+            </Button>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  {t('orContinueWith')}
+                </span>
+              </div>
+            </div>
+          </form>
+          <Button variant="outline" disabled>
             <SiGoogle />
             {t('google')}
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" disabled>
             <SiGithub />
             {t('github')}
           </Button>

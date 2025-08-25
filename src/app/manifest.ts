@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next'
+import { basePath } from '@/lib/utils'
 
 export const dynamic = 'force-static'
 
 export default function manifest(): MetadataRoute.Manifest {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
   return {
     name: 'KONYHA Recipe Manager',
     short_name: 'KONYHA',

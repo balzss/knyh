@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import { getLocale, getMessages } from 'next-intl/server'
 import Providers from '@/providers'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
+import { basePath } from '@/lib/utils'
 import './globals.css'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 export const metadata: Metadata = {
   title: 'KONYHA',

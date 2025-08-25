@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 import type { DatabaseSchema } from '@/lib/types'
 
 type UseTagsProps = {
@@ -25,7 +26,6 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
         return getLocalStorageData()
       } else {
         // Use API endpoint for SQLite in dev/production
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
         const endpoint = `${basePath}/api/data`
         const response = await fetch(endpoint)
         if (!response.ok) {

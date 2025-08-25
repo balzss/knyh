@@ -3,9 +3,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { localStorageConfig } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 import type { UserConfig } from '@/lib/types'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 const apiUrl = `${basePath}/api/config`
 
 export function useUpdateConfig() {

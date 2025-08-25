@@ -26,12 +26,12 @@ import {
   ShoppingCart,
   BookOpenText,
   Dices,
-  Github,
   BookOpen,
   ExternalLink,
   Pencil,
   Trash2,
 } from 'lucide-react'
+import { SiGithub } from '@icons-pack/react-simple-icons'
 import { useTags, useTagMutations, useRecipes, useConfirmDialog } from '@/hooks'
 import { myToast, SidebarItemRow } from '@/components/custom'
 import type { Tag } from '@/lib/types'
@@ -255,7 +255,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="text-muted-foreground">
               <Link href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
-                <Github className="h-4 w-4" />
+                <SiGithub className="h-4 w-4" />
                 <span>{t('github')}</span>
                 <ExternalLink className="h-3 w-3 ml-auto" />
               </Link>

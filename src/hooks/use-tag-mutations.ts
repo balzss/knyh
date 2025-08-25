@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { localStorageTags } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 import type { Tag } from '@/lib/types'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 const apiUrl = `${basePath}/api/tags`
 
 type CreateTagPayload = { displayName: string }

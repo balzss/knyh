@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { basePath } from '@/lib/utils'
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
@@ -10,7 +11,7 @@ export default function ServiceWorkerRegistration() {
       process.env.NODE_ENV === 'production'
     ) {
       navigator.serviceWorker
-        .register('/knyh/sw.js')
+        .register(`${basePath}/sw.js`)
         .then((registration) => {
           console.log('SW registered: ', registration)
 

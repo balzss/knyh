@@ -1,13 +1,11 @@
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { clientDataPath } from '@/lib/utils'
+import { clientDataPath, basePath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema, UserConfig } from '@/lib/types'
 import { toast } from './use-toast'
-
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 const importApiUrl = `${basePath}/api/import`
 
 type UseImportExportOptions = {

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { shuffleArray } from '@/lib/utils'
+import { shuffleArray, basePath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema } from '@/lib/types'
@@ -40,7 +40,6 @@ export const useRecipes = (options?: UseRecipesOptions) => {
         return getLocalStorageData()
       } else {
         // Use API endpoint for SQLite in dev/production
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
         const endpoint = `${basePath}/api/data`
         const response = await fetch(endpoint)
         if (!response.ok) {

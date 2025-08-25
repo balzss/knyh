@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { DatabaseSchema } from '@/lib/types'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
+import { basePath } from '@/lib/utils'
 
 export function useConfig() {
   return useQuery({
@@ -17,7 +18,6 @@ export function useConfig() {
         return getLocalStorageData()
       } else {
         // Use API endpoint for SQLite in dev/production
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
         const endpoint = `${basePath}/api/data`
         const response = await fetch(endpoint)
         if (!response.ok) {
