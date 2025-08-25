@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
-import { Download, FileUp } from 'lucide-react'
-
+import { Download, FileUp, Skull, RotateCcwKey } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -17,8 +16,9 @@ import {
 } from '@/components/ui/select'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
-import { useConfig, useUpdateConfig, useImportExport } from '@/hooks'
+import { useConfig, useUpdateConfig, useImportExport, useConfirmDialog } from '@/hooks'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { deleteUser } from '@/lib/auth-client'
 
 type Theme = 'dark' | 'light'
 type Language = 'hu' | 'en'
@@ -30,6 +30,7 @@ export default function SettingsPage() {
   const [mounted, setMounted] = useState(false)
   const { data: config, isLoading: configLoading } = useConfig()
   const updateConfig = useUpdateConfig()
+  const { confirm } = useConfirmDialog()
   const { handleExport, handleImport } = useImportExport({
     onConfigImported: (imported) => {
       // Apply theme immediately
@@ -74,6 +75,25 @@ export default function SettingsPage() {
         },
       }
     )
+  }
+
+  const handleDeleteUser = async () => {
+    const confirmed = await confirm({
+      title: 'Are you sure you want to delete your account?',
+      description: 'This action cannot be undone!',
+    })
+    if (confirmed) {
+      deleteUser(
+        {
+          callbackURL: '/signup', // TODO this is not working
+        },
+        {
+          onSuccess: () => {
+            alert('user deleted successfully...')
+          },
+        }
+      )
+    }
   }
 
   useEffect(() => {
@@ -142,6 +162,19 @@ export default function SettingsPage() {
               onChange={handleImport}
               accept=".json"
             />
+          </div>
+
+          <div className="flex flex-col items-start gap-2 mt-4">
+            <Label>Account</Label>
+
+            <Button onClick={() => alert('func coming soon')} variant="outline">
+              <RotateCcwKey />
+              Change password
+            </Button>
+            <Button onClick={handleDeleteUser} variant="destructive">
+              <Skull />
+              Delete account
+            </Button>
           </div>
         </PageLayout>
       </main>

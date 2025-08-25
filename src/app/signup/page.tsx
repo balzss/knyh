@@ -96,8 +96,8 @@ export default function SignupPage() {
                 {...register('password', {
                   required: 'required',
                   minLength: {
-                    value: 6,
-                    message: 'min length is 6',
+                    value: 8,
+                    message: 'min length is 8',
                   },
                 })}
               />

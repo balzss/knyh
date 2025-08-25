@@ -9,6 +9,7 @@ export interface ConfirmDialogOptions {
   description: string
   confirmText?: string
   cancelText?: string
+  // destructive?: boolean TODO add this option and change confirm button to desctructive if true
 }
 
 export interface ConfirmDialogContextType {

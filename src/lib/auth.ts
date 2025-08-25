@@ -5,5 +5,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    deleteUser: {
+      enabled: true,
+    },
+  },
   database: new Database('./data/auth.db'),
 })

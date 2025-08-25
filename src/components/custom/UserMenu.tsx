@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useConfig } from '@/hooks/use-config'
 import { generateInitials } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
-import { useSession } from '@/lib/auth-client'
+import { useSession, signOut } from '@/lib/auth-client'
 
 type UserMenuProps = {
   hideSidebarToggleMobile?: boolean
@@ -21,6 +21,7 @@ export function UserMenu({ hideSidebarToggleMobile }: UserMenuProps) {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState<boolean>(false)
   const { data: userConfig, isLoading } = useConfig()
   const { data: sessionData } = useSession()
+  const router = useRouter()
 
   // Check if we're in static export mode
   const isStaticMode = isStaticExport || isClientStaticExport()
@@ -31,6 +32,19 @@ export function UserMenu({ hideSidebarToggleMobile }: UserMenuProps) {
 
   const handleUserPopupOpen = (shouldOpen: boolean) => {
     setIsUserPopupOpen(shouldOpen)
+  }
+
+  const handleSignOut = () => {
+    signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push('/login')
+        },
+        onError: ({ error }) => {
+          console.log(error)
+        },
+      },
+    })
   }
 
   return (
@@ -52,13 +66,11 @@ export function UserMenu({ hideSidebarToggleMobile }: UserMenuProps) {
       <PopoverContent className="mx-2 flex w-80 flex-col gap-3 font-bold">
         <span>{isLoading ? t('loading') : t('loggedInAs', { username })}</span>
         <Button
-          asChild={!isStaticMode}
           disabled={isStaticMode}
           variant={isStaticMode ? 'outline' : 'default'}
+          onClick={handleSignOut}
         >
-          <Link href="/login" className="flex gap-2 items-center">
-            <LogOut /> {t('signOut')}
-          </Link>
+          <LogOut /> {t('signOut')}
         </Button>
       </PopoverContent>
     </Popover>

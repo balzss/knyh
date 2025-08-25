@@ -4,16 +4,32 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { myToast } from '@/components/custom'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import { signIn } from '@/lib/auth-client'
+
+type LoginForm = {
+  email: string
+  password: string
+}
 
 export default function LoginPage() {
   const t = useTranslations('LoginPage')
   const router = useRouter()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<LoginForm>({
+    mode: 'onChange',
+  })
 
   // Redirect to home if in static mode
   useEffect(() => {
@@ -22,6 +38,23 @@ export default function LoginPage() {
       router.replace('/')
     }
   }, [router])
+
+  const onSubmit: SubmitHandler<LoginForm> = ({ email, password }) => {
+    signIn.email(
+      {
+        email,
+        password,
+      },
+      {
+        onError: ({ error }) => {
+          myToast({ message: error.message })
+        },
+        onSuccess: () => {
+          router.push('/')
+        },
+      }
+    )
+  }
 
   // Check if we're in static mode (client-side check for render)
   const isStaticMode = isStaticExport || isClientStaticExport()
@@ -37,17 +70,39 @@ export default function LoginPage() {
           <CardTitle>{t('signIn')}</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow w-full gap-4 flex flex-col">
-          <div>
-            <Label htmlFor="email">{t('email')}</Label>
-            <Input id="email" type="email" />
-          </div>
-          <div>
-            <Label htmlFor="password">{t('password')}</Label>
-            <Input id="password" type="password" />
-          </div>
-          <Button asChild>
-            <Link href="/">{t('signIn')}</Link>
-          </Button>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <Label htmlFor="email">{t('email')}</Label>
+              <Input
+                id="email"
+                type="email"
+                {...register('email', {
+                  required: 'email is required!!',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Entered value does not match email format',
+                  },
+                })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">{t('password')}</Label>
+              <Input
+                id="password"
+                type="password"
+                {...register('password', {
+                  required: 'required',
+                  minLength: {
+                    value: 8,
+                    message: 'min length is 8',
+                  },
+                })}
+              />
+            </div>
+            <Button disabled={!isValid} type="submit">
+              {t('signIn')}
+            </Button>
+          </form>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t"></span>
