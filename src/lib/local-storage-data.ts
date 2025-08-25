@@ -58,7 +58,7 @@ async function getData(): Promise<DatabaseSchema> {
       recipes: [],
       tags: [],
       userConfig: {
-        name: 'Local User',
+        name: 'Demo User',
         theme: 'light',
         language: 'en',
       },

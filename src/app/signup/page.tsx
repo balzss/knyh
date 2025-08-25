@@ -9,6 +9,7 @@ import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { myToast } from '@/components/custom'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { signUp } from '@/lib/auth-client'
@@ -48,7 +49,10 @@ export default function SignupPage() {
       },
       {
         onError: ({ error }) => {
-          console.log(error)
+          myToast({ message: error.message })
+        },
+        onSuccess: () => {
+          router.push('/')
         },
       }
     )

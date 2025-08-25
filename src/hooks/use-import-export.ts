@@ -5,7 +5,7 @@ import { clientDataPath, basePath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
 import type { DatabaseSchema, UserConfig } from '@/lib/types'
-import { toast } from './use-toast'
+import { myToast } from '@/components/custom'
 const importApiUrl = `${basePath}/api/import`
 
 type UseImportExportOptions = {
@@ -47,10 +47,8 @@ export function useImportExport(options: UseImportExportOptions = {}) {
       URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Failed to export data:', error)
-      toast({
-        title: 'Export failed',
-        description: 'Could not export data. Please try again.',
-        variant: 'destructive',
+      myToast({
+        message: 'Export failed - Could not export data. Please try again.',
       })
     }
   }
@@ -78,7 +76,7 @@ export function useImportExport(options: UseImportExportOptions = {}) {
       }
     },
     onSuccess: (_resp, variables) => {
-      toast({ title: 'Import complete', description: 'Data imported successfully.' })
+      myToast({ message: 'Import complete - Data imported successfully.' })
       // Optimistically apply imported config (theme, etc.) before refetch.
       if (variables?.userConfig && options.onConfigImported) {
         options.onConfigImported(variables.userConfig)
@@ -89,7 +87,7 @@ export function useImportExport(options: UseImportExportOptions = {}) {
     },
     onError: (error: unknown) => {
       const msg = error instanceof Error ? error.message : 'Unknown error'
-      toast({ title: 'Import failed', description: msg })
+      myToast({ message: `Import failed - ${msg}` })
     },
   })
 
@@ -106,7 +104,7 @@ export function useImportExport(options: UseImportExportOptions = {}) {
           }
         } catch (error) {
           console.error('Failed to parse JSON:', error)
-          toast({ title: 'Invalid file', description: 'Could not parse JSON.' })
+          myToast({ message: 'Invalid file - Could not parse JSON.' })
         }
       }
       reader.readAsText(file)
