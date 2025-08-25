@@ -70,6 +70,7 @@ export function ConfirmDialogProvider({ children }: ConfirmDialogProviderProps) 
           description={dialogState.options.description}
           confirmText={dialogState.options.confirmText}
           cancelText={dialogState.options.cancelText}
+          destructive={dialogState.options.destructive}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />

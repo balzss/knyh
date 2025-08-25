@@ -31,7 +31,12 @@
     "light": "Világos",
     "export": "Exportálás",
     "import": "Importálás",
-    "data": "Adatok"
+    "data": "Adatok",
+    "account": "Fiók",
+    "changePassword": "Jelszó megváltoztatása",
+    "deleteAccount": "Fiók törlése",
+    "deleteUserTitle": "Biztosan törölni szeretnéd a fiókodat?",
+    "deleteUserDescription": "Ez a művelet nem vonható vissza. Minden adatod véglegesen törlődik."
   },
   "RecipeCard": {
     "yield": "1 adag",
@@ -183,6 +188,23 @@
     "hoursShort": "óra",
     "minuteShort": "perc",
     "minutesShort": "perc"
+  },
+  "PasswordChangeDialog": {
+    "changePassword": "Jelszó megváltoztatása",
+    "title": "Jelszó megváltoztatása",
+    "description": "Add meg a jelenlegi jelszavad és az új jelszót",
+    "currentPassword": "Jelenlegi jelszó",
+    "newPassword": "Új jelszó",
+    "confirmPassword": "Új jelszó megerősítése",
+    "cancel": "Mégse",
+    "change": "Megváltoztatás",
+    "changing": "Megváltoztatás...",
+    "currentPasswordRequired": "A jelenlegi jelszó megadása kötelező",
+    "newPasswordRequired": "Az új jelszó megadása kötelező",
+    "passwordTooShort": "A jelszónak legalább 6 karakternek kell lennie",
+    "passwordsDoNotMatch": "A jelszavak nem egyeznek",
+    "passwordChanged": "Jelszó sikeresen megváltoztatva",
+    "passwordChangeError": "Nem sikerült megváltoztatni a jelszót"
   },
   "TopBar": {
     "searchRecipes": "Receptek keresése",

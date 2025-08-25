@@ -31,7 +31,12 @@
     "light": "Light",
     "export": "Export",
     "import": "Import",
-    "data": "Data"
+    "data": "Data",
+    "account": "Account",
+    "changePassword": "Change password",
+    "deleteAccount": "Delete account",
+    "deleteUserTitle": "Are you sure you want to delete your account?",
+    "deleteUserDescription": "This action cannot be undone. All your data will be permanently deleted."
   },
   "RecipeCard": {
     "yield": "1 serving",
@@ -183,6 +188,23 @@
     "hoursShort": "hrs",
     "minuteShort": "min",
     "minutesShort": "mins"
+  },
+  "PasswordChangeDialog": {
+    "changePassword": "Change password",
+    "title": "Change your password",
+    "description": "Enter your current password and a new password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "cancel": "Cancel",
+    "change": "Change",
+    "changing": "Changing...",
+    "currentPasswordRequired": "Current password is required",
+    "newPasswordRequired": "New password is required",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordChanged": "Password changed successfully",
+    "passwordChangeError": "Failed to change password"
   },
   "TopBar": {
     "searchRecipes": "Search recipes",

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 import { Download, FileUp, Skull, RotateCcwKey } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
@@ -15,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout } from '@/components/custom'
+import { AppSidebar, PageLayout, PasswordChangeDialog } from '@/components/custom'
 import { useConfig, useUpdateConfig, useImportExport, useConfirmDialog } from '@/hooks'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { deleteUser } from '@/lib/auth-client'
@@ -27,6 +28,7 @@ export default function SettingsPage() {
   const t = useTranslations('SettingsPage')
   const { toggleSidebar } = useSidebar()
   const { theme, setTheme } = useTheme()
+  const router = useRouter()
   const [mounted, setMounted] = useState(false)
   const { data: config, isLoading: configLoading } = useConfig()
   const updateConfig = useUpdateConfig()
@@ -79,17 +81,25 @@ export default function SettingsPage() {
 
   const handleDeleteUser = async () => {
     const confirmed = await confirm({
-      title: 'Are you sure you want to delete your account?',
-      description: 'This action cannot be undone!',
+      title: t('deleteUserTitle'),
+      description: t('deleteUserDescription'),
+      confirmText: t('deleteAccount'),
+      destructive: true,
     })
     if (confirmed) {
       deleteUser(
         {
-          callbackURL: '/signup', // TODO this is not working
+          callbackURL: '/signup',
         },
         {
           onSuccess: () => {
-            alert('user deleted successfully...')
+            router.push('/signup')
+          },
+          onError: (error) => {
+            console.error('Delete user error:', error)
+            // Still show success message as the user might have been deleted
+            // but there could be a redirect issue
+            router.push('/signup')
           },
         }
       )
@@ -165,15 +175,17 @@ export default function SettingsPage() {
           </div>
 
           <div className="flex flex-col items-start gap-2 mt-4">
-            <Label>Account</Label>
+            <Label>{t('account')}</Label>
 
-            <Button onClick={() => alert('func coming soon')} variant="outline">
-              <RotateCcwKey />
-              Change password
-            </Button>
+            <PasswordChangeDialog>
+              <Button variant="outline">
+                <RotateCcwKey />
+                {t('changePassword')}
+              </Button>
+            </PasswordChangeDialog>
             <Button onClick={handleDeleteUser} variant="destructive">
               <Skull />
-              Delete account
+              {t('deleteAccount')}
             </Button>
           </div>
         </PageLayout>

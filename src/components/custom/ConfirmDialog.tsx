@@ -18,6 +18,7 @@ interface ConfirmDialogProps {
   onCancel?: () => void
   confirmText?: string
   cancelText?: string
+  destructive?: boolean
 }
 
 export function ConfirmDialog({
@@ -29,6 +30,7 @@ export function ConfirmDialog({
   onCancel,
   confirmText = 'Continue',
   cancelText = 'Cancel',
+  destructive = false,
 }: ConfirmDialogProps) {
   const handleConfirm = () => {
     onConfirm()
@@ -54,7 +56,9 @@ export function ConfirmDialog({
             <Button variant="outline" onClick={handleCancel}>
               {cancelText}
             </Button>
-            <Button onClick={handleConfirm}>{confirmText}</Button>
+            <Button onClick={handleConfirm} variant={destructive ? 'destructive' : 'default'}>
+              {confirmText}
+            </Button>
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

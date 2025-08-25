@@ -9,7 +9,7 @@ export interface ConfirmDialogOptions {
   description: string
   confirmText?: string
   cancelText?: string
-  // destructive?: boolean TODO add this option and change confirm button to desctructive if true
+  destructive?: boolean // If true, confirm button is styled as destructive
 }
 
 export interface ConfirmDialogContextType {
@@ -34,6 +34,7 @@ export function useConfirmDialog(): UseConfirmDialogExtended {
         description: t('deleteDescription', { name }),
         confirmText: t('deleteConfirmButton'),
         cancelText: t('cancelButton'),
+        destructive: true,
       })
     },
     [context, t]

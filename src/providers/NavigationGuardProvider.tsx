@@ -15,6 +15,7 @@ interface NavigationGuard {
     description: string
     confirmText: string
     cancelText: string
+    destructive?: boolean
   }
 }
 
