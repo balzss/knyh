@@ -232,5 +232,9 @@
     "deleteDescription": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
     "deleteConfirmButton": "Delete",
     "cancelButton": "Cancel"
+  },
+  "EmailChangeDialog": {
+    "title": "Change your email address",
+    "description": "Change your email address to something new"
   }
 }

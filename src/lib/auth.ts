@@ -9,6 +9,9 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
     },
+    changeEmail: {
+      enabled: true,
+    },
   },
   database: new Database('./data/auth.db'),
 })

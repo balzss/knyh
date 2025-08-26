@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
-import { Download, FileUp, Skull, RotateCcwKey } from 'lucide-react'
+import { Download, FileUp, Skull } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -16,10 +16,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, PasswordChangeDialog } from '@/components/custom'
+import {
+  AppSidebar,
+  PageLayout,
+  PasswordChangeDialog,
+  EmailChangeDialog,
+} from '@/components/custom'
 import { useConfig, useUpdateConfig, useImportExport, useConfirmDialog } from '@/hooks'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
-import { deleteUser } from '@/lib/auth-client'
+import { deleteUser, useSession } from '@/lib/auth-client'
 
 type Theme = 'dark' | 'light'
 type Language = 'hu' | 'en'
@@ -33,6 +38,7 @@ export default function SettingsPage() {
   const { data: config, isLoading: configLoading } = useConfig()
   const updateConfig = useUpdateConfig()
   const { confirm } = useConfirmDialog()
+  const { data: sessionData } = useSession()
   const { handleExport, handleImport } = useImportExport({
     onConfigImported: (imported) => {
       // Apply theme immediately
@@ -174,20 +180,20 @@ export default function SettingsPage() {
             />
           </div>
 
-          <div className="flex flex-col items-start gap-2 mt-4">
-            <Label>{t('account')}</Label>
+          {!isStaticExport && (
+            <div className="flex flex-col items-start gap-2 mt-4">
+              <Label>{t('account')}</Label>
 
-            <PasswordChangeDialog>
-              <Button variant="outline">
-                <RotateCcwKey />
-                {t('changePassword')}
+              {sessionData?.user.email && <EmailChangeDialog email={sessionData?.user.email} />}
+
+              <PasswordChangeDialog />
+
+              <Button onClick={handleDeleteUser} variant="destructive">
+                <Skull />
+                {t('deleteAccount')}
               </Button>
-            </PasswordChangeDialog>
-            <Button onClick={handleDeleteUser} variant="destructive">
-              <Skull />
-              {t('deleteAccount')}
-            </Button>
-          </div>
+            </div>
+          )}
         </PageLayout>
       </main>
     </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import {
   AlertDialog,
   AlertDialogContent,
@@ -21,17 +22,21 @@ interface ConfirmDialogProps {
   destructive?: boolean
 }
 
-export function ConfirmDialog({
-  open,
-  onOpenChange,
-  title,
-  description,
-  onConfirm,
-  onCancel,
-  confirmText = 'Continue',
-  cancelText = 'Cancel',
-  destructive = false,
-}: ConfirmDialogProps) {
+export function ConfirmDialog(props: ConfirmDialogProps) {
+  const t = useTranslations('ConfirmDialog')
+
+  const {
+    open,
+    onOpenChange,
+    title,
+    description,
+    onConfirm,
+    onCancel,
+    confirmText,
+    cancelText = t('cancelButton'),
+    destructive = false,
+  } = props
+
   const handleConfirm = () => {
     onConfirm()
     onOpenChange(false)

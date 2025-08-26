@@ -16,11 +16,7 @@ import { Label } from '@/components/ui/label'
 import { changePassword } from '@/lib/auth-client'
 import { myToast } from '@/components/custom/myToast'
 
-type PasswordChangeDialogProps = {
-  children?: React.ReactNode
-}
-
-export function PasswordChangeDialog({ children }: PasswordChangeDialogProps) {
+export function PasswordChangeDialog() {
   const t = useTranslations('PasswordChangeDialog')
   const [open, setOpen] = useState<boolean>(false)
   const [currentPassword, setCurrentPassword] = useState<string>('')
@@ -92,12 +88,10 @@ export function PasswordChangeDialog({ children }: PasswordChangeDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        {children || (
-          <Button variant="outline">
-            <RotateCcwKey />
-            {t('changePassword')}
-          </Button>
-        )}
+        <Button variant="outline">
+          <RotateCcwKey />
+          {t('changePassword')}
+        </Button>
       </DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>

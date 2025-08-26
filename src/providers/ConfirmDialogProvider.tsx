@@ -64,13 +64,9 @@ export function ConfirmDialogProvider({ children }: ConfirmDialogProviderProps) 
       {children}
       {dialogState.options && (
         <ConfirmDialog
-          open={dialogState.open}
           onOpenChange={handleOpenChange}
-          title={dialogState.options.title}
-          description={dialogState.options.description}
-          confirmText={dialogState.options.confirmText}
-          cancelText={dialogState.options.cancelText}
-          destructive={dialogState.options.destructive}
+          open={dialogState.open}
+          {...dialogState.options}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />

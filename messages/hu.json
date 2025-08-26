@@ -232,5 +232,9 @@
     "deleteDescription": "Biztosan törölni szeretnéd a(z) \"{name}\" recepted? Ez a művelet nem vonható vissza.",
     "deleteConfirmButton": "Törlés",
     "cancelButton": "Mégse"
+  },
+  "EmailChangeDialog": {
+    "title": "Email cím megváltoztatása",
+    "description": "Változtasd meg az email címed valami újra"
   }
 }
