@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout } from '@/components/custom'
 import { SortableList, CheckedItemsList } from '@/components/custom'
@@ -11,7 +10,6 @@ import type { ShoppingListItem } from '@/lib/types'
 
 export default function ShoppingList() {
   const t = useTranslations('ShoppingListPage')
-  const { toggleSidebar } = useSidebar()
   const { shoppingList, loading } = useShoppingList()
   const { updateShoppingList } = useShoppingListMutations()
 
@@ -111,7 +109,6 @@ export default function ShoppingList() {
     return (
       <div className="flex w-full">
         <TopBar
-          onSidebarToggle={toggleSidebar}
           customTopbarContent={
             <div className="flex items-center gap-2">
               <span className="mr-4 font-bold">{t('title')}</span>
@@ -133,7 +130,6 @@ export default function ShoppingList() {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
             <span className="mr-4 font-bold">{t('title')}</span>

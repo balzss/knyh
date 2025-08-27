@@ -3,9 +3,7 @@ import { useMemo } from 'react'
 import { shuffleArray, basePath } from '@/lib/utils'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
-import type { DatabaseSchema } from '@/lib/types'
-
-export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' | 'updated-desc'
+import type { DatabaseSchema, SortOption } from '@/lib/types'
 
 type UseRecipesOptions = {
   // An array of recipe IDs to fetch. If undefined, all recipes are considered.

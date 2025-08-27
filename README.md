@@ -60,7 +60,7 @@ A modern, open-source recipe management application built with Next.js 15. KNYH 
    ```
 
 4. **Open in browser**
-   Navigate to `http://localhost:3000/knyh`
+   Navigate to `http://localhost:3000`
 
 ## 🌐 Demo
 

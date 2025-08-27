@@ -254,15 +254,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="text-muted-foreground">
-              <Link href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
-                <SiGithub className="h-4 w-4" />
-                <span>{t('github')}</span>
-                <ExternalLink className="h-3 w-3 ml-auto" />
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="text-muted-foreground">
               <Link
                 href="https://github.com/balzss/knyh#readme"
                 target="_blank"
@@ -270,6 +261,15 @@ export function AppSidebar({ path }: AppSidebarProps) {
               >
                 <BookOpen className="h-4 w-4" />
                 <span>{t('docs')}</span>
+                <ExternalLink className="h-3 w-3 ml-auto" />
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="text-muted-foreground">
+              <Link href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
+                <SiGithub className="h-4 w-4" />
+                <span>{t('github')}</span>
                 <ExternalLink className="h-3 w-3 ml-auto" />
               </Link>
             </SidebarMenuButton>

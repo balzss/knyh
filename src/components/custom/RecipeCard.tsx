@@ -37,7 +37,6 @@ type RecipeCardProps = {
   onSelect?: (isSelected: boolean) => void
   archivedMode?: boolean
   recipeData: Recipe
-  recipeUrl?: string
   highlight?: string
 }
 
@@ -48,7 +47,6 @@ export function RecipeCard({
   onSelect,
   archivedMode = false,
   recipeData,
-  recipeUrl = '',
   highlight,
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
@@ -103,6 +101,7 @@ export function RecipeCard({
 
   const { title, metadata, id } = recipeData
   const isLocalRecipe = id.startsWith('local_')
+  const recipeUrl = `${window?.location.origin}${getRecipeViewUrl(id)}`
 
   return (
     <Card

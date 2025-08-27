@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useSidebar } from '@/components/ui/sidebar'
 import { Dices } from 'lucide-react'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, PageLayout, RecipeCard, IconButton, TagEditor } from '@/components/custom'
@@ -11,7 +10,6 @@ import type { Tag } from '@/lib/types'
 
 export default function RandomPage() {
   const t = useTranslations('RandomRecipePage')
-  const { toggleSidebar } = useSidebar()
   const { recipes } = useRecipes({ sort: 'random' })
   const [tagFilter, setTagFilter] = useState<Tag[]>([])
   const { tags } = useTags()
@@ -20,7 +18,6 @@ export default function RandomPage() {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
             <span className="mr-auto sm:mr-4 font-bold">{t('title')}</span>

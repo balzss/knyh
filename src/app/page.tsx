@@ -1,11 +1,9 @@
 'use client'
 
-import { useState, useDeferredValue, useMemo, useEffect } from 'react'
+import { useState, useDeferredValue, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-
 import { AnimatePresence } from 'motion/react'
-import { useSidebar } from '@/components/ui/sidebar'
 import { Archive, FilePlus, BookOpenText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -18,32 +16,25 @@ import {
   myToast,
   TagEditor,
   EmptyState,
-  Loader,
 } from '@/components/custom'
 import { useRecipes, useTags, useRecipeMutations, useConfig, useUpdateConfig } from '@/hooks'
-import type { Tag } from '@/lib/types'
-import type { SortOption } from '@/hooks/use-recipes'
-import { getRecipeViewUrl } from '@/lib/data-config'
+import { queryRecipes } from '@/lib/utils'
+import type { Tag, SortOption } from '@/lib/types'
 
 export default function Home() {
   const t = useTranslations('HomePage')
   const tNav = useTranslations('Navigation')
-  const { toggleSidebar } = useSidebar()
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const { data: userConfig, isLoading: configLoading } = useConfig()
+  const { data: userConfig } = useConfig()
   const updateConfig = useUpdateConfig()
 
-  const [sortOption, setSortOption] = useState<SortOption>(
-    (userConfig?.defaultSort as SortOption) || 'random'
-  )
-  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>(
-    userConfig?.defaultLayout || 'list'
-  )
-  const [layoutGridCols, setLayoutGridCols] = useState<number>(userConfig?.defaultGridCols || 5)
+  const sortOption = userConfig?.defaultSort || 'updated-desc'
+  const selectedLayout = userConfig?.defaultLayout || 'list'
+  const layoutGridCols = userConfig?.defaultGridCols || 5
 
-  const { recipes, loading } = useRecipes({ sort: sortOption })
+  const { recipes, loading: recipesLoading } = useRecipes({ sort: sortOption })
   const { updateRecipes } = useRecipeMutations()
   const { tags, loading: tagsLoading } = useTags()
 
@@ -54,36 +45,16 @@ export default function Home() {
     : recipes
 
   // Construct the current path with search parameters for the sidebar
+  // TODO maybe move this logic inside the sidebar?
   const currentPath = '/' + (searchParams.toString() ? `?${searchParams.toString()}` : '')
 
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
-  // Sync state with loaded config
-  useEffect(() => {
-    if (userConfig && !configLoading) {
-      if (userConfig.defaultSort) {
-        setSortOption(userConfig.defaultSort as SortOption)
-      }
-      if (userConfig.defaultLayout) {
-        setSelectedLayout(userConfig.defaultLayout)
-      }
-      if (userConfig.defaultGridCols) {
-        setLayoutGridCols(userConfig.defaultGridCols)
-      }
-    }
-  }, [userConfig, configLoading])
-
   // Debounced and memoized filter by search query (accent-insensitive title match)
   const filteredRecipes = useMemo(() => {
-    // Regex to strip diacritical marks for accent-insensitive search
-    const diacriticsRegex = /[\u0300-\u036f]/g
-    const normalize = (str: string) =>
-      str.toLowerCase().normalize('NFD').replace(diacriticsRegex, '')
-    return tagFilteredRecipes.filter((r) =>
-      normalize(r.title).includes(normalize(deferredSearchQuery))
-    )
+    return queryRecipes(tagFilteredRecipes, deferredSearchQuery)
   }, [tagFilteredRecipes, deferredSearchQuery])
 
   const handleCardSelect = (id: string, selected: boolean) => {
@@ -97,10 +68,6 @@ export default function Home() {
   }
 
   const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
-    setSelectedLayout(selectedValue)
-    setLayoutGridCols(gridCols)
-
-    // Save to userConfig
     updateConfig.mutate({
       defaultLayout: selectedValue,
       defaultGridCols: gridCols,
@@ -108,9 +75,6 @@ export default function Home() {
   }
 
   const handleSortChange = (newSortOption: SortOption) => {
-    setSortOption(newSortOption)
-
-    // Save to userConfig
     updateConfig.mutate({
       defaultSort: newSortOption,
     })
@@ -130,7 +94,6 @@ export default function Home() {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         hideSidebarToggleMobile={topBarMode === 'select'}
         customTopbarContent={
           <AnimatePresence initial={false}>
@@ -196,9 +159,12 @@ export default function Home() {
             className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
           />
         )}
-        <PageLayout variant={selectedLayout} maxCols={layoutGridCols}>
-          {(loading || tagsLoading) && <Loader />}
-          {!loading && !tagsLoading && filteredRecipes && filteredRecipes.length > 0 ? (
+        <PageLayout
+          variant={selectedLayout}
+          maxCols={layoutGridCols}
+          loading={recipesLoading || tagsLoading}
+        >
+          {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
@@ -210,10 +176,9 @@ export default function Home() {
                 recipeData={recipe}
                 isSelected={selectionList.includes(recipe.id)}
                 onSelect={(selected) => handleCardSelect(recipe.id, selected)}
-                recipeUrl={`${window?.location.origin}${getRecipeViewUrl(recipe.id)}`}
               />
             ))
-          ) : !loading && !tagsLoading ? (
+          ) : (
             <EmptyState
               title={t('emptyTitle')}
               description={t('emptyDescription')}
@@ -226,7 +191,7 @@ export default function Home() {
                 </Button>
               }
             />
-          ) : null}
+          )}
         </PageLayout>
       </main>
     </div>

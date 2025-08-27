@@ -13,7 +13,7 @@ import {
 import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
-import type { SortOption } from '@/hooks/use-recipes'
+import type { SortOption } from '@/lib/types'
 
 type TopBarSearchProps = {
   searchQuery: string

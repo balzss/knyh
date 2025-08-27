@@ -305,7 +305,13 @@ export function getUserConfig(): UserConfig {
     name: config.name || 'Demo User',
     theme: (config.theme as 'light' | 'dark') || 'dark',
     language: config.language || 'en',
-    defaultSort: config.defaultSort,
+    defaultSort:
+      (config.defaultSort as
+        | 'random'
+        | 'title-asc'
+        | 'title-desc'
+        | 'updated-asc'
+        | 'updated-desc') || 'updated-asc',
     defaultLayout: (config.defaultLayout as 'grid' | 'list') || undefined,
     defaultGridCols: config.defaultGridCols ? parseInt(config.defaultGridCols, 10) : undefined,
   }

@@ -24,11 +24,13 @@ export type Tag = {
   displayName: string
 }
 
+export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' | 'updated-desc'
+
 export type UserConfig = {
   name: string
   theme: string
   language: string
-  defaultSort?: string
+  defaultSort?: SortOption
   defaultLayout?: 'grid' | 'list'
   defaultGridCols?: number
 }

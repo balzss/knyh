@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl'
 import { Archive, ArchiveRestore, Trash2, BookOpenText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { useSidebar } from '@/components/ui/sidebar'
 import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import { TopBar } from '@/components/TopBar'
 import {
@@ -24,7 +23,6 @@ import type { Recipe, Tag } from '@/lib/types'
 
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
-  const { toggleSidebar } = useSidebar()
   const { recipes, loading } = useRecipes({ archived: true })
   const { tags, loading: tagsLoading } = useTags()
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
@@ -110,7 +108,7 @@ export default function ArchivePage() {
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <div className="flex w-full">
-      <TopBar onSidebarToggle={toggleSidebar} customTopbarContent={topBarModeMap[topBarMode]} />
+      <TopBar customTopbarContent={topBarModeMap[topBarMode]} />
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
         <PageLayout variant={selectedLayout}>

@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import crypto from 'crypto'
 import { format } from 'date-fns'
+import type { Recipe } from '@/lib/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -84,4 +85,11 @@ export function generateInitials(name?: string, fallback?: string): string {
   }
 
   return initials || 'U'
+}
+
+export function queryRecipes(recipes: Recipe[], query: string): Recipe[] {
+  // Regex to strip diacritical marks for accent-insensitive search
+  const diacriticsRegex = /[\u0300-\u036f]/g
+  const normalize = (str: string) => str.toLowerCase().normalize('NFD').replace(diacriticsRegex, '')
+  return recipes.filter((r) => normalize(r.title).includes(normalize(query)))
 }

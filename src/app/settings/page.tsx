@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
 import { Download, FileUp, Skull } from 'lucide-react'
-import { useSidebar } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -31,7 +30,6 @@ type Language = 'hu' | 'en'
 
 export default function SettingsPage() {
   const t = useTranslations('SettingsPage')
-  const { toggleSidebar } = useSidebar()
   const { theme, setTheme } = useTheme()
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
@@ -121,7 +119,6 @@ export default function SettingsPage() {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         customTopbarContent={
           <div className="flex items-center gap-2">
             <span className="mr-4 font-bold ">{t('settings')}</span>

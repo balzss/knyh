@@ -6,7 +6,7 @@ import { join } from 'path'
 
 const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'))
 
-const basePath = '/knyh'
+const basePath = process.env.BASE_PATH
 
 const withSerwist = withSerwistInit({
   swSrc: 'src/app/sw.ts',
@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  devIndicators: false,
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_OUTPUT_MODE: process.env.NEXT_OUTPUT_MODE,

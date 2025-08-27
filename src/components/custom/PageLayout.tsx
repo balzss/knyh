@@ -1,3 +1,5 @@
+import { Loader } from '@/components/custom'
+
 type LayoutVariant = 'list' | 'grid'
 type PageLayoutProps = {
   title?: string
@@ -5,6 +7,7 @@ type PageLayoutProps = {
   maxCols?: number
   children: React.ReactNode
   className?: string
+  loading?: boolean
 }
 
 function getLayout(variant: LayoutVariant, maxCols: number) {
@@ -36,7 +39,10 @@ export function PageLayout({
   children,
   maxCols = 5,
   className = '',
+  loading = false,
 }: PageLayoutProps) {
+  if (loading) return <Loader />
+
   return (
     <div className={`gap-3 p-3 w-full mx-auto grid ${getLayout(variant, maxCols)} ${className}`}>
       {title && (

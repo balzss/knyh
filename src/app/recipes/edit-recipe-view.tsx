@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { X, Ellipsis } from 'lucide-react'
-import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { AppSidebar, IconButton } from '@/components/custom'
 import {
@@ -30,7 +29,6 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const t = useTranslations('EditRecipeView')
   const mode = searchParams.get('mode') === 'raw' ? 'raw' : 'form'
 
-  const { toggleSidebar } = useSidebar()
   const router = useRouter()
   const { recipes } = useRecipes({
     ids: recipeId ? [recipeId] : [],
@@ -50,7 +48,6 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         hideSidebarToggleMobile
         customTopbarContent={
           <div className="flex items-center gap-2">

@@ -1,18 +1,18 @@
 import Link from 'next/link'
 import { Menu } from 'lucide-react'
+import { useSidebar } from '@/components/ui/sidebar'
 import { IconButton, UserMenu } from '@/components/custom'
 
 type TopBarProps = {
-  onSidebarToggle: () => void
   customTopbarContent?: React.ReactNode
   hideSidebarToggleMobile?: boolean
 }
 
 export function TopBar({
-  onSidebarToggle = () => {},
   customTopbarContent = <></>,
   hideSidebarToggleMobile = false,
 }: TopBarProps) {
+  const { toggleSidebar } = useSidebar()
   return (
     <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-0 border-b bg-background p-3">
       <IconButton
@@ -20,7 +20,7 @@ export function TopBar({
         icon={<Menu />}
         tooltip="Toggle Sidebar"
         iconSize="normal"
-        onClick={onSidebarToggle}
+        onClick={toggleSidebar}
       />
 
       <Link

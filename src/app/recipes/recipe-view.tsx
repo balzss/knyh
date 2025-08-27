@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Users, Timer, X, Pen, EllipsisVertical, Share2, Trash2, Archive } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useSidebar } from '@/components/ui/sidebar'
 import { TopBar } from '@/components/TopBar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
@@ -37,7 +36,6 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const router = useRouter()
   const t = useTranslations('RecipeView')
   const { confirmDelete } = useConfirmDialog()
-  const { toggleSidebar } = useSidebar()
 
   const { recipes, loading } = useRecipes({ ids: [recipeId], sort: 'random' })
   const { tags, loading: tagsLoading } = useTags()
@@ -100,7 +98,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   if (loading || tagsLoading) {
     return (
       <div className="flex w-full">
-        <TopBar onSidebarToggle={toggleSidebar} hideSidebarToggleMobile />
+        <TopBar hideSidebarToggleMobile />
         <AppSidebar />
         <main className="w-full mt-16 mx-auto">
           <PageLayout>
@@ -116,7 +114,6 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
     return (
       <div className="flex w-full">
         <TopBar
-          onSidebarToggle={toggleSidebar}
           hideSidebarToggleMobile
           customTopbarContent={
             <div className="flex items-center gap-2">
@@ -151,7 +148,6 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   return (
     <div className="flex w-full">
       <TopBar
-        onSidebarToggle={toggleSidebar}
         hideSidebarToggleMobile
         customTopbarContent={
           <div className="flex items-center gap-2">
