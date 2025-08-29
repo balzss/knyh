@@ -18,8 +18,12 @@ export default function RandomPage() {
   const t = useTranslations('RandomRecipePage')
   const { recipes } = useRecipes({ sort: 'random' })
   const [tagFilter, setTagFilter] = useState<Tag[]>([])
+  const [rollIndex, setRollIndex] = useState<number>(0)
   const { tags } = useTags()
-  const recipe = recipes?.filter((r) => tagFilter?.every((tag) => r.tags.includes(tag.id)))?.[0]
+
+  // Filter the pre-shuffled recipes by selected tags, then pick the nth (rollIndex) entry.
+  const filtered = recipes?.filter((r) => tagFilter?.every((tag) => r.tags.includes(tag.id))) || []
+  const recipe = filtered.length > 0 ? filtered[rollIndex % filtered.length] : undefined
 
   return (
     <div className="flex w-full">
@@ -32,7 +36,7 @@ export default function RandomPage() {
               variant="ghost"
               icon={<Dices />}
               tooltip={t('rollNew')}
-              onClick={() => window.location.reload()}
+              onClick={() => setRollIndex((i) => i + 1)}
             />
           </div>
         }
@@ -44,7 +48,11 @@ export default function RandomPage() {
             label={t('filter')}
             buttonLabel={t('selectTag')}
             tags={tagFilter}
-            onTagChange={(newTags) => setTagFilter(newTags)}
+            onTagChange={(newTags) => {
+              setTagFilter(newTags)
+              // Reset the roll index so the first result after changing filters is the 0th
+              setRollIndex(0)
+            }}
           />
           {recipe && (
             <RecipeCard
