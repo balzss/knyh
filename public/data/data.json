@@ -100,7 +100,7 @@
   "userConfig": {
     "name": "Demo User",
     "theme": "dark",
-    "language": "hu",
+    "language": "en",
     "defaultSort": "random",
     "defaultLayout": "list",
     "defaultGridCols": 5

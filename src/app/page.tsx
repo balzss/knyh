@@ -3,12 +3,9 @@
 import { useState, useDeferredValue, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { AnimatePresence } from 'motion/react'
-import { Archive, FilePlus, BookOpenText } from 'lucide-react'
+import { Archive, ListChecks, FilePlus, BookOpenText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { TopBar } from '@/components/TopBar'
-import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
 import {
   AppSidebar,
   RecipeCard,
@@ -16,10 +13,12 @@ import {
   myToast,
   TagEditor,
   EmptyState,
+  TopBar,
+  TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes, useTags, useRecipeMutations, useConfig, useUpdateConfig } from '@/hooks'
+import { useRecipes, useTags, useRecipeMutations, useConfig } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
-import type { Tag, SortOption } from '@/lib/types'
+import type { Tag } from '@/lib/types'
 
 export default function Home() {
   const t = useTranslations('HomePage')
@@ -28,7 +27,6 @@ export default function Home() {
   const router = useRouter()
 
   const { data: userConfig } = useConfig()
-  const updateConfig = useUpdateConfig()
 
   const sortOption = userConfig?.defaultSort || 'updated-desc'
   const selectedLayout = userConfig?.defaultLayout || 'list'
@@ -67,19 +65,6 @@ export default function Home() {
     })
   }
 
-  const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
-    updateConfig.mutate({
-      defaultLayout: selectedValue,
-      defaultGridCols: gridCols,
-    })
-  }
-
-  const handleSortChange = (newSortOption: SortOption) => {
-    updateConfig.mutate({
-      defaultSort: newSortOption,
-    })
-  }
-
   const handleTagFilterChange = (newTags: Tag[]) => {
     if (!newTags.length) {
       router.push('/')
@@ -90,62 +75,54 @@ export default function Home() {
     router.push(`/?tag=${tagIdList}`)
   }
 
+  const handleArchiveSelectedRecipes = () => {
+    updateRecipes.mutate(
+      { ids: selectionList, data: { archived: true } },
+      {
+        onSuccess: () => {
+          myToast({
+            message: t('archivedItems', { count: selectionList.length }),
+            action: {
+              label: t('undo'),
+              onClick: () =>
+                updateRecipes.mutate({
+                  ids: selectionList,
+                  data: { archived: false },
+                }),
+            },
+          })
+          setSelectionList([])
+        },
+      }
+    )
+  }
+
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <div className="flex w-full">
       <TopBar
         hideSidebarToggleMobile={topBarMode === 'select'}
         customTopbarContent={
-          <AnimatePresence initial={false}>
-            {topBarMode === 'search' && (
-              <TopBarSearch
-                key="search"
-                searchQuery={searchQuery}
-                onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-                selectedLayout={selectedLayout}
-                onLayoutChange={handleLayoutChange}
-                layoutGridCols={layoutGridCols}
-                sortOption={sortOption}
-                onSortChange={handleSortChange}
-              />
-            )}
-            {topBarMode === 'select' && (
-              <TopBarSelect
-                key="select"
-                onClearSelection={() => setSelectionList([])}
-                selectionLength={selectionList.length}
-                onSelectAll={() => setSelectionList(filteredRecipes.map((r) => r.id))}
-                totalCount={filteredRecipes.length}
-                selectActions={[
-                  {
-                    icon: <Archive />,
-                    tooltip: t('archive'),
-                    onClick: () => {
-                      updateRecipes.mutate(
-                        { ids: selectionList, data: { archived: true } },
-                        {
-                          onSuccess: () => {
-                            myToast({
-                              message: t('archivedItems', { count: selectionList.length }),
-                              action: {
-                                label: t('undo'),
-                                onClick: () =>
-                                  updateRecipes.mutate({
-                                    ids: selectionList,
-                                    data: { archived: false },
-                                  }),
-                              },
-                            })
-                            setSelectionList([])
-                          },
-                        }
-                      )
-                    },
-                  },
-                ]}
-              />
-            )}
-          </AnimatePresence>
+          <TopBarSearchSelect
+            mode={topBarMode}
+            searchQuery={searchQuery}
+            onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
+            onClearSelection={() => setSelectionList([])}
+            selectionLength={selectionList.length}
+            selectActions={[
+              {
+                icon: <ListChecks />,
+                tooltip: 'Select all',
+                onClick: () => setSelectionList(filteredRecipes.map((r) => r.id)),
+                disabled: selectionList.length === filteredRecipes.length,
+              },
+              {
+                icon: <Archive />,
+                tooltip: t('archive'),
+                onClick: handleArchiveSelectedRecipes,
+              },
+            ]}
+          />
         }
       />
       <AppSidebar path={currentPath} />

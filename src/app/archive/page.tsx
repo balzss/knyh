@@ -2,35 +2,33 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Archive, ArchiveRestore, Trash2, BookOpenText } from 'lucide-react'
+import { Archive, ArchiveRestore, Trash2, BookOpenText, ListChecks } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { TopBarSearch, TopBarSelect } from '@/components/TopBarContent'
-import { TopBar } from '@/components/TopBar'
 import {
   AppSidebar,
   PageLayout,
   RecipeCard,
   myToast,
   EmptyState,
-  Loader,
+  TopBar,
+  TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes } from '@/hooks/use-recipes'
-import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
-import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
-import { useTags } from '@/hooks/use-tags'
+import { useTags, useRecipes, useRecipeMutations, useConfirmDialog, useConfig } from '@/hooks'
 import type { Recipe, Tag } from '@/lib/types'
 
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
-  const { recipes, loading } = useRecipes({ archived: true })
+  const { recipes, loading: recipesLoading } = useRecipes({ archived: true })
   const { tags, loading: tagsLoading } = useTags()
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
+
+  const { data: userConfig } = useConfig()
+  const selectedLayout = userConfig?.defaultLayout || 'list'
+
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'list'>('list')
-  const [layoutGridCols, setLayoutGridCols] = useState<number>(5)
 
   const handleUnarchive = () => {
     updateRecipes.mutate(
@@ -68,52 +66,44 @@ export default function ArchivePage() {
     })
   }
 
-  const handleLayoutChange = (selectedValue: 'grid' | 'list', gridCols: number = 5) => {
-    setSelectedLayout(selectedValue)
-    setLayoutGridCols(gridCols)
-  }
-
-  const topBarModeMap = {
-    search: (
-      <TopBarSearch
-        searchQuery={searchQuery}
-        onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-        selectedLayout={selectedLayout}
-        onLayoutChange={handleLayoutChange}
-        layoutGridCols={layoutGridCols}
-      />
-    ),
-    select: (
-      <TopBarSelect
-        onClearSelection={() => setSelectionList([])}
-        selectionLength={selectionList.length}
-        onSelectAll={() => setSelectionList(recipes.map((r) => r.id))}
-        totalCount={recipes.length}
-        selectActions={[
-          {
-            icon: <ArchiveRestore />,
-            tooltip: t('restore'),
-            onClick: handleUnarchive,
-          },
-          {
-            icon: <Trash2 />,
-            tooltip: t('delete'),
-            onClick: handleBulkDelete,
-          },
-        ]}
-      />
-    ),
-  }
-
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
+
   return (
     <div className="flex w-full">
-      <TopBar customTopbarContent={topBarModeMap[topBarMode]} />
+      <TopBar
+        hideSidebarToggleMobile={topBarMode === 'select'}
+        customTopbarContent={
+          <TopBarSearchSelect
+            mode={topBarMode}
+            searchQuery={searchQuery}
+            onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
+            onClearSelection={() => setSelectionList([])}
+            selectionLength={selectionList.length}
+            selectActions={[
+              {
+                icon: <ListChecks />,
+                tooltip: 'Select all',
+                onClick: () => setSelectionList(recipes.map((r) => r.id)),
+                disabled: selectionList.length === recipes.length,
+              },
+              {
+                icon: <ArchiveRestore />,
+                tooltip: t('restore'),
+                onClick: handleUnarchive,
+              },
+              {
+                icon: <Trash2 />,
+                tooltip: t('delete'),
+                onClick: handleBulkDelete,
+              },
+            ]}
+          />
+        }
+      />
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
-        <PageLayout variant={selectedLayout}>
-          {(loading || tagsLoading) && <Loader />}
-          {!loading && !tagsLoading && recipes.length === 0 && (
+        <PageLayout variant={selectedLayout} loading={recipesLoading || tagsLoading}>
+          {recipes.length === 0 && (
             <EmptyState
               title={t('emptyTitle')}
               description={t('emptyDescription')}
@@ -127,9 +117,7 @@ export default function ArchivePage() {
               }
             />
           )}
-          {!loading &&
-            !tagsLoading &&
-            recipes.length > 0 &&
+          {recipes.length > 0 &&
             recipes.map((recipe: Recipe) => {
               const recipeTags = recipe.tags
                 ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))

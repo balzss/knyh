@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout } from '@/components/custom'
+import { TopBar, AppSidebar, PageLayout } from '@/components/custom'
 import { SortableList, CheckedItemsList } from '@/components/custom'
 import { useShoppingList, useShoppingListMutations } from '@/hooks'
 import type { ShoppingListItem } from '@/lib/types'

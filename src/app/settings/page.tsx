@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { TopBar } from '@/components/TopBar'
 import {
+  TopBar,
   AppSidebar,
   PageLayout,
   PasswordChangeDialog,

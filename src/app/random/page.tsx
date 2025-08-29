@@ -3,8 +3,14 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Dices } from 'lucide-react'
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar, PageLayout, RecipeCard, IconButton, TagEditor } from '@/components/custom'
+import {
+  TopBar,
+  AppSidebar,
+  PageLayout,
+  RecipeCard,
+  IconButton,
+  TagEditor,
+} from '@/components/custom'
 import { useRecipes, useTags } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
