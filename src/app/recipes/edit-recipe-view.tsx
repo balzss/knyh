@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { X, Ellipsis } from 'lucide-react'
-import { TopBar } from '@/components/TopBar'
-import { AppSidebar, IconButton } from '@/components/custom'
+import { TopBar, AppSidebar, IconButton } from '@/components/custom'
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Users, Timer, X, Pen, EllipsisVertical, Share2, Trash2, Archive } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { TopBar } from '@/components/TopBar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -15,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
+  TopBar,
   AppSidebar,
   PageLayout,
   IconButton,
