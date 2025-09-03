@@ -12,8 +12,6 @@ import path from 'path'
 import { serverDataPath } from '@/lib/utils'
 import type { DatabaseSchema } from '@/lib/types'
 
-export const dynamic = 'force-static'
-
 // Generate static params for all existing tags
 export async function generateStaticParams() {
   try {
@@ -39,17 +37,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
     const trimmed = displayName.trim()
 
-    const existing = getTagById(id)
+    const existing = await getTagById(id)
     if (!existing) {
       return NextResponse.json({ message: 'Tag not found' }, { status: 404 })
     }
-
-    const allTags = getAllTags()
+    const allTags = await getAllTags()
     if (allTags.some((t) => t.id !== id && t.displayName.toLowerCase() === trimmed.toLowerCase())) {
       return NextResponse.json({ message: 'Tag name already exists' }, { status: 409 })
     }
-
-    const updatedTag = updateTag(id, { displayName: trimmed })
+    const updatedTag = await updateTag(id, { displayName: trimmed })
     if (!updatedTag) {
       return NextResponse.json({ message: 'Failed to update tag' }, { status: 500 })
     }
@@ -64,22 +60,21 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   try {
-    const tagExists = getTagById(id)
+    const tagExists = await getTagById(id)
     if (!tagExists) {
       return NextResponse.json({ message: 'Tag not found' }, { status: 404 })
     }
-
     // Remove tag from all recipes that use it
-    const allRecipes = getAllRecipes()
+    const allRecipes = await getAllRecipes()
     for (const recipe of allRecipes) {
-      if (recipe.tags.includes(id)) {
-        const updatedTags = recipe.tags.filter((tagId) => tagId !== id)
-        updateRecipe(recipe.id, { tags: updatedTags })
+      if (recipe.tags.some((tag) => tag.id === id)) {
+        const updatedTags = recipe.tags.filter((tag) => tag.id !== id)
+        await updateRecipe(recipe.id, { tags: updatedTags })
       }
     }
 
     // Delete the tag
-    const success = deleteTag(id)
+    const success = await deleteTag(id)
     if (!success) {
       return NextResponse.json({ message: 'Failed to delete tag' }, { status: 500 })
     }

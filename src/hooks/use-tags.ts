@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { getLocalStorageData } from '@/lib/local-storage-data'
 import { basePath } from '@/lib/utils'
-import type { DatabaseSchema } from '@/lib/types'
+import type { Tag } from '@/lib/types'
 
 type UseTagsProps = {
   ids?: string[]
@@ -17,16 +17,17 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
   } = useQuery({
     queryKey: ['tags'],
 
-    queryFn: async (): Promise<DatabaseSchema> => {
+    queryFn: async (): Promise<Tag[]> => {
       // Use different data sources based on build mode and runtime detection
       const shouldUseLocalStorage = isStaticExport || isClientStaticExport()
 
       if (shouldUseLocalStorage) {
         // Use localStorage for static exports (supports mutations)
-        return getLocalStorageData()
+        const data = await getLocalStorageData()
+        return data.tags
       } else {
         // Use API endpoint for SQLite in dev/production
-        const endpoint = `${basePath}/api/data`
+        const endpoint = `${basePath}/api/tags`
         const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
@@ -36,7 +37,7 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
     },
 
     select: useCallback(
-      ({ tags }: DatabaseSchema) => {
+      (tags: Tag[]) => {
         if (!ids) {
           return tags // Return all tags if no IDs are provided
         }

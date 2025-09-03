@@ -3,7 +3,15 @@ import { createTag, getAllTags } from '@/lib/database'
 import { generateId } from '@/lib/utils'
 import type { Tag } from '@/lib/types'
 
-export const dynamic = 'force-static'
+export async function GET() {
+  try {
+    const tags = await getAllTags()
+    return NextResponse.json(tags)
+  } catch (error) {
+    console.error('Failed to fetch tags:', error)
+    return NextResponse.json({ message: 'Failed to load tags' }, { status: 500 })
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +23,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Cannot create from empty array.' }, { status: 400 })
     }
 
-    const existingTags = getAllTags()
+    const existingTags = await getAllTags()
     const existingNames = new Set(existingTags.map((t) => t.displayName.toLowerCase()))
 
     const newTags: Tag[] = []
@@ -34,7 +42,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: `Tag '${name}' already exists.` }, { status: 409 })
       }
 
-      const newTag = createTag({ id: generateId(), displayName: name })
+      const newTag = await createTag({ id: generateId(), displayName: name })
       newTags.push(newTag)
       existingNames.add(name.toLowerCase())
     }

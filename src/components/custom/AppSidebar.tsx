@@ -32,7 +32,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
-import { useTags, useTagMutations, useRecipes, useConfirmDialog } from '@/hooks'
+import { useTags, useTagMutations, useConfirmDialog } from '@/hooks'
 import { myToast, SidebarItemRow } from '@/components/custom'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
@@ -46,7 +46,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const tTag = useTranslations('TagActions')
   const { isMobile, setOpenMobile } = useSidebar()
   const { tags } = useTags()
-  const { recipes } = useRecipes()
   const { renameTag, deleteTag } = useTagMutations()
   const { confirmDelete } = useConfirmDialog()
   const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
@@ -77,13 +76,10 @@ export function AppSidebar({ path }: AppSidebarProps) {
       displayName: t('tags'),
       icon: <Tags />,
       subItems: Object.values(tags).map(({ id, displayName }) => {
-        const usageCount = recipes?.filter((r) => r.tags.includes(id)).length || 0
         return {
           id,
           displayName,
           href: `/?tag=${id}`,
-          usageCount,
-          // Highlight this tag if it's selected
           isActive: selectedTagIds.includes(id),
         }
       }),

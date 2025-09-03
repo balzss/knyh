@@ -59,6 +59,7 @@ describe('recipe-utils recipeToMarkdown', () => {
   it('roundtrips recipe -> markdown -> recipe', () => {
     const recipe: Recipe = {
       id: 'r1',
+      userId: 'test-user',
       title: 'Roundtrip',
       ingredients: [{ label: '', items: ['ing 1', 'ing 2'] }],
       instructions: ['Do A', 'Do B'],

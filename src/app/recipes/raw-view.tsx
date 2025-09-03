@@ -13,9 +13,6 @@ import { PageLayout, HelpDialog, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
 import type { Recipe } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown } from '@/lib/recipe-utils'
-import { formatTimestamp } from '@/lib/utils'
-
-// (parsing helpers moved to '@/lib/recipe-utils')
 
 type RawViewProps = {
   initialRecipe?: Recipe
@@ -52,19 +49,17 @@ export default function RawView({ initialRecipe }: RawViewProps) {
 
     if (isMultipleRecipes) {
       // Create multiple recipes
-      const now = formatTimestamp(new Date())
+      const now = new Date()
       const payloads = parsed.map((recipe) => ({
         title: recipe.title,
         ingredients: recipe.ingredients,
         instructions: recipe.instructions,
         tags: [], // bulk recipes don't have tags initially
-        metadata: {
-          totalTime: recipe.metadata.totalTime || '',
-          yield: recipe.metadata.yield || '',
-        },
+        totalTime: recipe.totalTime || '',
+        yield: recipe.yield || '',
         archived: false,
         createdAt: now,
-        lastModified: now,
+        updatedAt: now,
       }))
 
       createRecipe.mutate(payloads, {
@@ -77,19 +72,17 @@ export default function RawView({ initialRecipe }: RawViewProps) {
       })
     } else if (firstRecipe) {
       // Single recipe logic
-      const now = formatTimestamp(new Date())
+      const now = new Date()
       const payload = {
         title: firstRecipe.title,
         ingredients: firstRecipe.ingredients,
         instructions: firstRecipe.instructions,
         tags: initialRecipe ? initialRecipe.tags : [],
-        metadata: {
-          totalTime: firstRecipe.metadata.totalTime || initialRecipe?.metadata.totalTime || '',
-          yield: firstRecipe.metadata.yield || initialRecipe?.metadata.yield || '',
-        },
+        totalTime: firstRecipe.totalTime || initialRecipe?.totalTime || '',
+        yield: firstRecipe.yield || initialRecipe?.yield || '',
         archived: initialRecipe?.archived ?? false,
         createdAt: initialRecipe?.createdAt ?? now,
-        lastModified: now,
+        updatedAt: now,
       }
 
       if (initialRecipe) {

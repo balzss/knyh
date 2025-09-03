@@ -14,13 +14,12 @@ import {
   TopBar,
   TopBarSearchSelect,
 } from '@/components/custom'
-import { useTags, useRecipes, useRecipeMutations, useConfirmDialog, useConfig } from '@/hooks'
-import type { Recipe, Tag } from '@/lib/types'
+import { useRecipes, useRecipeMutations, useConfirmDialog, useConfig } from '@/hooks'
+import type { Recipe } from '@/lib/types'
 
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
   const { recipes, loading: recipesLoading } = useRecipes({ archived: true })
-  const { tags, loading: tagsLoading } = useTags()
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
 
@@ -102,7 +101,7 @@ export default function ArchivePage() {
       />
       <AppSidebar path="/archive" />
       <main className="w-full mt-14">
-        <PageLayout variant={selectedLayout} loading={recipesLoading || tagsLoading}>
+        <PageLayout variant={selectedLayout} loading={recipesLoading}>
           {recipes.length === 0 && (
             <EmptyState
               title={t('emptyTitle')}
@@ -119,15 +118,12 @@ export default function ArchivePage() {
           )}
           {recipes.length > 0 &&
             recipes.map((recipe: Recipe) => {
-              const recipeTags = recipe.tags
-                ? tags.filter((tag: Tag) => recipe.tags.includes(tag.id))
-                : []
               return (
                 <RecipeCard
                   key={recipe.id}
                   selectionMode={selectionList.length > 0}
                   recipeData={recipe}
-                  tags={recipeTags}
+                  tags={recipe.tags}
                   isSelected={selectionList.includes(recipe.id)}
                   onSelect={(selected) => handleCardSelect(recipe.id, selected)}
                   archivedMode

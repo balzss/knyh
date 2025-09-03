@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
-import { createRecipe, updateRecipe } from '@/lib/database'
+import { headers } from 'next/headers'
+import { auth } from '@/lib/auth'
+import { getAllRecipes, createMultipleRecipes, updateRecipe, getRecipeById } from '@/lib/database'
 import type { Recipe } from '@/lib/types'
 
-export const dynamic = 'force-static'
-
 export async function POST(request: Request) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
     const payload = await request.json()
 
@@ -24,12 +29,13 @@ export async function POST(request: Request) {
       )
     }
 
-    const newRecipes: Recipe[] = []
-    for (const recipeData of payload) {
-      const newRecipe = createRecipe(recipeData)
-      newRecipes.push(newRecipe)
-    }
+    // Add userId to each recipe
+    const recipesWithUserId = payload.map((recipeData: Recipe) => ({
+      ...recipeData,
+      userId: session.user.id,
+    }))
 
+    const newRecipes = await createMultipleRecipes(recipesWithUserId)
     return NextResponse.json(newRecipes, { status: 201 })
   } catch (error) {
     console.error(error)
@@ -41,6 +47,10 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { ids, data } = await request.json()
 
@@ -57,7 +67,12 @@ export async function PATCH(request: Request) {
 
     const updatedRecipes: Recipe[] = []
     for (const id of ids) {
-      const updatedRecipe = updateRecipe(id, data)
+      const existing = await getRecipeById(id)
+      if (!existing) continue
+      // Only allow updating recipes owned by the session user
+      if (existing.userId !== session.user.id) continue
+
+      const updatedRecipe = await updateRecipe(id, data)
       if (updatedRecipe) {
         updatedRecipes.push(updatedRecipe)
       }
@@ -70,5 +85,26 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: 'Invalid JSON body' }, { status: 400 })
     }
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+
+    if (!session?.user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Parse query parameters
+    const { searchParams } = new URL(request.url)
+    const archivedParam = searchParams.get('archived')
+    const archived = archivedParam !== null ? archivedParam === 'true' : undefined
+
+    const recipes = await getAllRecipes(session.user.id, archived)
+    return NextResponse.json(recipes)
+  } catch (error) {
+    console.error('Failed to export data:', error)
+    return NextResponse.json({ message: 'Failed to load data' }, { status: 500 })
   }
 }

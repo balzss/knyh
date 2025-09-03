@@ -5,7 +5,7 @@ export default getRequestConfig(async () => {
   let locale = 'en' // Default fallback
 
   try {
-    const userConfig = getUserConfig()
+    const userConfig = await getUserConfig()
     locale = userConfig.language || 'en'
   } catch (error) {
     console.warn('Could not read language from database, using default:', error)

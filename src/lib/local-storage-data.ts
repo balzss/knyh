@@ -83,15 +83,16 @@ export const localStorageRecipes = {
     return data.recipes
   },
 
-  async create(recipes: Omit<Recipe, 'id'>[]): Promise<Recipe[]> {
+  async create(recipes: Omit<Recipe, 'id' | 'userId'>[]): Promise<Recipe[]> {
     const data = await getData()
-    const now = new Date().toISOString()
+    const now = new Date()
 
     const newRecipes = recipes.map((recipe) => ({
       ...recipe,
       id: generateId(),
+      userId: 'local',
       createdAt: now,
-      lastModified: now,
+      updatedAt: now,
     }))
 
     data.recipes.push(...newRecipes)
@@ -99,7 +100,7 @@ export const localStorageRecipes = {
     return newRecipes
   },
 
-  async update(id: string, updates: Omit<Recipe, 'id'>): Promise<Recipe> {
+  async update(id: string, updates: Omit<Recipe, 'id' | 'userId'>): Promise<Recipe> {
     const data = await getData()
     const index = data.recipes.findIndex((r) => r.id === id)
 
@@ -110,6 +111,7 @@ export const localStorageRecipes = {
     const updatedRecipe = {
       ...updates,
       id,
+      userId: data.recipes[index].userId || 'local',
       lastModified: new Date().toISOString(),
     }
 
@@ -118,10 +120,13 @@ export const localStorageRecipes = {
     return updatedRecipe
   },
 
-  async updateMany(ids: string[], updates: Partial<Omit<Recipe, 'id'>>): Promise<Recipe[]> {
+  async updateMany(
+    ids: string[],
+    updates: Partial<Omit<Recipe, 'id' | 'userId'>>
+  ): Promise<Recipe[]> {
     const data = await getData()
     const updatedRecipes: Recipe[] = []
-    const now = new Date().toISOString()
+    const now = new Date()
 
     for (const id of ids) {
       const index = data.recipes.findIndex((r) => r.id === id)
@@ -129,7 +134,7 @@ export const localStorageRecipes = {
         data.recipes[index] = {
           ...data.recipes[index],
           ...updates,
-          lastModified: now,
+          updatedAt: now,
         }
         updatedRecipes.push(data.recipes[index])
       }
@@ -205,8 +210,8 @@ export const localStorageTags = {
 
     // Remove tag references from recipes
     data.recipes.forEach((recipe) => {
-      recipe.tags = recipe.tags.filter((tagId) => tagId !== id)
-      recipe.lastModified = new Date().toISOString()
+      recipe.tags = recipe.tags.filter((tag) => tag.id !== id)
+      recipe.updatedAt = new Date()
     })
 
     saveData(data)

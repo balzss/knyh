@@ -8,9 +8,9 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { myToast } from '@/components/custom'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { TextInput, myToast } from '@/components/custom'
+import { usePasswordVisibility } from '@/hooks'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
 import { signUp } from '@/lib/auth-client'
 
@@ -27,9 +27,16 @@ export default function SignupPage() {
     register,
     handleSubmit,
     formState: { isValid },
+    setValue,
+    watch,
   } = useForm<SignupForm>({
     mode: 'onChange',
   })
+
+  const emailValue = watch('email') || ''
+  const passwordValue = watch('password') || ''
+
+  const { passwordVisibilityButton, inputType } = usePasswordVisibility(passwordValue)
 
   // Redirect to home if in static mode
   useEffect(() => {
@@ -58,6 +65,14 @@ export default function SignupPage() {
     )
   }
 
+  const handleEmailChange = (_event: React.SyntheticEvent | undefined, newValue: string) => {
+    setValue('email', newValue, { shouldValidate: true })
+  }
+
+  const handlePasswordChange = (_event: React.SyntheticEvent | undefined, newValue: string) => {
+    setValue('password', newValue, { shouldValidate: true })
+  }
+
   // Check if we're in static mode (client-side check for render)
   const isStaticMode = isStaticExport || isClientStaticExport()
 
@@ -76,9 +91,12 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <div>
               <Label htmlFor="email">{t('email')}</Label>
-              <Input
+              <TextInput
                 id="email"
                 type="email"
+                value={emailValue}
+                onValueChange={handleEmailChange}
+                clearable
                 {...register('email', {
                   required: 'email is required!!',
                   pattern: {
@@ -90,9 +108,12 @@ export default function SignupPage() {
             </div>
             <div>
               <Label htmlFor="password">{t('password')}</Label>
-              <Input
+              <TextInput
                 id="password"
-                type="password"
+                type={inputType}
+                value={passwordValue}
+                onValueChange={handlePasswordChange}
+                actionButtons={[passwordVisibilityButton]}
                 {...register('password', {
                   required: 'required',
                   minLength: {

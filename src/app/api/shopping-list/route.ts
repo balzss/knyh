@@ -4,7 +4,7 @@ import type { ShoppingListItem } from '@/lib/types'
 
 export async function GET() {
   try {
-    const items = getShoppingList()
+    const items = await getShoppingList()
     return NextResponse.json(items)
   } catch (error) {
     console.error('Failed to get shopping list:', error)
@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const items: ShoppingListItem[] = await request.json()
-    updateShoppingList(items)
+    await updateShoppingList(items)
     return NextResponse.json({ message: 'Shopping list updated successfully' })
   } catch (error) {
     console.error('Failed to update shopping list:', error)

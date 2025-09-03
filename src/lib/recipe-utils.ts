@@ -5,7 +5,8 @@ export type ParsedRecipe = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
-  metadata: { yield: string; totalTime: string }
+  yield: string
+  totalTime: string
 }
 
 /**
@@ -109,7 +110,8 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
     title,
     ingredients: [{ label: '', items: ingredients }], // Convert string[] to GroupData[]
     instructions,
-    metadata: { yield: yieldValue, totalTime: totalTimeValue },
+    yield: yieldValue,
+    totalTime: totalTimeValue,
   }
 }
 
@@ -118,8 +120,8 @@ export function recipeToMarkdown(recipe: Recipe): string {
   const header = `# ${recipe.title}`
 
   const frontmatter: string[] = []
-  if (recipe.metadata?.yield) frontmatter.push(`yield: ${recipe.metadata.yield}`)
-  if (recipe.metadata?.totalTime) frontmatter.push(`time: ${recipe.metadata.totalTime}`)
+  if (recipe.yield) frontmatter.push(`yield: ${recipe.yield}`)
+  if (recipe.totalTime) frontmatter.push(`time: ${recipe.totalTime}`)
 
   const frontmatterBlock = frontmatter.length ? `\n---\n${frontmatter.join('\n')}\n---\n` : ''
 

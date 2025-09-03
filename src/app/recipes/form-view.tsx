@@ -18,10 +18,8 @@ import {
   myToast,
 } from '@/components/custom'
 import { getRecipeViewUrl } from '@/lib/data-config'
-
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import type { Tag, Recipe } from '@/lib/types'
-import { formatTimestamp } from '@/lib/utils'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
   tags: Tag[]
@@ -37,7 +35,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
   const router = useRouter()
   const { createRecipe, updateRecipe } = useRecipeMutations()
   const { tags: initialTags } = useTags({
-    ids: initialRecipe?.tags || [],
+    ids: initialRecipe?.tags.map((t) => t.id) || [],
   })
 
   const {
@@ -77,20 +75,10 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
       return
     }
 
-    const now = formatTimestamp(new Date())
-    const formattedSubmitData = {
-      ...submitData,
-      tags: submitData.tags.map((t) => t.id),
-    }
-
     if (initialRecipe) {
       updateRecipe.mutate(
         {
-          data: {
-            ...formattedSubmitData,
-            createdAt: initialRecipe.createdAt,
-            lastModified: now,
-          },
+          data: submitData,
           id: initialRecipe.id,
         },
         {
@@ -103,17 +91,14 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         }
       )
     } else {
-      createRecipe.mutate(
-        { ...formattedSubmitData, createdAt: now, lastModified: now },
-        {
-          onSuccess: (newlyCreatedRecipes) => {
-            router.push(getRecipeViewUrl(newlyCreatedRecipes[0].id))
-            myToast({
-              message: t('recipeCreated'),
-            })
-          },
-        }
-      )
+      createRecipe.mutate(submitData, {
+        onSuccess: (newlyCreatedRecipes) => {
+          router.push(getRecipeViewUrl(newlyCreatedRecipes[0].id))
+          myToast({
+            message: t('recipeCreated'),
+          })
+        },
+      })
     }
   }
 
@@ -179,17 +164,17 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
         <div className="mb-3 flex gap-2">
           <Controller
             control={control}
-            name="metadata.yield"
+            name="yield"
             render={({ field }) => (
-              <YieldDialog yieldValue={field.value} onYieldValueChange={field.onChange} />
+              <YieldDialog yieldValue={field.value || ''} onYieldValueChange={field.onChange} />
             )}
           />
           <Controller
             control={control}
-            name="metadata.totalTime"
+            name="totalTime"
             render={({ field }) => (
               <TotalTimeDialog
-                totalTimeValue={field.value}
+                totalTimeValue={field.value || ''}
                 onTotalTimeValueChange={field.onChange}
               />
             )}

@@ -5,8 +5,8 @@ import { basePath } from '@/lib/utils'
 import type { Recipe } from '@/lib/types'
 const apiUrl = `${basePath}/api/recipes`
 
-// The type for creating a recipe (all fields except the server-generated id)
-type CreateRecipePayload = Omit<Recipe, 'id'>
+// The type for creating a recipe (all fields except the server-generated id and server-assigned userId)
+type CreateRecipePayload = Omit<Recipe, 'id' | 'userId'>
 
 // The type for updating a recipe
 type UpdateRecipePayload = {
@@ -44,6 +44,7 @@ export const useRecipeMutations = () => {
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(body),
         })
 
@@ -69,6 +70,7 @@ export const useRecipeMutations = () => {
         const response = await fetch(`${apiUrl}/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(data),
         })
         if (!response.ok) {
@@ -91,6 +93,7 @@ export const useRecipeMutations = () => {
         const response = await fetch(apiUrl, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ ids, data }),
         })
         if (!response.ok) {
@@ -113,6 +116,7 @@ export const useRecipeMutations = () => {
         // Use API for SQLite mode
         const response = await fetch(`${apiUrl}/${recipeId}`, {
           method: 'DELETE',
+          credentials: 'include',
         })
         if (!response.ok) {
           throw new Error('Failed to delete recipe')
@@ -134,7 +138,10 @@ export const useRecipeMutations = () => {
         // Use API for SQLite mode
         await Promise.all(
           ids.map(async (id) => {
-            const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+            const response = await fetch(`${apiUrl}/${id}`, {
+              method: 'DELETE',
+              credentials: 'include',
+            })
             if (!response.ok) throw new Error('Failed to delete recipe')
             // ignore body (or could await response.json())
           })

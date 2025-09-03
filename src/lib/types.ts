@@ -3,20 +3,18 @@ export type GroupData = {
   items: string[]
 }
 
-export type RecipeMetaData = {
-  totalTime: string
-  yield: string
-}
 export type Recipe = {
   id: string
+  userId: string
   title: string
   ingredients: GroupData[]
   instructions: string[]
-  tags: string[]
-  metadata: RecipeMetaData
+  tags: Tag[]
   archived?: boolean
-  createdAt: string
-  lastModified: string
+  totalTime: string | null
+  yield: string | null
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type Tag = {

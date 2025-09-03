@@ -11,19 +11,18 @@ import {
   IconButton,
   TagEditor,
 } from '@/components/custom'
-import { useRecipes, useTags } from '@/hooks'
+import { useRecipes } from '@/hooks'
 import type { Tag } from '@/lib/types'
 
 export default function RandomPage() {
   const t = useTranslations('RandomRecipePage')
-  const { recipes } = useRecipes({ sort: 'random' })
   const [tagFilter, setTagFilter] = useState<Tag[]>([])
   const [rollIndex, setRollIndex] = useState<number>(0)
-  const { tags } = useTags()
+  const { recipes } = useRecipes({ sort: 'random', tags: tagFilter.map((t) => t.id) })
 
-  // Filter the pre-shuffled recipes by selected tags, then pick the nth (rollIndex) entry.
-  const filtered = recipes?.filter((r) => tagFilter?.every((tag) => r.tags.includes(tag.id))) || []
-  const recipe = filtered.length > 0 ? filtered[rollIndex % filtered.length] : undefined
+  // // Filter the pre-shuffled recipes by selected tags, then pick the nth (rollIndex) entry.
+  // const filtered = recipes?.filter((r) => tagFilter?.every((tag) => r.tags.includes(tag.id))) || []
+  const recipe = recipes.length > 0 ? recipes[rollIndex % recipes.length] : undefined
 
   return (
     <div className="flex w-full">
@@ -54,15 +53,7 @@ export default function RandomPage() {
               setRollIndex(0)
             }}
           />
-          {recipe && (
-            <RecipeCard
-              key={recipe.id}
-              tags={recipe.tags
-                .map((tagId) => tags?.find((tag) => tag.id === tagId))
-                .filter((t) => !!t)}
-              recipeData={recipe}
-            />
-          )}
+          {recipe && <RecipeCard key={recipe.id} tags={recipe.tags} recipeData={recipe} />}
         </PageLayout>
       </main>
     </div>

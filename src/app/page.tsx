@@ -16,7 +16,7 @@ import {
   TopBar,
   TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes, useTags, useRecipeMutations, useConfig } from '@/hooks'
+import { useRecipes, useRecipeMutations, useConfig } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
 import type { Tag } from '@/lib/types'
 
@@ -32,15 +32,13 @@ export default function Home() {
   const selectedLayout = userConfig?.defaultLayout || 'list'
   const layoutGridCols = userConfig?.defaultGridCols || 5
 
-  const { recipes, loading: recipesLoading } = useRecipes({ sort: sortOption })
-  const { updateRecipes } = useRecipeMutations()
-  const { tags, loading: tagsLoading } = useTags()
-
   const tagParam = searchParams.get('tag')?.split(',')
-  const filterTags = tags.filter((t) => tagParam?.includes(t.id))
-  const tagFilteredRecipes = filterTags.length
-    ? recipes.filter((r) => tagParam?.every((t) => r.tags.includes(t)))
-    : recipes
+  const { recipes, loading: recipesLoading } = useRecipes({
+    sort: sortOption,
+    tags: tagParam,
+  })
+  const filterTags = recipes[0]?.tags || []
+  const { updateRecipes } = useRecipeMutations()
 
   // Construct the current path with search parameters for the sidebar
   // TODO maybe move this logic inside the sidebar?
@@ -52,8 +50,8 @@ export default function Home() {
 
   // Debounced and memoized filter by search query (accent-insensitive title match)
   const filteredRecipes = useMemo(() => {
-    return queryRecipes(tagFilteredRecipes, deferredSearchQuery)
-  }, [tagFilteredRecipes, deferredSearchQuery])
+    return queryRecipes(recipes, deferredSearchQuery)
+  }, [recipes, deferredSearchQuery])
 
   const handleCardSelect = (id: string, selected: boolean) => {
     setSelectionList((prevList) => {
@@ -136,20 +134,14 @@ export default function Home() {
             className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
           />
         )}
-        <PageLayout
-          variant={selectedLayout}
-          maxCols={layoutGridCols}
-          loading={recipesLoading || tagsLoading}
-        >
+        <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
                 highlight={searchQuery}
                 selectionMode={selectionList.length > 0}
-                tags={recipe.tags
-                  .map((tagId) => tags?.find((tag) => tag.id === tagId))
-                  .filter((t) => !!t)}
+                tags={recipe.tags}
                 recipeData={recipe}
                 isSelected={selectionList.includes(recipe.id)}
                 onSelect={(selected) => handleCardSelect(recipe.id, selected)}

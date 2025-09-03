@@ -99,7 +99,7 @@ export function RecipeCard({
     [updateRecipe, recipeData, t]
   )
 
-  const { title, metadata, id } = recipeData
+  const { title, yield: recipeYield, totalTime, id } = recipeData
   const isLocalRecipe = id.startsWith('local_')
   const recipeUrl = `${window?.location.origin}${getRecipeViewUrl(id)}`
 
@@ -159,10 +159,10 @@ export function RecipeCard({
         </CardTitle>
         <CardDescription className="flex gap-3 items-center select-none sm:select-text">
           <div className="flex gap-1 items-center">
-            <Users size="1rem" /> {metadata?.yield || t('yield')}
+            <Users size="1rem" /> {recipeYield || t('yield')}
           </div>
           <div className="flex gap-1 items-center">
-            <Timer size="1rem" /> {metadata?.totalTime || t('totalTime')}
+            <Timer size="1rem" /> {totalTime || t('totalTime')}
           </div>
         </CardDescription>
         <div
