@@ -33,9 +33,42 @@ async function getData(): Promise<DatabaseSchema> {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const localData = JSON.parse(stored)
+
+      // Build tag lookup from local data (fall back to JSON file tags)
+      const tagSource: Tag[] = localData.tags || jsonData?.tags || []
+      const tagMap = new Map<string, Tag>((tagSource || []).map((t: Tag) => [t.id, t]))
+
+      // Normalize date fields on recipes (JSON.parse yields strings for Date)
+      // and ensure tags are Tag[] (resolve tag id strings to Tag objects)
+      const normalizedRecipes = (localData.recipes || []).map((r: Recipe) => {
+        const createdAt = r.createdAt ? new Date(r.createdAt) : new Date()
+        const updatedAt = r.updatedAt
+          ? new Date(r.updatedAt)
+          : r.updatedAt
+            ? new Date(r.updatedAt)
+            : new Date()
+
+        const rawTags = r.tags || []
+        const normalizedTags: Tag[] = rawTags.map((t: string | Tag) => {
+          if (typeof t === 'string') {
+            return tagMap.get(t) || { id: t, displayName: t }
+          }
+          // assume it's already a Tag-like object
+          return t as Tag
+        })
+
+        return {
+          ...r,
+          createdAt,
+          updatedAt,
+          tags: normalizedTags,
+        }
+      })
+
       // Use JSON data for user name, localStorage for everything else
       return {
         ...localData,
+        recipes: normalizedRecipes,
         userConfig: {
           ...localData.userConfig,
           name: jsonData?.userConfig?.name || localData.userConfig?.name || 'Local User',
@@ -108,11 +141,14 @@ export const localStorageRecipes = {
       throw new Error(`Recipe with id ${id} not found`)
     }
 
+    const now = new Date()
+
     const updatedRecipe = {
+      ...data.recipes[index],
       ...updates,
       id,
       userId: data.recipes[index].userId || 'local',
-      lastModified: new Date().toISOString(),
+      updatedAt: now,
     }
 
     data.recipes[index] = updatedRecipe

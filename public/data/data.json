@@ -20,8 +20,8 @@
         "yield": null
       },
       "archived": false,
-      "createdAt": "2025-08-27-15-16",
-      "lastModified": "2025-08-29-22-37"
+  "createdAt": "2025-08-27T15:16:00.000Z",
+  "lastModified": "2025-08-29T22:37:00.000Z"
     },
     {
       "id": "kgnk24xa",
@@ -61,8 +61,8 @@
         "yield": "5 adag"
       },
       "archived": false,
-      "createdAt": "1970-01-01-00:00",
-      "lastModified": "2025-08-29-22-37"
+  "createdAt": "1970-01-01T00:00:00.000Z",
+  "lastModified": "2025-08-29T22:37:00.000Z"
     },
     {
       "id": "pdos32ns",
@@ -94,8 +94,8 @@
         "yield": "20 darab"
       },
       "archived": true,
-      "createdAt": "1970-01-01-00:00",
-      "lastModified": "2025-08-29-22-38"
+  "createdAt": "1970-01-01T00:00:00.000Z",
+  "lastModified": "2025-08-29T22:38:00.000Z"
     }
   ],
   "tags": [
@@ -121,7 +121,7 @@
     }
   ],
   "userConfig": {
-    "userId": "user",
+    "name": "Demo User",
     "theme": "dark",
     "language": "en"
   }
