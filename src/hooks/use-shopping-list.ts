@@ -23,6 +23,9 @@ export const useShoppingList = () => {
         const endpoint = `${basePath}/api/shopping-list`
         const response = await fetch(endpoint)
         if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Authentication required')
+          }
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         return response.json()
@@ -46,11 +49,14 @@ export const useShoppingListMutations = () => {
         return localStorageShoppingList.update(items)
       } else {
         const response = await fetch(`${basePath}/api/shopping-list`, {
-          method: 'PUT',
+          method: 'POST', // Changed from PUT to POST to match API
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items }),
         })
         if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Authentication required')
+          }
           throw new Error('Failed to update shopping list')
         }
         return response.json()

@@ -33,10 +33,13 @@ model ShoppingListItem {
   text      String
   checked   Boolean  @default(false)
   sortOrder Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([sortOrder])
+  @@index([userId])
 }
 
 model Tag {
@@ -55,17 +58,18 @@ model UserConfig {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id               String             @id @default(cuid())
+  name             String
+  email            String             @unique
+  emailVerified    Boolean            @default(false)
+  image            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
   // Relations
-  sessions      Session[]
-  accounts      Account[]
-  recipes       Recipe[]
+  sessions         Session[]
+  accounts         Account[]
+  recipes          Recipe[]
+  shoppingListItems ShoppingListItem[]
 }
 
 model Session {

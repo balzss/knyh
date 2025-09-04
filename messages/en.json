@@ -165,7 +165,11 @@
     "title": "Shopping list",
     "addItem": "Add item",
     "checkedItems": "Checked items",
-    "removeItem": "Remove item"
+    "removeItem": "Remove item",
+    "moreOptions": "More options",
+    "clearList": "Clear list",
+    "uncheckAll": "Uncheck all items",
+    "removeChecked": "Remove checked items"
   },
   "YieldDialog": {
     "setYield": "Set yield",

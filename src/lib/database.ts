@@ -313,8 +313,9 @@ export async function updateUserConfig(updates: Partial<UserConfig>): Promise<Us
 }
 
 // Shopping list operations
-export async function getShoppingList(): Promise<ShoppingListItem[]> {
+export async function getShoppingList(userId: string): Promise<ShoppingListItem[]> {
   const rows = await prisma.shoppingListItem.findMany({
+    where: { userId },
     orderBy: { sortOrder: 'asc' },
   })
 
@@ -324,15 +325,18 @@ export async function getShoppingList(): Promise<ShoppingListItem[]> {
   }))
 }
 
-export async function updateShoppingList(items: ShoppingListItem[]): Promise<void> {
-  // Clear existing items
-  await prisma.shoppingListItem.deleteMany()
+export async function updateShoppingList(userId: string, items: ShoppingListItem[]): Promise<void> {
+  // Clear existing items for this user
+  await prisma.shoppingListItem.deleteMany({
+    where: { userId },
+  })
 
   // Insert new items
   const data = items.map((item, index) => ({
     text: item.text,
     checked: item.checked,
     sortOrder: index,
+    userId,
   }))
 
   if (data.length > 0) {
@@ -348,9 +352,9 @@ export async function exportToJson(userId?: string, archived?: boolean): Promise
     ? await getAllRecipes(userId, archived)
     : await prisma.recipe
         .findMany({
-          include: { tags: true },
           where: archived !== undefined ? { archived } : undefined,
-          orderBy: { updatedAt: 'desc' },
+          include: { tags: true },
+          orderBy: { createdAt: 'desc' },
         })
         .then((recipes) =>
           recipes.map((recipe) => ({
@@ -360,16 +364,31 @@ export async function exportToJson(userId?: string, archived?: boolean): Promise
           }))
         )
 
+  // For shopping list, if userId is provided, get user's items, otherwise get all items
+  let shoppingList: ShoppingListItem[] = []
+  if (userId) {
+    shoppingList = await getShoppingList(userId)
+  } else {
+    // For export without userId, get all shopping list items (used for migration)
+    const allItems = await prisma.shoppingListItem.findMany({
+      orderBy: { sortOrder: 'asc' },
+    })
+    shoppingList = allItems.map((item) => ({
+      text: item.text,
+      checked: Boolean(item.checked),
+    }))
+  }
+
   return {
     recipes: allRecipes,
     tags: await getAllTags(),
     userConfig: await getUserConfig(),
-    shoppingList: await getShoppingList(),
+    shoppingList,
   }
 }
 
 // Import data from JSON (for data migration/import)
-export async function importFromJson(data: DatabaseSchema): Promise<void> {
+export async function importFromJson(data: DatabaseSchema, userId?: string): Promise<void> {
   await prisma.$transaction(async (tx) => {
     // Clear existing data
     await tx.shoppingListItem.deleteMany()
@@ -392,7 +411,7 @@ export async function importFromJson(data: DatabaseSchema): Promise<void> {
       await tx.recipe.create({
         data: {
           id: recipe.id,
-          userId: recipe.userId || 'imported',
+          userId: recipe.userId || userId || 'imported-user',
           title: recipe.title,
           ingredients: recipe.ingredients,
           instructions: recipe.instructions,
@@ -421,13 +440,15 @@ export async function importFromJson(data: DatabaseSchema): Promise<void> {
     }
 
     // Import shopping list
-    if (data.shoppingList) {
+    if (data.shoppingList && userId) {
+      // Only import shopping list if we have a userId to assign it to
       for (const [index, item] of data.shoppingList.entries()) {
         await tx.shoppingListItem.create({
           data: {
             text: item.text,
             checked: item.checked,
             sortOrder: index,
+            userId: userId,
           },
         })
       }

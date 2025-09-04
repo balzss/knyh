@@ -165,7 +165,11 @@
     "title": "Bevásárló lista",
     "addItem": "Tétel hozzáadása",
     "checkedItems": "Kipipált tételek",
-    "removeItem": "Tétel eltávolítása"
+    "removeItem": "Tétel eltávolítása",
+    "moreOptions": "További lehetőségek",
+    "clearList": "Lista törlése",
+    "uncheckAll": "Összes tétel kipálás megszüntetése",
+    "removeChecked": "Kipipált tételek eltávolítása"
   },
   "YieldDialog": {
     "setYield": "Adag beállítása",

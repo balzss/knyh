@@ -24,11 +24,11 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     // redirect to login page if not in static mode and no session detected
-    if (isPending || isStaticExport) return
+    if (isPending || isStaticExport || isPublicPath) return
     if (!sessionData?.user) {
       router.replace('/login')
     }
-  }, [pathname, isPending, sessionData, router])
+  }, [pathname, isPending, sessionData, router, isPublicPath])
 
   if (isPublicPath || isStaticExport || sessionData?.user) return children
 

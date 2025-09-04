@@ -2,9 +2,18 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import { TopBar, AppSidebar, PageLayout } from '@/components/custom'
+import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
+import { TopBar, AppSidebar, PageLayout, IconButton } from '@/components/custom'
 import { SortableList, CheckedItemsList } from '@/components/custom'
+import AuthGuard from '@/components/AuthGuard'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useShoppingList, useShoppingListMutations } from '@/hooks'
+import { isStaticExport } from '@/lib/data-config'
 import type { ShoppingListItem } from '@/lib/types'
 
 export default function ShoppingList() {
@@ -104,61 +113,121 @@ export default function ShoppingList() {
     [checkedItems, uncheckedItems, saveToDatabase]
   )
 
-  if (loading) {
-    return (
-      <div className="flex w-full">
-        <TopBar
-          customTopbarContent={
-            <div className="flex items-center gap-2">
-              <span className="mr-4 font-bold">{t('title')}</span>
-            </div>
-          }
-        />
-        <AppSidebar path="/shopping-list" />
-        <main className="w-full mt-16 mx-auto">
-          <PageLayout>
-            <div className="flex items-center justify-center p-8">
-              <div className="text-muted-foreground">Loading...</div>
-            </div>
-          </PageLayout>
-        </main>
-      </div>
-    )
-  }
+  // Handle clearing the entire list
+  const handleClearList = useCallback(() => {
+    setUncheckedItems([])
+    setCheckedItems([])
+    saveToDatabase([], [])
+  }, [saveToDatabase])
 
-  return (
+  // Handle unchecking all items (move all checked items to unchecked)
+  const handleUncheckAll = useCallback(() => {
+    const allItems = [...uncheckedItems, ...checkedItems]
+    setUncheckedItems(allItems)
+    setCheckedItems([])
+    saveToDatabase(allItems, [])
+  }, [uncheckedItems, checkedItems, saveToDatabase])
+
+  // Handle removing all checked items
+  const handleRemoveChecked = useCallback(() => {
+    setCheckedItems([])
+    saveToDatabase(uncheckedItems, [])
+  }, [uncheckedItems, saveToDatabase])
+
+  const shoppingListContent = (
     <div className="flex w-full">
-      <TopBar
-        customTopbarContent={
-          <div className="flex items-center gap-2">
-            <span className="mr-4 font-bold">{t('title')}</span>
-          </div>
-        }
-      />
-      <AppSidebar path="/shopping-list" />
-      <main className="w-full mt-16 mx-auto">
-        <PageLayout>
-          <div className="space-y-4">
-            <SortableList
-              addItemLabel={t('addItem')}
-              items={uncheckedItems}
-              onItemsChange={handleUncheckedItemsChange}
-              showCheckboxes={true}
-              onItemChecked={handleItemChecked}
-            />
+      {loading ? (
+        <>
+          <TopBar
+            customTopbarContent={
+              <div className="flex items-center gap-2 justify-between w-full">
+                <span className="mr-4 font-bold">{t('title')}</span>
+              </div>
+            }
+          />
+          <AppSidebar path="/shopping-list" />
+          <main className="w-full mt-16 mx-auto">
+            <PageLayout>
+              <div className="flex items-center justify-center p-8">
+                <div className="text-muted-foreground">Loading...</div>
+              </div>
+            </PageLayout>
+          </main>
+        </>
+      ) : (
+        <>
+          <TopBar
+            customTopbarContent={
+              <div className="flex items-center gap-2 justify-between w-full">
+                <span className="mr-4 font-bold">{t('title')}</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <IconButton
+                      icon={<MoreVertical />}
+                      tooltip={t('moreOptions')}
+                      variant="ghost"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={handleClearList}
+                      disabled={shoppingList.length === 0}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      {t('clearList')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleUncheckAll}
+                      disabled={checkedItems.length === 0}
+                    >
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      {t('uncheckAll')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleRemoveChecked}
+                      disabled={checkedItems.length === 0}
+                    >
+                      <CheckCheck className="mr-2 h-4 w-4" />
+                      {t('removeChecked')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            }
+          />
+          <AppSidebar path="/shopping-list" />
+          <main className="w-full mt-16 mx-auto">
+            <PageLayout>
+              <div className="space-y-4">
+                <SortableList
+                  addItemLabel={t('addItem')}
+                  items={uncheckedItems}
+                  onItemsChange={handleUncheckedItemsChange}
+                  showCheckboxes={true}
+                  onItemChecked={handleItemChecked}
+                />
 
-            {checkedItems.length > 0 && (
-              <CheckedItemsList
-                items={checkedItems}
-                onItemUnchecked={handleItemUnchecked}
-                onItemRemoved={handleCheckedItemRemoved}
-                checkedItemsLabel={t('checkedItems')}
-                removeItemTooltip={t('removeItem')}
-              />
-            )}
-          </div>
-        </PageLayout>
-      </main>
+                {checkedItems.length > 0 && (
+                  <CheckedItemsList
+                    items={checkedItems}
+                    onItemUnchecked={handleItemUnchecked}
+                    onItemRemoved={handleCheckedItemRemoved}
+                    checkedItemsLabel={t('checkedItems')}
+                    removeItemTooltip={t('removeItem')}
+                  />
+                )}
+              </div>
+            </PageLayout>
+          </main>
+        </>
+      )}
     </div>
   )
+
+  // Wrap with AuthGuard only in database mode
+  if (isStaticExport) {
+    return shoppingListContent
+  }
+
+  return <AuthGuard>{shoppingListContent}</AuthGuard>
 }
