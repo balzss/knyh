@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { ConfirmDialogProvider } from './ConfirmDialogProvider'
 import { NavigationGuardProvider } from './NavigationGuardProvider'
 import { isStaticExport, isClientStaticExport } from '@/lib/data-config'
+import AuthGuard from '@/components/AuthGuard'
 
 const queryClient = new QueryClient()
 
@@ -105,27 +106,24 @@ export default function Providers({ children, i18n }: ProvidersProps) {
 
   return (
     <Suspense>
-      <NextIntlClientProvider
-        locale={isHydrated ? clientLocale : i18n.locale}
-        messages={isHydrated ? clientMessages : i18n.messages}
-        timeZone={timeZone}
-      >
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <AuthGuard>
+          <NextIntlClientProvider
+            locale={isHydrated ? clientLocale : i18n.locale}
+            messages={isHydrated ? clientMessages : i18n.messages}
+            timeZone={timeZone}
           >
-            <ConfirmDialogProvider>
-              <NavigationGuardProvider>
-                <SidebarProvider>{children}</SidebarProvider>
-                <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
-              </NavigationGuardProvider>
-            </ConfirmDialogProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </NextIntlClientProvider>
+            <QueryClientProvider client={queryClient}>
+              <ConfirmDialogProvider>
+                <NavigationGuardProvider>
+                  <SidebarProvider>{children}</SidebarProvider>
+                  <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+                </NavigationGuardProvider>
+              </ConfirmDialogProvider>
+            </QueryClientProvider>
+          </NextIntlClientProvider>
+        </AuthGuard>
+      </ThemeProvider>
     </Suspense>
   )
 }
