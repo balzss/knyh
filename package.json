@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "vitest",
+    "test": "vitest --watch=false",
     "test:ci": "vitest run --reporter=dot --coverage=false",
     "migrate": "node scripts/migrate-to-sqlite.mjs",
     "export:json": "node scripts/export-to-json.mjs"

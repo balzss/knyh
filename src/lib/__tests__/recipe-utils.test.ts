@@ -11,14 +11,15 @@ describe('recipe-utils parseMarkdown', () => {
     expect(r.title).toBe('Test Recipe')
     expect(r.ingredients).toEqual([{ label: '', items: ['item 1', 'item 2'] }])
     expect(r.instructions).toEqual(['Do something', 'Do next'])
-    expect(r.metadata).toEqual({ yield: '', totalTime: '' })
+    expect(r.yield).toBe('')
+    expect(r.totalTime).toBe('')
   })
 
   it('parses frontmatter with synonyms (servings & duration)', () => {
     const md = `# Fancy\n---\nservings: 4 people\nduration: 45m\n---\n- a\n- b\n\n1. cook\n2. eat`
     const [r] = parseMarkdown(md)
-    expect(r.metadata.yield).toBe('4 people')
-    expect(r.metadata.totalTime).toBe('45m')
+    expect(r.yield).toBe('4 people')
+    expect(r.totalTime).toBe('45m')
   })
 
   it('parses multiple recipes in one markdown', () => {
@@ -26,7 +27,8 @@ describe('recipe-utils parseMarkdown', () => {
     const parsed = parseMarkdown(md)
     expect(parsed.length).toBe(2)
     expect(parsed[0].title).toBe('R1')
-    expect(parsed[1].metadata).toEqual({ yield: '2', totalTime: '10m' })
+    expect(parsed[1].yield).toBe('2')
+    expect(parsed[1].totalTime).toBe('10m')
   })
 
   it('returns empty array for blank input', () => {
@@ -64,10 +66,11 @@ describe('recipe-utils recipeToMarkdown', () => {
       ingredients: [{ label: '', items: ['ing 1', 'ing 2'] }],
       instructions: ['Do A', 'Do B'],
       tags: [],
-      metadata: { yield: '3', totalTime: '15m' },
+      yield: '3',
+      totalTime: '15m',
       archived: false,
-      createdAt: '2025-01-01T00:00:00.000Z',
-      lastModified: '2025-01-01T00:00:00.000Z',
+      createdAt: new Date('2025-01-01T00:00:00.000Z'),
+      updatedAt: new Date('2025-01-01T00:00:00.000Z'),
     }
     const md = recipeToMarkdown(recipe)
     const parsed = parseMarkdown(md)
@@ -76,6 +79,7 @@ describe('recipe-utils recipeToMarkdown', () => {
     expect(r.title).toBe(recipe.title)
     expect(r.ingredients).toEqual(recipe.ingredients)
     expect(r.instructions).toEqual(recipe.instructions)
-    expect(r.metadata).toEqual(recipe.metadata)
+    expect(r.yield).toBe(recipe.yield)
+    expect(r.totalTime).toBe(recipe.totalTime)
   })
 })
