@@ -207,7 +207,7 @@ export function RecipeCard({
           </div>
         )}
         <div
-          className={`ml-auto flex gap-1 [&_button]:h-7 [&_button]:w-7 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
+          className={`ml-auto flex gap-2 [&_a]:h-7 [&_a]:w-7 [&_button]:h-7 [&_button]:w-7 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >
           {archivedMode ? (
             editor && (
