@@ -104,6 +104,17 @@ describe('recipes', () => {
     expect(list.map((r) => r.id)).not.toContain(created.id)
   })
 
+  it('saves a recipe without ingredients or instructions', async () => {
+    const response = await asEditor('/api/recipes', {
+      method: 'POST',
+      json: [{ title: 'Just a title' }],
+    })
+    expect(response.status).toBe(201)
+    const [recipe] = (await response.json()) as Array<Recipe & Record<string, unknown>>
+    expect(recipe.ingredients).toEqual([])
+    expect(recipe.instructions).toEqual([])
+  })
+
   it('rejects invalid payloads', async () => {
     const empty = await asEditor('/api/recipes', { method: 'POST', json: [] })
     const notArray = await asEditor('/api/recipes', { method: 'POST', json: recipeBody() })

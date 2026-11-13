@@ -154,9 +154,9 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               icon={<X />}
               tooltip={t('closeRecipe')}
               onClick={handleClosePage}
-              className="mr-auto sm:mr-4 "
+              className="mr-2"
             />
-            <span className="mr-4 font-bold ">{recipe.title}</span>
+            <span className="mr-auto font-bold">{recipe.title}</span>
             <div className="flex gap-2 items-center">
               {editor && (
                 <IconButton
@@ -166,7 +166,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 />
               )}
               <ShareDialog
-                recipeId={recipeId}
+                title={recipe.title}
                 trigger={<IconButton icon={<Share2 />} tooltip={t('shareRecipe')} />}
                 recipeUrl={window.location.href}
               />

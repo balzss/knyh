@@ -92,6 +92,7 @@
   },
   "FormView": {
     "invalidRecipeData": "Recipe data is invalid",
+    "saveFailed": "Could not save the recipe.",
     "recipeUpdated": "Recipe updated successfully!",
     "recipeCreated": "Recipe created successfully!",
     "recipeTitle": "Recipe title",
@@ -144,6 +145,12 @@
     "recipeNotFoundDesc": "The recipe you're looking for doesn't exist or may have been deleted.",
     "backToHome": "Back to home",
     "recipeArchived": "Recipe archived"
+  },
+  "ShareDialog": {
+    "title": "Share recipe",
+    "urlCopied": "URL copied to clipboard",
+    "copy": "Copy URL",
+    "shareViaDevice": "Share via device"
   },
   "ShoppingListPage": {
     "title": "Shopping list",

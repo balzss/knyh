@@ -13,7 +13,7 @@ import {
   TopBar,
   TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes, useRecipeMutations, useViewPreferences } from '@/hooks'
+import { useRecipes, useRecipeMutations, useTags, useViewPreferences } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
 import type { Tag } from '@/lib/types'
@@ -37,7 +37,7 @@ export default function HomePage() {
     archived: false,
     tags: tagParam,
   })
-  const filterTags = recipes[0]?.tags || []
+  const { tags: filterTags } = useTags({ ids: tagParam })
   const { updateRecipes } = useRecipeMutations()
 
   // Construct the current path with search parameters for the sidebar

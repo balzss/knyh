@@ -47,11 +47,11 @@
     "edit": "Recept szerkesztése",
     "share": "Megosztás",
     "archive": "Archiválás",
-    "duplicate": "Másolás",
+    "duplicate": "Duplikálás",
     "moreOptions": "További lehetőségek",
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
-    "recipeDuplicated": "Recept lemásolva",
+    "recipeDuplicated": "Recept duplikálva",
     "undo": "Visszavonás"
   },
   "HomePage": {
@@ -92,6 +92,7 @@
   },
   "FormView": {
     "invalidRecipeData": "Érvénytelen recept adatok",
+    "saveFailed": "A recept mentése nem sikerült.",
     "recipeUpdated": "Recept sikeresen frissítve!",
     "recipeCreated": "Recept sikeresen létrehozva!",
     "recipeTitle": "Recept neve",
@@ -144,6 +145,12 @@
     "recipeNotFoundDesc": "A keresett recept nem létezik vagy törölve lett.",
     "backToHome": "Vissza a főoldalra",
     "recipeArchived": "Recept archiválva"
+  },
+  "ShareDialog": {
+    "title": "Recept megosztása",
+    "urlCopied": "Az URL a vágólapra másolva",
+    "copy": "URL másolása",
+    "shareViaDevice": "Megosztás az eszközön"
   },
   "ShoppingListPage": {
     "title": "Bevásárló lista",

@@ -35,12 +35,14 @@ describe('recipe-utils parseMarkdown', () => {
     expect(parseMarkdown('   \n\n')).toEqual([])
   })
 
-  it('ignores invalid blocks missing ingredients or instructions', () => {
-    const md = `# OnlyTitle\n\n# WithIngredientsOnly\n- a\n- b\n\n# Good One\n- a\n\n1. step`
-    const parsed = parseMarkdown(md)
-    // Only the last one is valid
-    expect(parsed.length).toBe(1)
-    expect(parsed[0].title).toBe('Good One')
+  it('accepts recipes without ingredients or instructions', () => {
+    const md = `# OnlyTitle\n\n# WithIngredientsOnly\n- a\n- b\n\n# WithStepsOnly\n\n1. step`
+    const [title, ingredients, steps] = parseMarkdown(md)
+    expect(title).toMatchObject({ title: 'OnlyTitle', ingredients: [], instructions: [] })
+    expect(ingredients.ingredients).toEqual([{ label: '', items: ['a', 'b'] }])
+    expect(ingredients.instructions).toEqual([])
+    expect(steps.ingredients).toEqual([])
+    expect(steps.instructions).toEqual(['step'])
   })
 
   it('handles ingredients as GroupData with empty label', () => {

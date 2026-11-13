@@ -106,10 +106,9 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
     i++
   }
 
-  if (!ingredients.length || !instructions.length) return null
   return {
     title,
-    ingredients: [{ label: '', items: ingredients }], // Convert string[] to GroupData[]
+    ingredients: ingredients.length ? [{ label: '', items: ingredients }] : [], // Convert string[] to GroupData[]
     instructions,
     yield: yieldValue,
     totalTime: totalTimeValue,

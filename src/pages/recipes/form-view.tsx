@@ -16,6 +16,7 @@ import {
   myToast,
 } from '@/components/custom'
 import { getRecipeViewUrl } from '@/lib/urls'
+import { getErrorMessage } from '@/lib/utils'
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import type { Tag, Recipe, RecipeDraft } from '@/lib/types'
 import type { DraftGetter } from './edit-recipe-view'
@@ -54,6 +55,8 @@ export default function FormView({
     formState: { isDirty, isValid, errors },
   } = useForm<RecipeForm>({
     defaultValues: {
+      ingredients: [],
+      instructions: [],
       ...initialRecipe,
       tags: initialTags,
     },
@@ -101,6 +104,9 @@ export default function FormView({
     },
   })
 
+  const showSaveError = (error: unknown) =>
+    myToast({ message: `${t('saveFailed')} ${getErrorMessage(error)}` })
+
   const onSubmit: SubmitHandler<RecipeForm> = (submitData) => {
     if (!isValid) {
       myToast({
@@ -116,6 +122,7 @@ export default function FormView({
           id: initialRecipe.id,
         },
         {
+          onError: showSaveError,
           onSuccess: (updatedRecipe) => {
             navigate(getRecipeViewUrl(updatedRecipe.id))
             myToast({
@@ -126,6 +133,7 @@ export default function FormView({
       )
     } else {
       createRecipe.mutate(submitData, {
+        onError: showSaveError,
         onSuccess: (newlyCreatedRecipes) => {
           navigate(getRecipeViewUrl(newlyCreatedRecipes[0].id))
           myToast({

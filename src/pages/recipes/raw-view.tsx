@@ -9,6 +9,7 @@ import './custom-prism-theme.css'
 import { Button } from '@/components/ui/button'
 import { PageLayout, HelpDialog, LlmPrompt, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
+import { getErrorMessage } from '@/lib/utils'
 import type { Recipe, RecipeDraft } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
 import type { DraftGetter } from './edit-recipe-view'
@@ -60,13 +61,11 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
     }
   }, [draftGetter, code, parsed, base])
 
-  const isValid =
-    parsed.length > 0 &&
-    parsed.every(
-      (r) =>
-        r.title && r.ingredients.some((group) => group.items.length > 0) && r.instructions.length
-    )
+  const isValid = parsed.length > 0 && parsed.every((r) => r.title)
   const isSaving = createRecipe.isPending || updateRecipe.isPending
+
+  const showSaveError = (error: unknown) =>
+    myToast({ message: `${tForm('saveFailed')} ${getErrorMessage(error)}` })
 
   const handleSave = () => {
     if (!isValid || isSaving) return
@@ -87,6 +86,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
       }))
 
       createRecipe.mutate(payloads, {
+        onError: showSaveError,
         onSuccess: (created) => {
           navigate(`/recipes/${created[0].id}`)
           myToast({
@@ -113,6 +113,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         updateRecipe.mutate(
           { id: initialRecipe.id, data: payload },
           {
+            onError: showSaveError,
             onSuccess: (updated) => {
               navigate(`/recipes/${updated.id}`)
               myToast({ message: tForm('recipeUpdated') })
@@ -121,6 +122,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         )
       } else {
         createRecipe.mutate(payload, {
+          onError: showSaveError,
           onSuccess: (created) => {
             navigate(`/recipes/${created[0].id}`)
             myToast({ message: tForm('recipeCreated') })

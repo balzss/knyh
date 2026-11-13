@@ -12,7 +12,6 @@ import {
   Users,
   Timer,
   ArchiveRestore,
-  Trash2,
   Copy,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -25,7 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { IconButton, myToast, ShareDialog, Highlight } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
-import { useRecipeMutations, useConfirmDialog, useLongPress, useFormatTotalTime } from '@/hooks'
+import { useRecipeMutations, useLongPress, useFormatTotalTime } from '@/hooks'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'
 import { useEditMode } from '@/providers/EditModeProvider'
 
@@ -39,14 +38,6 @@ type RecipeCardProps = {
   highlight?: string
 }
 
-/*
- * Card spacing, on a 4 px grid. The gap grows with the level of grouping:
- *   4 px (1)   inside one line: icon and its label, the title and its meta line
- *   8 px (2)   between siblings: tags, action buttons, meta items
- *  12 px (3)   between groups in the card, and between cards (see PageLayout)
- *  16 px (4)   the card's inset (12 px on phones)
- * Padding lives on the Card only. The header and footer have none of their own.
- */
 export function RecipeCard({
   tags,
   isSelected = false,
@@ -59,18 +50,15 @@ export function RecipeCard({
   const t = useTranslations('RecipeCard')
   const { editor } = useEditMode()
   const formatTotalTime = useFormatTotalTime()
-  const { updateRecipe, deleteRecipe, createRecipe } = useRecipeMutations()
-  const { confirmDelete } = useConfirmDialog()
+  const { updateRecipe, createRecipe } = useRecipeMutations()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
-  const { bind: longPressBind, wasLongPress } = useLongPress(() => {
-    onSelect?.(!isSelected)
-  })
-
-  const handleDeleteRecipe = useCallback(async () => {
-    const confirmed = await confirmDelete({ name: recipeData.title })
-    if (confirmed) deleteRecipe.mutate(recipeData.id)
-  }, [confirmDelete, recipeData.title, recipeData.id, deleteRecipe])
+  const { bind: longPressBind, wasLongPress } = useLongPress(
+    () => {
+      onSelect?.(!isSelected)
+    },
+    { enabled: !selectionMode }
+  )
 
   const handleDuplicateRecipe = useCallback(async () => {
     const { id: _id, ...recipeDataWithoutId } = recipeData
@@ -111,6 +99,49 @@ export function RecipeCard({
   const { title, yield: recipeYield, totalTime, id } = recipeData
   const recipeUrl = `${window.location.origin}${getRecipeViewUrl(id)}`
 
+  const headerContent = (
+    <>
+      <CardTitle className={cn('leading-snug', onSelect && 'pr-8')}>
+        <h3>
+          <Highlight text={title} term={highlight} />
+        </h3>
+      </CardTitle>
+      <CardDescription className="flex items-center gap-2 select-none sm:select-text">
+        {recipeYield && (
+          <div className="flex gap-1 items-center">
+            <Users size="1rem" /> {recipeYield}
+          </div>
+        )}
+        {formatTotalTime(totalTime) && (
+          <div className="flex gap-1 items-center">
+            <Timer size="1rem" /> {formatTotalTime(totalTime)}
+          </div>
+        )}
+      </CardDescription>
+      <div
+        className={cn(
+          'flex absolute top-2 right-2 transition-all duration-100 ease-in-out',
+          (isHovered || selectionMode) && !isDropdownOpen
+            ? 'opacity-100'
+            : 'sm:opacity-0 sm:invisible'
+        )}
+      >
+        {onSelect && (
+          <IconButton
+            icon={isSelected ? <CircleCheckBig /> : <Circle />}
+            tooltip={isSelected ? 'Unselect text placeholder' : 'Select text placeholder'}
+            className={cn('h-8 w-8', isSelected && 'text-primary hover:text-primary')}
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              onSelect(!isSelected)
+            }}
+          />
+        )}
+      </div>
+    </>
+  )
+
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}
@@ -122,68 +153,31 @@ export function RecipeCard({
           setIsHovered(false)
         }
       }}
-      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''}`}
+      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''} ${selectionMode ? 'cursor-pointer select-none' : ''}`}
       tabIndex={0}
+      onClick={selectionMode ? () => onSelect?.(!isSelected) : undefined}
       {...longPressBind}
       role="article"
       aria-label={`Recipe: ${title}`}
     >
       <CardHeader className="p-0">
-        <Link
-          to={getRecipeViewUrl(id)}
-          className="flex flex-col gap-1"
-          onClick={(e) => {
-            if (wasLongPress()) {
-              e.preventDefault()
-              e.stopPropagation()
-              return
-            }
-          }}
-          onContextMenu={(e) => {
-            if (selectionMode) {
-              e.preventDefault()
-            }
-          }}
-        >
-          <CardTitle className={cn('leading-snug', onSelect && 'pr-8')}>
-            <h3>
-              <Highlight text={title} term={highlight} />
-            </h3>
-          </CardTitle>
-          <CardDescription className="flex items-center gap-2 select-none sm:select-text">
-            {recipeYield && (
-              <div className="flex gap-1 items-center">
-                <Users size="1rem" /> {recipeYield}
-              </div>
-            )}
-            {formatTotalTime(totalTime) && (
-              <div className="flex gap-1 items-center">
-                <Timer size="1rem" /> {formatTotalTime(totalTime)}
-              </div>
-            )}
-          </CardDescription>
-          <div
-            className={cn(
-              'flex absolute top-2 right-2 transition-all duration-100 ease-in-out',
-              (isHovered || selectionMode) && !isDropdownOpen
-                ? 'opacity-100'
-                : 'sm:opacity-0 sm:invisible'
-            )}
+        {selectionMode ? (
+          <div className="flex flex-col gap-1">{headerContent}</div>
+        ) : (
+          <Link
+            to={getRecipeViewUrl(id)}
+            className="flex flex-col gap-1"
+            onClick={(e) => {
+              if (wasLongPress()) {
+                e.preventDefault()
+                e.stopPropagation()
+                return
+              }
+            }}
           >
-            {onSelect && (
-              <IconButton
-                icon={isSelected ? <CircleCheckBig /> : <Circle />}
-                tooltip={isSelected ? 'Unselect text placeholder' : 'Select text placeholder'}
-                className={cn('h-8 w-8', isSelected && 'text-primary hover:text-primary')}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  onSelect(!isSelected)
-                }}
-              />
-            )}
-          </div>
-        </Link>
+            {headerContent}
+          </Link>
+        )}
       </CardHeader>
       <CardFooter className="mt-auto flex-col items-stretch gap-3 p-0 sm:flex-row sm:flex-wrap sm:items-end">
         {/* Tags and actions share a row from sm up and stack on phones. Each tag line is as tall
@@ -194,10 +188,10 @@ export function RecipeCard({
             {tags.map((tag) => (
               <Badge
                 key={tag.id}
-                className={cn('my-[3px]', !archivedMode && 'cursor-pointer')}
+                className={cn('my-[3px]', !archivedMode && !selectionMode && 'cursor-pointer')}
                 variant={archivedMode ? 'outline' : 'default'}
               >
-                {archivedMode ? (
+                {archivedMode || selectionMode ? (
                   tag.displayName
                 ) : (
                   <Link to={`/?tag=${tag.id}`}>{tag.displayName}</Link>
@@ -211,20 +205,12 @@ export function RecipeCard({
         >
           {archivedMode ? (
             editor && (
-              <>
-                <IconButton
-                  icon={<ArchiveRestore />}
-                  tooltip={t('restore')}
-                  iconSize="small"
-                  onClick={() => handleArchiveRecipe(false)}
-                />
-                <IconButton
-                  icon={<Trash2 />}
-                  tooltip={t('delete')}
-                  iconSize="small"
-                  onClick={handleDeleteRecipe}
-                />
-              </>
+              <IconButton
+                icon={<ArchiveRestore />}
+                tooltip={t('restore')}
+                iconSize="small"
+                onClick={() => handleArchiveRecipe(false)}
+              />
             )
           ) : (
             <>
@@ -237,18 +223,10 @@ export function RecipeCard({
                 />
               )}
               <ShareDialog
-                recipeId={title.replaceAll(' ', '-').toLowerCase()}
+                title={title}
                 trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
                 recipeUrl={recipeUrl}
               />
-              {editor && (
-                <IconButton
-                  icon={<Archive />}
-                  tooltip={t('archive')}
-                  iconSize="small"
-                  onClick={() => handleArchiveRecipe()}
-                />
-              )}
               {editor && (
                 <DropdownMenu onOpenChange={setIsDropdownOpen}>
                   <DropdownMenuTrigger asChild>
@@ -263,9 +241,9 @@ export function RecipeCard({
                       <Copy className="mr-2 h-4 w-4" />
                       {t('duplicate')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleDeleteRecipe}>
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      {t('delete')}
+                    <DropdownMenuItem onClick={() => handleArchiveRecipe()}>
+                      <Archive className="mr-2 h-4 w-4" />
+                      {t('archive')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

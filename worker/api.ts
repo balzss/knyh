@@ -13,8 +13,8 @@ const groupSchema = z.object({ label: z.string(), items: z.array(z.string()) })
 
 const recipeSchema = z.object({
   title: z.string().trim().min(1).max(500),
-  ingredients: z.array(groupSchema),
-  instructions: z.array(z.string()),
+  ingredients: z.array(groupSchema).default([]),
+  instructions: z.array(z.string()).default([]),
   tags: z.array(z.object({ id: z.string() })).default([]),
   totalTime: z.string().nullable().optional(),
   yield: z.string().nullable().optional(),
@@ -52,7 +52,8 @@ api.use('*', async (c, next) => {
 
 api.onError((error, c) => {
   if (error instanceof ZodError) {
-    return c.json({ message: 'Invalid request', issues: error.issues }, 400)
+    const detail = error.issues.map((issue) => [...issue.path, issue.message].join(': ')).join('; ')
+    return c.json({ message: `Invalid request (${detail})`, issues: error.issues }, 400)
   }
   if (error instanceof SyntaxError) {
     return c.json({ message: 'Invalid JSON body' }, 400)

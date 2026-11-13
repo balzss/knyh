@@ -1,4 +1,5 @@
 import { Clipboard, Share } from 'lucide-react'
+import { useTranslations } from 'use-intl'
 import {
   Dialog,
   DialogContent,
@@ -12,13 +13,14 @@ import { myToast } from '@/components/custom'
 
 type ShareDialogProps = {
   trigger: React.ReactNode
-  recipeId: string
+  title: string
   recipeUrl: string
 }
 
-export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) {
+export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
+  const t = useTranslations('ShareDialog')
   const handleCopyUrl = () => {
-    myToast({ message: 'URL copied to clipboard' })
+    myToast({ message: t('urlCopied') })
     navigator.clipboard.writeText(recipeUrl || '')
   }
 
@@ -26,7 +28,7 @@ export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) 
     if (navigator.share) {
       navigator
         .share({
-          title: recipeId,
+          title,
           url: recipeUrl,
         })
         .catch((error) => console.error('Error sharing:', error))
@@ -40,7 +42,7 @@ export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) 
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
         <DialogHeader>
-          <DialogTitle>Share recipe</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-6 py-3">
           <div className="flex gap-3">
@@ -48,17 +50,17 @@ export function ShareDialog({ trigger, recipeId, recipeUrl }: ShareDialogProps) 
               defaultValue={recipeUrl}
               readOnly
               inputMode="none"
-              className=" selection:bg-primary selection:text-black focus-visible:ring-0"
+              className="selection:bg-primary selection:text-black focus-visible:ring-0"
             />
           </div>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={handleCopyUrl}>
               <Clipboard />
-              Copy
+              {t('copy')}
             </Button>
             <Button onClick={handleShare} variant="outline">
               <Share />
-              Share via device
+              {t('shareViaDevice')}
             </Button>
           </div>
         </div>
