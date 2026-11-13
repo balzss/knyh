@@ -26,7 +26,6 @@ import {
   ShoppingCart,
   BookOpenText,
   Dices,
-  BookOpen,
   ExternalLink,
   Pencil,
   Trash2,
@@ -266,19 +265,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="text-muted-foreground">
-              <a
-                href="https://github.com/balzss/knyh#readme"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>{t('docs')}</span>
-                <ExternalLink className="h-3 w-3 ml-auto" />
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="text-muted-foreground">
               <a href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
                 <SiGithub className="h-4 w-4" />
                 <span>{t('github')}</span>
@@ -287,9 +273,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <div className="px-2 py-1 text-xs text-muted-foreground text-center">
-          v{__APP_VERSION__}
-        </div>
       </SidebarFooter>
     </Sidebar>
   )

@@ -54,28 +54,6 @@ export default function SettingsPage() {
             </Select>
           </div>
 
-          <div className="flex flex-col items-start gap-2 mb-3">
-            <Label>{t('editMode')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {editor ? t('editModeOn') : t('editModeOff')}
-            </p>
-            {editor ? (
-              <Button asChild variant="outline">
-                <a href="/cdn-cgi/access/logout">
-                  <LogOut />
-                  {t('signOut')}
-                </a>
-              </Button>
-            ) : (
-              <Button asChild>
-                <a href="/auth/login?next=/settings">
-                  <LogIn />
-                  {t('signIn')}
-                </a>
-              </Button>
-            )}
-          </div>
-
           {editor && (
             <>
               {!configLoading && (
@@ -115,6 +93,27 @@ export default function SettingsPage() {
               </div>
             </>
           )}
+          <div className="flex flex-col items-start gap-2 mt-6">
+            <Label>{t('editMode')}</Label>
+            <p className="text-sm text-muted-foreground">
+              {editor ? t('editModeOn') : t('editModeOff')}
+            </p>
+            {editor ? (
+              <Button asChild variant="outline">
+                <a href="/cdn-cgi/access/logout">
+                  <LogOut />
+                  {t('signOut')}
+                </a>
+              </Button>
+            ) : (
+              <Button asChild>
+                <a href="/auth/login?next=/settings">
+                  <LogIn />
+                  {t('signIn')}
+                </a>
+              </Button>
+            )}
+          </div>
         </PageLayout>
       </main>
     </div>

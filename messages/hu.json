@@ -7,8 +7,7 @@
     "archive": "Archívum",
     "settings": "Beállítások",
     "new-recipe-button": "Új recept",
-    "github": "GitHub",
-    "docs": "Dokumentáció"
+    "github": "GitHub"
   },
   "TagActions": {
     "renameTag": "Címke átnevezése",
@@ -178,8 +177,6 @@
     "clearSelection": "Kijelölés megszűntetése",
     "selectAll": "Összes kijelölése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
-    "loading": "Betöltés...",
-    "signOut": "Kijelentkezés",
     "filterAndViewOptions": "Szűrő és nézet opciók",
     "sortBy": "Rendezés",
     "random": "Véletlenszerű",
@@ -190,10 +187,7 @@
     "layout": "Elrendezés",
     "list": "Lista",
     "grid": "Rács",
-    "maxCols": "Max oszlop: {cols}",
-    "editModeOn": "Szerkesztés bekapcsolva",
-    "editModeOff": "Csak megtekintés",
-    "signIn": "Belépés a szerkesztéshez"
+    "maxCols": "Max oszlop: {cols}"
   },
   "ConfirmDialog": {
     "deleteTitle": "{name} törlése",

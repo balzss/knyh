@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Menu } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
-import { IconButton, UserMenu } from '@/components/custom'
+import { IconButton } from '@/components/custom'
 
 type TopBarProps = {
   customTopbarContent?: React.ReactNode
@@ -31,8 +31,6 @@ export function TopBar({
       </Link>
 
       <div className="flex-1 items-center">{customTopbarContent}</div>
-
-      <UserMenu hideSidebarToggleMobile={hideSidebarToggleMobile} />
     </nav>
   )
 }

@@ -7,8 +7,7 @@
     "archive": "Archive",
     "settings": "Settings",
     "new-recipe-button": "New recipe",
-    "github": "GitHub",
-    "docs": "Documentation"
+    "github": "GitHub"
   },
   "TagActions": {
     "renameTag": "Rename tag",
@@ -178,8 +177,6 @@
     "clearSelection": "Clear selection",
     "selectAll": "Select all",
     "toggleSidebar": "Toggle sidebar",
-    "loading": "Loading...",
-    "signOut": "Sign Out",
     "filterAndViewOptions": "Filter and view options",
     "sortBy": "Sort by",
     "random": "Random",
@@ -190,10 +187,7 @@
     "layout": "Layout",
     "list": "List",
     "grid": "Grid",
-    "maxCols": "Max cols: {cols}",
-    "editModeOn": "Edit mode on",
-    "editModeOff": "View only",
-    "signIn": "Sign in to edit"
+    "maxCols": "Max cols: {cols}"
   },
   "ConfirmDialog": {
     "deleteTitle": "Delete \"{name}\"",
