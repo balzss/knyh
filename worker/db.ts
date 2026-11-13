@@ -2,7 +2,7 @@ import type { DatabaseSchema, GroupData, ShoppingListItem, Tag, UserConfig } fro
 import { generateId } from '../src/lib/id'
 
 /** A recipe as sent over the wire: dates are ISO strings. */
-export type RecipeJson = {
+type RecipeJson = {
   id: string
   title: string
   ingredients: GroupData[]
@@ -15,7 +15,7 @@ export type RecipeJson = {
   updatedAt: string
 }
 
-export type RecipeInput = {
+type RecipeInput = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
@@ -89,7 +89,7 @@ export async function listRecipes(db: D1Database, archived?: boolean): Promise<R
   return results.map((row) => toRecipe(row, tags.get(row.id) ?? []))
 }
 
-export async function getRecipe(db: D1Database, id: string): Promise<RecipeJson | null> {
+async function getRecipe(db: D1Database, id: string): Promise<RecipeJson | null> {
   const row = await db.prepare('SELECT * FROM recipes WHERE id = ?').bind(id).first<RecipeRow>()
   if (!row) return null
   const tags = await tagsByRecipe(db, id)
@@ -190,14 +190,6 @@ export async function listTags(db: D1Database): Promise<Tag[]> {
     .prepare('SELECT id, display_name FROM tags ORDER BY display_name')
     .all<{ id: string; display_name: string }>()
   return results.map((row) => ({ id: row.id, displayName: row.display_name }))
-}
-
-export async function getTag(db: D1Database, id: string): Promise<Tag | null> {
-  const row = await db
-    .prepare('SELECT id, display_name FROM tags WHERE id = ?')
-    .bind(id)
-    .first<{ id: string; display_name: string }>()
-  return row ? { id: row.id, displayName: row.display_name } : null
 }
 
 export async function createTag(db: D1Database, displayName: string): Promise<Tag> {

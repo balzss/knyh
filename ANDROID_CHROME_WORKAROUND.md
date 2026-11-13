@@ -10,7 +10,7 @@ We temporarily change the input type to `type="search"` on Android Chrome mobile
 
 ### Files Modified
 1. `src/components/ui/input.tsx` - Added detection and conditional type switching
-2. `src/app/globals.css` - Added CSS to remove search input styling
+2. `src/globals.css` - Added CSS to remove search input styling
 
 ### Detection Logic
 - Only applies on Android devices

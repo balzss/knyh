@@ -14,7 +14,7 @@ export interface ConfirmDialogContextType {
   confirm: (options: ConfirmDialogOptions) => Promise<boolean>
 }
 
-export interface UseConfirmDialogExtended extends ConfirmDialogContextType {
+interface UseConfirmDialogExtended extends ConfirmDialogContextType {
   confirmDelete: (params: { name?: string }) => Promise<boolean>
 }
 

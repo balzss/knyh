@@ -12,9 +12,6 @@
   "TagActions": {
     "renameTag": "Címke átnevezése",
     "removeTag": "Címke törlése",
-    "deleteTagDialogTitle": "Címke törlése",
-    "deleteTagDialogDescription": "Ez eltávolítja a \"{name}\" címkét minden receptből ({count} érintett). A művelet nem visszavonható.",
-    "deleting": "Törlés...",
     "delete": "Törlés",
     "cancel": "Mégse",
     "tagRenamed": "Címke átnevezve",
@@ -36,7 +33,6 @@
     "editModeOff": "Jelentkezz be a receptek hozzáadásához vagy módosításához.",
     "signIn": "Belépés",
     "signOut": "Kilépés",
-    "viewOnly": "Csak a tulajdonos módosíthatja a beállításokat és az adatokat.",
     "system": "Rendszer"
   },
   "RecipeCard": {
@@ -96,7 +92,6 @@
     "recipeTitle": "Recept neve",
     "recipeTitleRequired": "A recept neve kötelező",
     "ingredients": "Hozzávalók",
-    "addIngredient": "Új hozzávaló",
     "instructions": "Elkészítés",
     "addInstruction": "Következő lépés",
     "tags": "Címkék",
@@ -104,7 +99,6 @@
     "saveRecipe": "Recept mentése",
     "unsavedChanges": "Nem mentett változások",
     "unsavedChangesDescription": "Vannak nem mentett változásaid. Biztosan el akarod hagyni ezt az oldalt?",
-    "unsavedChangesWarning": "Vannak nem mentett változásaid. Biztosan el akarod hagyni?",
     "leave": "Elhagy",
     "stay": "Marad"
   },
@@ -127,7 +121,6 @@
     "recipeDeleted": "Recept sikeresen törölve!",
     "undo": "Visszavonás",
     "closeRecipe": "Recept bezárása",
-    "presentationMode": "Prezentációs mód",
     "editRecipe": "Recept szerkesztése",
     "shareRecipe": "Recept megosztása",
     "deleteRecipe": "Recept törlése",
@@ -178,7 +171,6 @@
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
     "clearSelection": "Kijelölés megszűntetése",
-    "selectAll": "Összes kijelölése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
     "filterAndViewOptions": "Szűrő és nézet opciók",
     "sortBy": "Rendezés",

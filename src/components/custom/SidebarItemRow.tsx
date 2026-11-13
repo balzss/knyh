@@ -10,7 +10,7 @@ import { MoreVertical } from 'lucide-react'
 import { useLongPress } from '@/hooks'
 import { useTranslations } from 'use-intl'
 
-export interface SidebarAction {
+interface SidebarAction {
   key: string
   label: string
   icon?: React.ReactNode

@@ -1,7 +1,7 @@
 // Recipe parsing & serialization utilities extracted from raw-view for reuse.
 import type { Recipe, GroupData } from './types'
 
-export type ParsedRecipe = {
+type ParsedRecipe = {
   title: string
   ingredients: GroupData[]
   instructions: string[]

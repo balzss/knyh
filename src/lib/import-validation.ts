@@ -5,7 +5,7 @@ import type { DatabaseSchema, Tag, UserConfig, GroupData } from './types'
  * Validation functions for import data
  */
 
-export function isValidGroupData(obj: unknown): obj is GroupData {
+function isValidGroupData(obj: unknown): obj is GroupData {
   if (typeof obj !== 'object' || obj === null) return false
   const record = obj as Record<string, unknown>
 
@@ -18,7 +18,7 @@ export function isValidGroupData(obj: unknown): obj is GroupData {
   )
 }
 
-export function isValidTag(obj: unknown): obj is Tag {
+function isValidTag(obj: unknown): obj is Tag {
   if (typeof obj !== 'object' || obj === null) return false
   const record = obj as Record<string, unknown>
 
@@ -30,7 +30,7 @@ export function isValidTag(obj: unknown): obj is Tag {
   )
 }
 
-export function isValidUserConfig(obj: unknown): obj is UserConfig {
+function isValidUserConfig(obj: unknown): obj is UserConfig {
   if (typeof obj !== 'object' || obj === null) return false
   const record = obj as Record<string, unknown>
 
@@ -43,7 +43,7 @@ export function isValidUserConfig(obj: unknown): obj is UserConfig {
 }
 
 // Import-specific recipe validation (handles legacy format)
-export function isValidImportRecipe(obj: unknown): obj is any {
+function isValidImportRecipe(obj: unknown): obj is any {
   if (typeof obj !== 'object' || obj === null) return false
   const record = obj as Record<string, unknown>
 

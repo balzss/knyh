@@ -12,9 +12,6 @@
   "TagActions": {
     "renameTag": "Rename tag",
     "removeTag": "Remove tag",
-    "deleteTagDialogTitle": "Delete tag",
-    "deleteTagDialogDescription": "This will remove the tag \"{name}\" from all recipes ({count} affected). This action cannot be undone.",
-    "deleting": "Deleting...",
     "delete": "Delete",
     "cancel": "Cancel",
     "tagRenamed": "Tag renamed",
@@ -36,7 +33,6 @@
     "editModeOff": "Sign in to add or change recipes.",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "viewOnly": "Only the owner can change settings or data.",
     "system": "System"
   },
   "RecipeCard": {
@@ -96,7 +92,6 @@
     "recipeTitle": "Recipe title",
     "recipeTitleRequired": "Recipe title is required",
     "ingredients": "Ingredients",
-    "addIngredient": "Add ingredient",
     "instructions": "Instructions",
     "addInstruction": "Add instruction",
     "tags": "Tags",
@@ -104,7 +99,6 @@
     "saveRecipe": "Save recipe",
     "unsavedChanges": "Unsaved Changes",
     "unsavedChangesDescription": "You have unsaved changes. Are you sure you want to leave this page?",
-    "unsavedChangesWarning": "You have unsaved changes. Are you sure you want to leave?",
     "leave": "Leave",
     "stay": "Stay"
   },
@@ -127,7 +121,6 @@
     "recipeDeleted": "Recipe deleted successfully!",
     "undo": "Undo",
     "closeRecipe": "Close recipe",
-    "presentationMode": "View in presentation mode",
     "editRecipe": "Edit recipe",
     "shareRecipe": "Share recipe",
     "deleteRecipe": "Delete recipe",
@@ -178,7 +171,6 @@
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
     "clearSelection": "Clear selection",
-    "selectAll": "Select all",
     "toggleSidebar": "Toggle sidebar",
     "filterAndViewOptions": "Filter and view options",
     "sortBy": "Sort by",
