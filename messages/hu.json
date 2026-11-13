@@ -116,7 +116,12 @@
     "ruleIngredientsSimple": "Hozzávalók: soronként egy - jellel.",
     "ruleInstructionsSimple": "Üres sor, majd minden lépés külön sor (számozhatod vagy kihagyhatod).",
     "ruleBulk": "Több: új recept egy új # címsorral.",
-    "hintTips": "A lépések megjelenítéskor számozódnak; saját számozás is rendben. Tartsd egyszerűen; extra üres sorok figyelmen kívül vannak hagyva."
+    "hintTips": "A lépések megjelenítéskor számozódnak; saját számozás is rendben. Tartsd egyszerűen; extra üres sorok figyelmen kívül vannak hagyva.",
+    "llmPromptTitle": "Prompt nyelvi modellhez",
+    "llmPromptHint": "Másold be a ChatGPT-be, a Claude-ba vagy másik asszisztensbe, majd írd utána a recept szövegét. A válasz közvetlenül beilleszthető a szerkesztőbe.",
+    "copyPrompt": "Prompt másolása",
+    "promptCopied": "Másolva",
+    "copyFailed": "A prompt másolása nem sikerült"
   },
   "RecipeView": {
     "recipeDeleted": "Recept sikeresen törölve!",

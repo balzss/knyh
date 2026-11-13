@@ -116,7 +116,12 @@
     "ruleIngredientsSimple": "Ingredients: one per line starting with - .",
     "ruleInstructionsSimple": "Blank line, then each instruction on its own line (you can add numbers or leave them off).",
     "ruleBulk": "Bulk: just add another # Heading to start a new recipe.",
-    "hintTips": "Steps are numbered when displayed; adding numbers yourself is fine too. Keep it simple; extra blank lines ignored."
+    "hintTips": "Steps are numbered when displayed; adding numbers yourself is fine too. Keep it simple; extra blank lines ignored.",
+    "llmPromptTitle": "Prompt for an LLM",
+    "llmPromptHint": "Paste this into ChatGPT, Claude or another assistant, then add your recipe text after it. The reply can be pasted straight into the editor.",
+    "copyPrompt": "Copy prompt",
+    "promptCopied": "Copied",
+    "copyFailed": "Could not copy the prompt"
   },
   "RecipeView": {
     "recipeDeleted": "Recipe deleted successfully!",

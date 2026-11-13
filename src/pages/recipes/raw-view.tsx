@@ -7,7 +7,7 @@ import { highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-markdown'
 import './custom-prism-theme.css'
 import { Button } from '@/components/ui/button'
-import { PageLayout, HelpDialog, myToast } from '@/components/custom'
+import { PageLayout, HelpDialog, LlmPrompt, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
 import type { Recipe, RecipeDraft } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
@@ -191,6 +191,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
                 <li>{t('ruleBulk')}</li>
               </ul>
               <p className="text-xs text-muted-foreground">{t('hintTips')}</p>
+              <LlmPrompt />
             </div>
           }
         />

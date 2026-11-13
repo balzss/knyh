@@ -21,7 +21,7 @@ export function HelpDialog({ trigger, title, content }: HelpDialogProps) {
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-6 py-3">{content}</div>
+        <div className="grid max-h-[70vh] gap-6 overflow-y-auto py-3">{content}</div>
       </DialogContent>
     </Dialog>
   )
