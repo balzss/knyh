@@ -20,7 +20,7 @@
   ],
   // Cloudflare Access settings. See README for where to find these values.
   "vars": {
-    "TEAM_DOMAIN": "",
-    "POLICY_AUD": ""
+    "TEAM_DOMAIN": "bsaros.cloudflareaccess.com",
+    "POLICY_AUD": "f71d8a0be3e292abf981008b1f8f2e288a8520dcef7c0d842329dcbe7fe556df"
   }
 }
