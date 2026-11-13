@@ -18,6 +18,10 @@ interface UseLongPressReturn {
   cancel: () => void
 }
 
+// A press that starts on a control, or inside a menu rendered through a portal, is not a long press on the
+// container. Opening a menu also swallows the pointer-up, so the timer would otherwise fire and select the card.
+const IGNORED_TARGETS = 'button, [role="menu"], [role="menuitem"], [role="dialog"]'
+
 export function useLongPress(
   callback: () => void,
   { delay = 500, enabled = true }: UseLongPressOptions = {}
@@ -32,16 +36,20 @@ export function useLongPress(
     startTimeRef.current = 0
   }, [])
 
-  const start = useCallback(() => {
-    if (!enabled) return
-    activatedRef.current = false
-    startTimeRef.current = Date.now()
-    clear()
-    timeoutRef.current = window.setTimeout(() => {
-      activatedRef.current = true
-      callback()
-    }, delay)
-  }, [callback, delay, enabled, clear])
+  const start = useCallback(
+    (e?: React.TouchEvent | React.PointerEvent) => {
+      if (!enabled) return
+      if (e?.target instanceof Element && e.target.closest(IGNORED_TARGETS)) return
+      activatedRef.current = false
+      startTimeRef.current = Date.now()
+      clear()
+      timeoutRef.current = window.setTimeout(() => {
+        activatedRef.current = true
+        callback()
+      }, delay)
+    },
+    [callback, delay, enabled, clear]
+  )
 
   const end = useCallback(
     (e: React.TouchEvent | React.PointerEvent) => {
