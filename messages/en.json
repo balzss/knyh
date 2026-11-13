@@ -139,7 +139,7 @@
     "moreOptions": "More options",
     "ingredients": "Ingredients",
     "instructions": "Instructions",
-    "lastModified": "Last modified",
+    "modified": "Modified",
     "created": "Created",
     "recipeNotFound": "Recipe not found",
     "recipeNotFoundDesc": "The recipe you're looking for doesn't exist or may have been deleted.",

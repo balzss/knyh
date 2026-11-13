@@ -139,7 +139,7 @@
     "moreOptions": "További lehetőségek",
     "ingredients": "Hozzávalók",
     "instructions": "Elkészítés",
-    "lastModified": "Utoljára módosítva",
+    "modified": "Módosítva",
     "created": "Létrehozva",
     "recipeNotFound": "Recept nem található",
     "recipeNotFoundDesc": "A keresett recept nem létezik vagy törölve lett.",

@@ -29,6 +29,7 @@ import {
   ScaleDialog,
   myToast,
   Loader,
+  RelativeTime,
 } from '@/components/custom'
 import { useRecipes, useRecipeMutations, useConfirmDialog, useFormatTotalTime } from '@/hooks'
 import { useEditMode } from '@/providers/EditModeProvider'
@@ -204,23 +205,29 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                 trigger={<IconButton icon={<Share2 />} tooltip={t('shareRecipe')} />}
                 recipeUrl={window.location.href}
               />
-              {editor && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleArchiveRecipe}>
-                      <Archive className="mr-2 h-4 w-4" />
-                      {t('archiveRecipe')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleDeleteRecipe}>
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      {t('deleteRecipe')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setScaleOpen(true)}>
+                    <Calculator className="mr-2 h-4 w-4" />
+                    {t('adjustAmounts')}
+                  </DropdownMenuItem>
+                  {editor && (
+                    <>
+                      <DropdownMenuItem onClick={handleArchiveRecipe}>
+                        <Archive className="mr-2 h-4 w-4" />
+                        {t('archiveRecipe')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleDeleteRecipe}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {t('deleteRecipe')}
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         }
@@ -268,13 +275,6 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                     ×{formatAmount(factor, separator)}
                   </button>
                 )}
-                <IconButton
-                  icon={<Calculator />}
-                  tooltip={t('adjustAmounts')}
-                  iconSize="small"
-                  className="text-muted-foreground"
-                  onClick={() => setScaleOpen(true)}
-                />
               </div>
             </div>
             <ScaleDialog
@@ -336,12 +336,12 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           <div className="mt-8 text-xs italic text-muted-foreground">
             {recipe?.updatedAt && (
               <p>
-                {t('lastModified')}: {recipe.updatedAt.toString()}
+                {t('modified')}: <RelativeTime date={recipe.updatedAt} />
               </p>
             )}
             {recipe?.createdAt && (
               <p className="mt-1">
-                {t('created')}: {recipe.createdAt.toString()}
+                {t('created')}: <RelativeTime date={recipe.createdAt} />
               </p>
             )}
           </div>

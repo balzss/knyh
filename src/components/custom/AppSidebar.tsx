@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   X,
   Tags,
@@ -36,6 +37,11 @@ import { myToast, RenameTagDialog, SidebarItemRow } from '@/components/custom'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
+
+const buildTime = new Date(__BUILD_TIME__).toLocaleString([], {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+})
 
 type AppSidebarProps = {
   path?: string
@@ -269,13 +275,20 @@ export function AppSidebar({ path }: AppSidebarProps) {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-          <p className="px-2 text-xs text-muted-foreground" title={__BUILD_TIME__}>
-            {new Date(__BUILD_TIME__).toLocaleString([], {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            })}{' '}
-            · {__BUILD_SHA__}
-          </p>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="w-full px-2 text-center text-xs text-muted-foreground"
+                title={buildTime}
+              >
+                {__BUILD_SHA__}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent side="top" className="w-auto px-3 py-2 text-xs">
+              {buildTime}
+            </PopoverContent>
+          </Popover>
         </SidebarFooter>
       </Sidebar>
       <RenameTagDialog tag={renamingTag} onClose={() => setRenamingTag(null)} />
