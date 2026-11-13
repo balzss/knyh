@@ -12,8 +12,7 @@
     {
       "binding": "DB",
       "database_name": "knyh",
-      // Replace with the id printed by `npx wrangler d1 create knyh`.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "33d069fa-537e-4467-aa56-9bc540c70589",
       "migrations_dir": "migrations"
     }
   ],
