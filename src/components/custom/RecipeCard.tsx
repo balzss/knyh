@@ -185,22 +185,27 @@ export function RecipeCard({
           </div>
         </Link>
       </CardHeader>
-      <CardFooter className="mt-auto flex-wrap items-end justify-between gap-x-3 gap-y-2 p-0">
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <Badge
-              key={tag.id}
-              className={archivedMode ? '' : 'cursor-pointer'}
-              variant={archivedMode ? 'outline' : 'default'}
-            >
-              {archivedMode ? (
-                tag.displayName
-              ) : (
-                <Link to={`/?tag=${tag.id}`}>{tag.displayName}</Link>
-              )}
-            </Badge>
-          ))}
-        </div>
+      <CardFooter className="mt-auto flex-col items-stretch gap-3 p-0 sm:flex-row sm:flex-wrap sm:items-end">
+        {/* Tags and actions share a row from sm up and stack on phones. Each tag line is as tall
+            as an action button (28 px, so 3 px above and below the 22 px tag), which keeps their
+            centres on one line even when the tags wrap. */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+            {tags.map((tag) => (
+              <Badge
+                key={tag.id}
+                className={cn('my-[3px]', !archivedMode && 'cursor-pointer')}
+                variant={archivedMode ? 'outline' : 'default'}
+              >
+                {archivedMode ? (
+                  tag.displayName
+                ) : (
+                  <Link to={`/?tag=${tag.id}`}>{tag.displayName}</Link>
+                )}
+              </Badge>
+            ))}
+          </div>
+        )}
         <div
           className={`ml-auto flex gap-1 [&_button]:h-7 [&_button]:w-7 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >
