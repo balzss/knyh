@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,6 +16,8 @@ interface SidebarAction {
   label: string
   icon?: React.ReactNode
   onSelect: () => void
+  /** The action opens a dialog, which takes focus. The menu must not hand it back to its trigger. */
+  opensDialog?: boolean
 }
 
 interface SidebarItemRowProps {
@@ -42,6 +45,7 @@ export function SidebarItemRow({
 }: SidebarItemRowProps) {
   const tTag = useTranslations('TagActions')
   const { bind, wasLongPress } = useLongPress(() => onOpenChange(true), { enabled: isMobile })
+  const dialogOpenedRef = useRef(false)
 
   return (
     <div className="flex items-center gap-1 group/tagrow w-full" {...bind}>
@@ -88,12 +92,21 @@ export function SidebarItemRow({
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent
+            align="end"
+            onCloseAutoFocus={(event) => {
+              if (dialogOpenedRef.current) {
+                event.preventDefault()
+                dialogOpenedRef.current = false
+              }
+            }}
+          >
             {actions.map((a) => (
               <button
                 key={a.key}
                 onClick={(e) => {
                   e.preventDefault()
+                  dialogOpenedRef.current = !!a.opensDialog
                   a.onSelect()
                 }}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm w-full text-left hover:bg-accent focus:bg-accent rounded-sm"

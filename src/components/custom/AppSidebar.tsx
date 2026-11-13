@@ -32,7 +32,7 @@ import {
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import { useTags, useTagMutations, useConfirmDialog } from '@/hooks'
-import { myToast, SidebarItemRow } from '@/components/custom'
+import { myToast, RenameTagDialog, SidebarItemRow } from '@/components/custom'
 import type { Tag } from '@/lib/types'
 import { getErrorMessage } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
@@ -47,9 +47,10 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const { isMobile, setOpenMobile } = useSidebar()
   const { editor } = useEditMode()
   const { tags } = useTags()
-  const { renameTag, deleteTag } = useTagMutations()
+  const { deleteTag } = useTagMutations()
   const { confirmDelete } = useConfirmDialog()
   const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
+  const [renamingTag, setRenamingTag] = useState<Tag | null>(null)
 
   // Extract tags from URL parameters if present
   const getSelectedTagsFromPath = (currentPath?: string) => {
@@ -113,167 +114,164 @@ export function AppSidebar({ path }: AppSidebarProps) {
   ]
 
   return (
-    <Sidebar>
-      {isMobile && (
-        <SidebarHeader className="p-3">
-          <div className="flex justify-between items-center">
-            <Link
-              className="text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md"
-              to="/"
-              onClick={() => setOpenMobile(false)}
-            >
-              KONYHA
-            </Link>
-            <Button variant="ghost" size="icon" onClick={() => setOpenMobile(false)}>
-              <X />
-            </Button>
-          </div>
-        </SidebarHeader>
-      )}
-      <SidebarContent className={isMobile ? '' : 'mt-16'}>
-        <SidebarGroup>
-          {editor && (
-            <div className="mb-4">
-              <Button
-                variant={path === '/new' ? 'outline' : 'default'}
-                className="font-bold py-4 px-3"
-                asChild={path !== '/new'}
-                disabled={path === '/new'}
+    <>
+      <Sidebar>
+        {isMobile && (
+          <SidebarHeader className="p-3">
+            <div className="flex justify-between items-center">
+              <Link
+                className="text-2xl font-bold focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-background focus:rounded-md"
+                to="/"
+                onClick={() => setOpenMobile(false)}
               >
-                {path !== '/new' ? (
-                  <Link to="/recipes/new" onClick={() => setOpenMobile(false)}>
-                    <FilePlus />
-                    <span>{t('new-recipe-button')}</span>
-                  </Link>
-                ) : (
-                  <>
-                    <FilePlus />
-                    <span>{t('new-recipe-button')}</span>
-                  </>
-                )}
+                KONYHA
+              </Link>
+              <Button variant="ghost" size="icon" onClick={() => setOpenMobile(false)}>
+                <X />
               </Button>
             </div>
-          )}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarItems(tags).map((item) => {
-                if (item.subItems) {
-                  return (
-                    <Collapsible
-                      key={item.displayName}
-                      asChild
-                      defaultOpen={true}
-                      className="group/collapsible"
-                    >
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton>
-                            {item.icon}
-                            <span>{item.displayName}</span>
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.subItems.map((subItem) => (
-                              <SidebarItemRow
-                                alwaysShowActionsOnMobile={false}
-                                key={subItem.id}
-                                href={subItem.href}
-                                displayName={subItem.displayName}
-                                isMobile={isMobile}
-                                open={menuOpenForTag === subItem.id}
-                                onOpenChange={(open) => setMenuOpenForTag(open ? subItem.id : null)}
-                                onNavigate={() => setOpenMobile(false)}
-                                isActive={subItem.isActive}
-                                actions={
-                                  !editor
-                                    ? []
-                                    : [
-                                        {
-                                          key: 'rename',
-                                          label: tTag('renameTag'),
-                                          icon: <Pencil className="h-4 w-4" />,
-                                          onSelect: () => {
-                                            const newName =
-                                              window.prompt(
-                                                tTag('renamePrompt'),
-                                                subItem.displayName
-                                              ) || ''
-                                            const trimmed = newName.trim()
-                                            if (!trimmed || trimmed === subItem.displayName) return
-                                            renameTag.mutate(
-                                              { id: subItem.id, displayName: trimmed },
-                                              {
-                                                onSuccess: () =>
-                                                  myToast({ message: tTag('tagRenamed') }),
-                                                onError: (error: unknown) =>
-                                                  myToast({
-                                                    message: getErrorMessage(error, 'Error'),
-                                                  }),
-                                              }
-                                            )
-                                          },
-                                        },
-                                        {
-                                          key: 'delete',
-                                          label: tTag('removeTag'),
-                                          icon: <Trash2 className="h-4 w-4" />,
-                                          onSelect: async () => {
-                                            const confirmed = await confirmDelete({
-                                              name: subItem.displayName,
-                                            })
-                                            if (confirmed) {
-                                              deleteTag.mutate(subItem.id, {
-                                                onSuccess: () => {
-                                                  myToast({ message: tTag('tagDeleted') })
-                                                },
-                                                onError: (e: unknown) => {
-                                                  myToast({ message: getErrorMessage(e, 'Error') })
-                                                },
+          </SidebarHeader>
+        )}
+        <SidebarContent className={isMobile ? '' : 'mt-16'}>
+          <SidebarGroup>
+            {editor && (
+              <div className="mb-4">
+                <Button
+                  variant={path === '/new' ? 'outline' : 'default'}
+                  className="font-bold py-4 px-3"
+                  asChild={path !== '/new'}
+                  disabled={path === '/new'}
+                >
+                  {path !== '/new' ? (
+                    <Link to="/recipes/new" onClick={() => setOpenMobile(false)}>
+                      <FilePlus />
+                      <span>{t('new-recipe-button')}</span>
+                    </Link>
+                  ) : (
+                    <>
+                      <FilePlus />
+                      <span>{t('new-recipe-button')}</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {sidebarItems(tags).map((item) => {
+                  if (item.subItems) {
+                    return (
+                      <Collapsible
+                        key={item.displayName}
+                        asChild
+                        defaultOpen={true}
+                        className="group/collapsible"
+                      >
+                        <SidebarMenuItem>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton>
+                              {item.icon}
+                              <span>{item.displayName}</span>
+                              <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {item.subItems.map((subItem) => (
+                                <SidebarItemRow
+                                  alwaysShowActionsOnMobile={false}
+                                  key={subItem.id}
+                                  href={subItem.href}
+                                  displayName={subItem.displayName}
+                                  isMobile={isMobile}
+                                  open={menuOpenForTag === subItem.id}
+                                  onOpenChange={(open) =>
+                                    setMenuOpenForTag(open ? subItem.id : null)
+                                  }
+                                  onNavigate={() => setOpenMobile(false)}
+                                  isActive={subItem.isActive}
+                                  actions={
+                                    !editor
+                                      ? []
+                                      : [
+                                          {
+                                            key: 'rename',
+                                            opensDialog: true,
+                                            label: tTag('renameTag'),
+                                            icon: <Pencil className="h-4 w-4" />,
+                                            onSelect: () => {
+                                              setMenuOpenForTag(null)
+                                              setRenamingTag({
+                                                id: subItem.id,
+                                                displayName: subItem.displayName,
                                               })
-                                            }
+                                            },
                                           },
-                                        },
-                                      ]
-                                }
-                              />
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                  )
-                }
+                                          {
+                                            key: 'delete',
+                                            opensDialog: true,
+                                            label: tTag('removeTag'),
+                                            icon: <Trash2 className="h-4 w-4" />,
+                                            onSelect: async () => {
+                                              setMenuOpenForTag(null)
+                                              const confirmed = await confirmDelete({
+                                                name: subItem.displayName,
+                                              })
+                                              if (confirmed) {
+                                                deleteTag.mutate(subItem.id, {
+                                                  onSuccess: () => {
+                                                    myToast({ message: tTag('tagDeleted') })
+                                                  },
+                                                  onError: (e: unknown) => {
+                                                    myToast({
+                                                      message: getErrorMessage(e, 'Error'),
+                                                    })
+                                                  },
+                                                })
+                                              }
+                                            },
+                                          },
+                                        ]
+                                  }
+                                />
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </SidebarMenuItem>
+                      </Collapsible>
+                    )
+                  }
 
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive={item.isActive ?? path === item.href}>
-                      <Link to={item.href} onClick={() => setOpenMobile(false)}>
-                        {item.icon}
-                        <span>{item.displayName}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="text-muted-foreground">
-              <a href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
-                <SiGithub className="h-4 w-4" />
-                <span>{t('github')}</span>
-                <ExternalLink className="h-3 w-3 ml-auto" />
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton asChild isActive={item.isActive ?? path === item.href}>
+                        <Link to={item.href} onClick={() => setOpenMobile(false)}>
+                          {item.icon}
+                          <span>{item.displayName}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className="text-muted-foreground">
+                <a href="https://github.com/balzss/knyh" target="_blank" rel="noopener noreferrer">
+                  <SiGithub className="h-4 w-4" />
+                  <span>{t('github')}</span>
+                  <ExternalLink className="h-3 w-3 ml-auto" />
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      <RenameTagDialog tag={renamingTag} onClose={() => setRenamingTag(null)} />
+    </>
   )
 }

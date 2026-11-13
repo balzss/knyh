@@ -16,8 +16,12 @@
     "cancel": "Cancel",
     "tagRenamed": "Tag renamed",
     "tagDeleted": "Tag deleted",
-    "renamePrompt": "Rename tag",
-    "actionsAriaLabel": "Actions for {name}"
+    "actionsAriaLabel": "Actions for {name}",
+    "renameDescription": "Recipes that use this tag keep it under the new name.",
+    "tagNameLabel": "Tag name",
+    "rename": "Rename",
+    "tagNameTaken": "A tag with this name already exists.",
+    "renameFailed": "Could not rename the tag. Try again."
   },
   "SettingsPage": {
     "settings": "Settings",

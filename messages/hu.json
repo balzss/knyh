@@ -16,8 +16,12 @@
     "cancel": "Mégse",
     "tagRenamed": "Címke átnevezve",
     "tagDeleted": "Címke törölve",
-    "renamePrompt": "Címke átnevezése",
-    "actionsAriaLabel": "Műveletek: {name}"
+    "actionsAriaLabel": "Műveletek: {name}",
+    "renameDescription": "A címkét használó receptek az új néven tartják meg.",
+    "tagNameLabel": "Címke neve",
+    "rename": "Átnevezés",
+    "tagNameTaken": "Már van ilyen nevű címke.",
+    "renameFailed": "A címke átnevezése nem sikerült. Próbáld újra."
   },
   "SettingsPage": {
     "settings": "Beállítások",
