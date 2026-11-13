@@ -269,6 +269,13 @@ export function AppSidebar({ path }: AppSidebarProps) {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          <p className="px-2 text-xs text-muted-foreground" title={__BUILD_TIME__}>
+            {new Date(__BUILD_TIME__).toLocaleString([], {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })}{' '}
+            · {__BUILD_SHA__}
+          </p>
         </SidebarFooter>
       </Sidebar>
       <RenameTagDialog tag={renamingTag} onClose={() => setRenamingTag(null)} />
