@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { DatabaseSchema, Tag, UserConfig, GroupData } from './types'
+import { normalizeTotalTime } from './time'
 
 /**
  * Validation functions for import data
@@ -133,7 +134,8 @@ export function normalizeImportData(data: any): DatabaseSchema {
       }
 
       // Handle legacy metadata format
-      const totalTime = recipe.metadata?.totalTime || recipe.totalTime || null
+      const rawTotalTime = recipe.metadata?.totalTime || recipe.totalTime || null
+      const totalTime = rawTotalTime ? normalizeTotalTime(rawTotalTime) || null : null
       const yield_ = recipe.metadata?.yield || recipe.yield || null
 
       // Normalize dates

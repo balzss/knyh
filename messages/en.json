@@ -161,11 +161,7 @@
     "minutes": "Minutes",
     "cancel": "Cancel",
     "set": "Set",
-    "totalTime": "Total time:",
-    "hourShort": "hr",
-    "hoursShort": "hrs",
-    "minuteShort": "min",
-    "minutesShort": "mins"
+    "totalTime": "Total time:"
   },
   "TopBar": {
     "searchRecipes": "Search recipes",
@@ -199,5 +195,9 @@
     "title": "Sign in to edit",
     "description": "Only the owner can add or change recipes and use the shopping list.",
     "signIn": "Sign in"
+  },
+  "Time": {
+    "hours": "hrs",
+    "minutes": "mins"
   }
 }

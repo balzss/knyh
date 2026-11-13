@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { IconButton, myToast, ShareDialog, Highlight } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
-import { useRecipeMutations, useConfirmDialog, useLongPress } from '@/hooks'
+import { useRecipeMutations, useConfirmDialog, useLongPress, useFormatTotalTime } from '@/hooks'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'
 import { useEditMode } from '@/providers/EditModeProvider'
 
@@ -50,6 +50,7 @@ export function RecipeCard({
 }: RecipeCardProps) {
   const t = useTranslations('RecipeCard')
   const { editor } = useEditMode()
+  const formatTotalTime = useFormatTotalTime()
   const { updateRecipe, deleteRecipe, createRecipe } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
   const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -148,9 +149,9 @@ export function RecipeCard({
                 <Users size="1rem" /> {recipeYield}
               </div>
             )}
-            {totalTime && (
+            {formatTotalTime(totalTime) && (
               <div className="flex gap-1 items-center">
-                <Timer size="1rem" /> {totalTime}
+                <Timer size="1rem" /> {formatTotalTime(totalTime)}
               </div>
             )}
           </CardDescription>

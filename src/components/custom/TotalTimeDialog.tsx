@@ -13,6 +13,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { useFormatTotalTime } from '@/hooks'
+import { parseTotalTime, normalizeTotalTime } from '@/lib/time'
 
 type TotalTimeDialogProps = {
   totalTimeValue: string
@@ -23,31 +25,30 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
   const t = useTranslations('TotalTimeDialog')
   const [open, setOpen] = useState<boolean>(false)
 
-  const [initialHours, initialMinutes] = (totalTimeValue || ':').split(':')
-  const [hours, setHours] = useState<string>(initialHours)
-  const [minutes, setMinutes] = useState<string>(initialMinutes)
+  const formatTotalTime = useFormatTotalTime()
 
-  const handleOpenChange = (prevOpen: boolean) => {
-    setOpen(prevOpen)
-    if (!prevOpen) {
-      const splitTotalTime = totalTimeValue.split(':')
-      setHours(splitTotalTime[0])
-      setMinutes(splitTotalTime[1])
+  // The inputs show the stored time, and start over from it each time the dialog opens
+  const toInputs = (time: string) => {
+    const parsed = parseTotalTime(time)
+    return {
+      hours: parsed?.hours ? String(parsed.hours) : '',
+      minutes: parsed?.minutes ? String(parsed.minutes) : '',
     }
   }
+  const [hours, setHours] = useState<string>(() => toInputs(totalTimeValue).hours)
+  const [minutes, setMinutes] = useState<string>(() => toInputs(totalTimeValue).minutes)
 
-  const formatTotalTime = (time: string) => {
-    const splitTime = time.split(':')
-    const hours = Number(splitTime[0])
-    const minutes = Number(splitTime[1])
-    const formattedHours = hours > 0 ? `${hours} ${t(hours > 1 ? 'hoursShort' : 'hourShort')}` : ''
-    const formattedMinutes =
-      minutes > 0 ? `${minutes} ${t(minutes > 1 ? 'minutesShort' : 'minuteShort')}` : ''
-    return [formattedHours, formattedMinutes].join(' ')
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      const inputs = toInputs(totalTimeValue)
+      setHours(inputs.hours)
+      setMinutes(inputs.minutes)
+    }
+    setOpen(nextOpen)
   }
 
   const handleSetValue = () => {
-    onTotalTimeValueChange(`${hours}:${minutes}`)
+    onTotalTimeValueChange(normalizeTotalTime(`${hours || 0}:${minutes || 0}`))
     setOpen(false)
   }
 
@@ -62,7 +63,7 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
       <DialogTrigger asChild>
         <Button variant="outline">
           <Timer />
-          {totalTimeValue ? (
+          {formatTotalTime(totalTimeValue) ? (
             <>
               {t('totalTime')}{' '}
               <span className="font-normal">{formatTotalTime(totalTimeValue)}</span>

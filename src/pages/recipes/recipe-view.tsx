@@ -19,7 +19,7 @@ import {
   myToast,
   Loader,
 } from '@/components/custom'
-import { useRecipes, useRecipeMutations, useConfirmDialog } from '@/hooks'
+import { useRecipes, useRecipeMutations, useConfirmDialog, useFormatTotalTime } from '@/hooks'
 import { useEditMode } from '@/providers/EditModeProvider'
 import { getRecipeEditUrl } from '@/lib/urls'
 
@@ -34,6 +34,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const navigate = useNavigate()
   const t = useTranslations('RecipeView')
   const { confirmDelete } = useConfirmDialog()
+  const formatTotalTime = useFormatTotalTime()
 
   const { recipes, loading } = useRecipes({ ids: [recipeId], sort: 'random' })
   const recipe = recipes?.[0]
@@ -196,12 +197,16 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
           <div className="flex flex-col gap-1">
             <h1 className="font-bold text-3xl md:text-4xl">{recipe?.title}</h1>
             <div className="text-muted-foreground flex gap-4">
-              <div className="flex gap-1 items-center">
-                <Users size="1rem" /> {recipe?.yield}
-              </div>
-              <div className="flex gap-1 items-center">
-                <Timer size="1rem" /> {recipe?.totalTime}
-              </div>
+              {recipe?.yield && (
+                <div className="flex gap-1 items-center">
+                  <Users size="1rem" /> {recipe.yield}
+                </div>
+              )}
+              {formatTotalTime(recipe?.totalTime) && (
+                <div className="flex gap-1 items-center">
+                  <Timer size="1rem" /> {formatTotalTime(recipe?.totalTime)}
+                </div>
+              )}
             </div>
             <div className="flex gap-3 flex-wrap mt-3">
               {recipe?.tags.map(({ id, displayName }) => (

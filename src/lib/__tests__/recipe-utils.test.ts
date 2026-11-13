@@ -19,7 +19,7 @@ describe('recipe-utils parseMarkdown', () => {
     const md = `# Fancy\n---\nservings: 4 people\nduration: 45m\n---\n- a\n- b\n\n1. cook\n2. eat`
     const [r] = parseMarkdown(md)
     expect(r.yield).toBe('4 people')
-    expect(r.totalTime).toBe('45m')
+    expect(r.totalTime).toBe('0:45')
   })
 
   it('parses multiple recipes in one markdown', () => {
@@ -28,7 +28,7 @@ describe('recipe-utils parseMarkdown', () => {
     expect(parsed.length).toBe(2)
     expect(parsed[0].title).toBe('R1')
     expect(parsed[1].yield).toBe('2')
-    expect(parsed[1].totalTime).toBe('10m')
+    expect(parsed[1].totalTime).toBe('0:10')
   })
 
   it('returns empty array for blank input', () => {
@@ -66,7 +66,7 @@ describe('recipe-utils recipeToMarkdown', () => {
       instructions: ['Do A', 'Do B'],
       tags: [],
       yield: '3',
-      totalTime: '15m',
+      totalTime: '0:15',
       archived: false,
       createdAt: new Date('2025-01-01T00:00:00.000Z'),
       updatedAt: new Date('2025-01-01T00:00:00.000Z'),

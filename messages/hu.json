@@ -161,11 +161,7 @@
     "minutes": "Perc",
     "cancel": "Mégse",
     "set": "Beállítás",
-    "totalTime": "Teljes idő:",
-    "hourShort": "óra",
-    "hoursShort": "óra",
-    "minuteShort": "perc",
-    "minutesShort": "perc"
+    "totalTime": "Teljes idő:"
   },
   "TopBar": {
     "searchRecipes": "Receptek keresése",
@@ -199,5 +195,9 @@
     "title": "Belépés a szerkesztéshez",
     "description": "Csak a tulajdonos adhat hozzá vagy módosíthat recepteket, és használhatja a bevásárlólistát.",
     "signIn": "Belépés"
+  },
+  "Time": {
+    "hours": "óra",
+    "minutes": "perc"
   }
 }

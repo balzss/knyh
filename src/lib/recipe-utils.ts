@@ -1,5 +1,6 @@
 // Recipe parsing & serialization utilities extracted from raw-view for reuse.
 import type { Recipe, GroupData } from './types'
+import { normalizeTotalTime } from './time'
 
 type ParsedRecipe = {
   title: string
@@ -69,7 +70,7 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
           const value = kv[2].trim()
           if (key === 'yield' || key === 'servings') yieldValue = value
           else if (key === 'time' || key === 'total_time' || key === 'duration')
-            totalTimeValue = value
+            totalTimeValue = normalizeTotalTime(value)
         }
       }
       i++
