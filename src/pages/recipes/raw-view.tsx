@@ -1,38 +1,64 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type MutableRefObject } from 'react'
 import { useTranslations } from 'use-intl'
 import { FileWarning, Save, HelpCircle } from 'lucide-react'
-import Editor from 'react-simple-code-editor'
+import EditorModule from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-markdown'
 import './custom-prism-theme.css'
 import { Button } from '@/components/ui/button'
 import { PageLayout, HelpDialog, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
-import type { Recipe } from '@/lib/types'
-import { parseMarkdown, recipeToMarkdown } from '@/lib/recipe-utils'
+import type { Recipe, RecipeDraft } from '@/lib/types'
+import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
+import type { DraftGetter } from './edit-recipe-view'
+
+// The package is CommonJS (`exports.default = Editor`). Depending on the bundler's interop, the default
+// import is the component itself or the whole exports object, so accept both.
+const Editor =
+  (EditorModule as unknown as { default?: typeof EditorModule }).default ?? EditorModule
 
 type RawViewProps = {
   initialRecipe?: Recipe
+  /** Content carried over from form mode */
+  draft?: RecipeDraft | null
+  draftGetter?: MutableRefObject<DraftGetter | null>
 }
 
-export default function RawView({ initialRecipe }: RawViewProps) {
+export default function RawView({ initialRecipe, draft, draftGetter }: RawViewProps) {
   const t = useTranslations('RawView')
   const tForm = useTranslations('FormView') // reuse success messages
   const navigate = useNavigate()
   const { createRecipe, updateRecipe } = useRecipeMutations()
 
-  const [code, setCode] = useState('')
+  // What the markdown is based on: the carried-over draft, else the recipe being edited
+  const base = draft ?? initialRecipe ?? null
+  const [code, setCode] = useState(() => (base ? recipeToMarkdown(base) : ''))
   const parsed = useMemo(() => parseMarkdown(code), [code])
   const isMultipleRecipes = parsed.length > 1
   const firstRecipe = parsed[0] || null
 
-  // Prefill when editing
+  // Let the parent read the markdown when switching to form mode. Tags and ingredient groups
+  // can't be written in markdown, so they come from what the markdown was based on.
   useEffect(() => {
-    if (initialRecipe) {
-      setCode(recipeToMarkdown(initialRecipe))
+    if (!draftGetter) return
+    draftGetter.current = () => {
+      if (!code.trim()) return null
+      if (parsed.length !== 1) return undefined
+      const [recipe] = parsed
+      return {
+        title: recipe.title,
+        ingredients: mergeIngredientGroups(base?.ingredients, recipe.ingredients),
+        instructions: recipe.instructions,
+        tags: base?.tags ?? [],
+        totalTime: recipe.totalTime || null,
+        yield: recipe.yield || null,
+      }
     }
-  }, [initialRecipe])
+    return () => {
+      draftGetter.current = null
+    }
+  }, [draftGetter, code, parsed, base])
 
   const isValid =
     parsed.length > 0 &&
@@ -75,7 +101,7 @@ export default function RawView({ initialRecipe }: RawViewProps) {
         title: firstRecipe.title,
         ingredients: firstRecipe.ingredients,
         instructions: firstRecipe.instructions,
-        tags: initialRecipe ? initialRecipe.tags : [],
+        tags: base?.tags ?? [],
         totalTime: firstRecipe.totalTime || initialRecipe?.totalTime || '',
         yield: firstRecipe.yield || initialRecipe?.yield || '',
         archived: initialRecipe?.archived ?? false,

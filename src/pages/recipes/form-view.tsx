@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, type MutableRefObject } from 'react'
 import { useTranslations } from 'use-intl'
 import { Save } from 'lucide-react'
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
@@ -17,7 +17,8 @@ import {
 } from '@/components/custom'
 import { getRecipeViewUrl } from '@/lib/urls'
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
-import type { Tag, Recipe } from '@/lib/types'
+import type { Tag, Recipe, RecipeDraft } from '@/lib/types'
+import type { DraftGetter } from './edit-recipe-view'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
   tags: Tag[]
@@ -26,9 +27,17 @@ type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
 type FormViewProps = {
   initialRecipe?: Recipe
   resetTrigger?: number
+  /** Content carried over from markdown mode */
+  draft?: RecipeDraft | null
+  draftGetter?: MutableRefObject<DraftGetter | null>
 }
 
-export default function FormView({ initialRecipe, resetTrigger }: FormViewProps) {
+export default function FormView({
+  initialRecipe,
+  resetTrigger,
+  draft,
+  draftGetter,
+}: FormViewProps) {
   const t = useTranslations('FormView')
   const navigate = useNavigate()
   const { createRecipe, updateRecipe } = useRecipeMutations()
@@ -41,6 +50,7 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
     control,
     handleSubmit,
     reset,
+    getValues,
     formState: { isDirty, isValid, errors },
   } = useForm<RecipeForm>({
     defaultValues: {
@@ -53,6 +63,32 @@ export default function FormView({ initialRecipe, resetTrigger }: FormViewProps)
   useEffect(() => {
     reset()
   }, [resetTrigger, reset])
+
+  // Apply what was entered in markdown mode. Keeping the original defaults makes the form dirty,
+  // so it still counts as unsaved and the save button follows the usual rules.
+  useEffect(() => {
+    if (draft) reset({ ...getValues(), ...draft }, { keepDefaultValues: true })
+  }, [draft, reset, getValues])
+
+  // Let the parent read the form when switching to markdown mode
+  useEffect(() => {
+    if (!draftGetter) return
+    draftGetter.current = () => {
+      if (!isDirty) return null
+      const values = getValues()
+      return {
+        title: values.title ?? '',
+        ingredients: values.ingredients ?? [],
+        instructions: values.instructions ?? [],
+        tags: values.tags ?? [],
+        totalTime: values.totalTime ?? null,
+        yield: values.yield ?? null,
+      }
+    }
+    return () => {
+      draftGetter.current = null
+    }
+  }, [draftGetter, getValues, isDirty])
 
   // Block navigation when there are unsaved changes
   useFormNavigationGuard({

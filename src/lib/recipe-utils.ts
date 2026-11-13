@@ -116,7 +116,9 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
 }
 
 /** Serialize a Recipe entity into markdown understood by parseMarkdown. */
-export function recipeToMarkdown(recipe: Recipe): string {
+export function recipeToMarkdown(
+  recipe: Pick<Recipe, 'title' | 'ingredients' | 'instructions' | 'yield' | 'totalTime'>
+): string {
   const header = `# ${recipe.title}`
 
   const frontmatter: string[] = []
@@ -131,4 +133,17 @@ export function recipeToMarkdown(recipe: Recipe): string {
     .join('\n')
   const instructions = recipe.instructions.map((s, idx) => `${idx + 1}. ${s}`).join('\n')
   return `${header}${frontmatterBlock}\n${ingredients}\n\n${instructions}`
+}
+
+/**
+ * Markdown has no ingredient groups. When its flattened list of ingredients still matches the
+ * previous one, keep the previous groups so a round trip through markdown doesn't flatten them.
+ */
+export function mergeIngredientGroups(
+  previous: GroupData[] | undefined,
+  next: GroupData[]
+): GroupData[] {
+  const flatten = (groups: GroupData[]) => groups.flatMap((group) => group.items)
+  const unchanged = previous && JSON.stringify(flatten(previous)) === JSON.stringify(flatten(next))
+  return unchanged ? previous : next
 }

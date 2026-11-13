@@ -16,6 +16,12 @@ export type Recipe = {
   updatedAt: Date
 }
 
+/** The part of a recipe the user edits. Carried between form and markdown mode. */
+export type RecipeDraft = Pick<
+  Recipe,
+  'title' | 'ingredients' | 'instructions' | 'tags' | 'totalTime' | 'yield'
+>
+
 export type Tag = {
   id: string
   displayName: string

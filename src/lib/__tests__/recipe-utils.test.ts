@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseMarkdown, recipeToMarkdown } from '@/lib/recipe-utils'
+import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
 import type { Recipe } from '@/lib/types'
 
 describe('recipe-utils parseMarkdown', () => {
@@ -80,5 +80,40 @@ describe('recipe-utils recipeToMarkdown', () => {
     expect(r.instructions).toEqual(recipe.instructions)
     expect(r.yield).toBe(recipe.yield)
     expect(r.totalTime).toBe(recipe.totalTime)
+  })
+})
+
+describe('mergeIngredientGroups', () => {
+  const grouped = [
+    { label: 'Dough', items: ['flour', 'water'] },
+    { label: 'Sauce', items: ['tomato'] },
+  ]
+  const flat = [{ label: '', items: ['flour', 'water', 'tomato'] }]
+
+  it('keeps the groups when the ingredients did not change', () => {
+    expect(mergeIngredientGroups(grouped, flat)).toBe(grouped)
+  })
+
+  it('uses the new list when an ingredient changed', () => {
+    const edited = [{ label: '', items: ['flour', 'water', 'basil'] }]
+    expect(mergeIngredientGroups(grouped, edited)).toBe(edited)
+  })
+
+  it('uses the new list when there is nothing to keep', () => {
+    expect(mergeIngredientGroups(undefined, flat)).toBe(flat)
+  })
+
+  it('survives a trip through markdown without losing groups', () => {
+    const md = recipeToMarkdown({
+      title: 'Pizza',
+      ingredients: grouped,
+      instructions: ['mix', 'bake'],
+      yield: '2',
+      totalTime: '1:00',
+    })
+    const [parsed] = parseMarkdown(md)
+    expect(parsed.title).toBe('Pizza')
+    expect(parsed.yield).toBe('2')
+    expect(mergeIngredientGroups(grouped, parsed.ingredients)).toBe(grouped)
   })
 })
