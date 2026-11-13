@@ -144,7 +144,18 @@
     "recipeNotFound": "Recipe not found",
     "recipeNotFoundDesc": "The recipe you're looking for doesn't exist or may have been deleted.",
     "backToHome": "Back to home",
-    "recipeArchived": "Recipe archived"
+    "recipeArchived": "Recipe archived",
+    "adjustAmounts": "Adjust amounts",
+    "resetAmounts": "Back to the original amounts"
+  },
+  "ScaleDialog": {
+    "title": "Adjust amounts",
+    "description": "Multiply the ingredient amounts, e.g. 2 to double the recipe or 0.5 to halve it.",
+    "multiplierLabel": "Multiplier",
+    "invalid": "Enter a number above 0, like 2, 1.5 or 1/2.",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "reset": "Reset to ×1"
   },
   "ShareDialog": {
     "title": "Share recipe",

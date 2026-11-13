@@ -144,7 +144,18 @@
     "recipeNotFound": "Recept nem található",
     "recipeNotFoundDesc": "A keresett recept nem létezik vagy törölve lett.",
     "backToHome": "Vissza a főoldalra",
-    "recipeArchived": "Recept archiválva"
+    "recipeArchived": "Recept archiválva",
+    "adjustAmounts": "Mennyiségek módosítása",
+    "resetAmounts": "Vissza az eredeti mennyiségekhez"
+  },
+  "ScaleDialog": {
+    "title": "Mennyiségek módosítása",
+    "description": "Szorozd meg a hozzávalók mennyiségét, pl. 2-vel duplázhatod, 0,5-tel felezheted a receptet.",
+    "multiplierLabel": "Szorzó",
+    "invalid": "Adj meg 0-nál nagyobb számot, pl. 2, 1,5 vagy 1/2.",
+    "cancel": "Mégse",
+    "apply": "Alkalmaz",
+    "reset": "Vissza ×1-re"
   },
   "ShareDialog": {
     "title": "Recept megosztása",

@@ -1,7 +1,17 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useTranslations } from 'use-intl'
-import { Users, Timer, X, Pen, EllipsisVertical, Share2, Trash2, Archive } from 'lucide-react'
+import { useLocale, useTranslations } from 'use-intl'
+import {
+  Users,
+  Timer,
+  X,
+  Pen,
+  EllipsisVertical,
+  Share2,
+  Trash2,
+  Archive,
+  Calculator,
+} from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -16,23 +26,47 @@ import {
   PageLayout,
   IconButton,
   ShareDialog,
+  ScaleDialog,
   myToast,
   Loader,
 } from '@/components/custom'
 import { useRecipes, useRecipeMutations, useConfirmDialog, useFormatTotalTime } from '@/hooks'
 import { useEditMode } from '@/providers/EditModeProvider'
 import { getRecipeEditUrl } from '@/lib/urls'
+import { formatAmount, scaleLine } from '@/lib/scale-quantity'
 
 type RecipeViewProps = {
   recipeId: string
 }
 
+/** Text with its scaled leading amount highlighted, so it's clear it isn't the original */
+function ScaledText({
+  text,
+  factor,
+  separator,
+}: {
+  text: string
+  factor: number
+  separator: ',' | '.'
+}) {
+  const { amount, rest } = scaleLine(text, factor, separator)
+  return (
+    <>
+      {amount && <span className="text-primary">{amount}</span>}
+      {rest}
+    </>
+  )
+}
+
 export default function RecipeView({ recipeId }: RecipeViewProps) {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set())
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
+  const [factor, setFactor] = useState(1)
+  const [scaleOpen, setScaleOpen] = useState(false)
 
   const navigate = useNavigate()
   const t = useTranslations('RecipeView')
+  const separator = useLocale() === 'hu' ? ',' : '.'
   const { confirmDelete } = useConfirmDialog()
   const formatTotalTime = useFormatTotalTime()
 
@@ -199,7 +233,10 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             <div className="text-muted-foreground flex gap-4">
               {recipe?.yield && (
                 <div className="flex gap-1 items-center">
-                  <Users size="1rem" /> {recipe.yield}
+                  <Users size="1rem" />{' '}
+                  <span>
+                    <ScaledText text={recipe.yield} factor={factor} separator={separator} />
+                  </span>
                 </div>
               )}
               {formatTotalTime(recipe?.totalTime) && (
@@ -217,7 +254,35 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <h2 className="text-xl text-muted-foreground mt-4">{t('ingredients')}</h2>
+            <div className="flex items-center justify-between mt-4">
+              <h2 className="text-xl text-muted-foreground">{t('ingredients')}</h2>
+              <div className="flex items-center gap-1">
+                {factor !== 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setFactor(1)}
+                    aria-label={t('resetAmounts')}
+                    title={t('resetAmounts')}
+                    className="text-primary text-sm font-medium px-1"
+                  >
+                    ×{formatAmount(factor, separator)}
+                  </button>
+                )}
+                <IconButton
+                  icon={<Calculator />}
+                  tooltip={t('adjustAmounts')}
+                  iconSize="small"
+                  className="text-muted-foreground"
+                  onClick={() => setScaleOpen(true)}
+                />
+              </div>
+            </div>
+            <ScaleDialog
+              open={scaleOpen}
+              onOpenChange={setScaleOpen}
+              factor={factor}
+              onApply={setFactor}
+            />
             {recipe?.ingredients?.map((group, groupIndex) => (
               <div key={groupIndex} className="mb-4">
                 {group.label && <h3 className="font-medium text-lg mb-2">{group.label}</h3>}
@@ -245,7 +310,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                           htmlFor={`ingredient-${globalIndex}`}
                           className={`${checkedIngredients.has(globalIndex) ? 'text-muted-foreground line-through' : ''}`}
                         >
-                          {ingredient}
+                          <ScaledText text={ingredient} factor={factor} separator={separator} />
                         </label>
                       </li>
                     )
