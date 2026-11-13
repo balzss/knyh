@@ -13,7 +13,7 @@ import {
   TopBar,
   TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes, useRecipeMutations, useConfig } from '@/hooks'
+import { useRecipes, useRecipeMutations, useViewPreferences } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
 import type { Tag } from '@/lib/types'
@@ -25,11 +25,11 @@ export default function HomePage() {
   const navigate = useNavigate()
   const { editor } = useEditMode()
 
-  const { data: userConfig } = useConfig()
-
-  const sortOption = userConfig?.defaultSort || 'updated-desc'
-  const selectedLayout = userConfig?.defaultLayout || 'list'
-  const layoutGridCols = userConfig?.defaultGridCols || 5
+  const {
+    sort: sortOption,
+    layout: selectedLayout,
+    gridCols: layoutGridCols,
+  } = useViewPreferences()
 
   const tagParam = searchParams.get('tag')?.split(',')
   const { recipes, loading: recipesLoading } = useRecipes({

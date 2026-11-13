@@ -28,9 +28,6 @@ const configSchema = z
   .object({
     name: z.string().max(100),
     language: z.enum(['en', 'hu']),
-    defaultSort: z.enum(['random', 'title-asc', 'title-desc', 'updated-asc', 'updated-desc']),
-    defaultLayout: z.enum(['grid', 'list']),
-    defaultGridCols: z.number().int().min(1).max(12),
   })
   .partial()
 const shoppingListSchema = z.array(z.object({ text: z.string().max(500), checked: z.boolean() }))

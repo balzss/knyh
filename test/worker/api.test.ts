@@ -177,12 +177,11 @@ describe('config', () => {
 
     const response = await asEditor('/api/config', {
       method: 'PATCH',
-      json: { language: 'hu', defaultLayout: 'grid', defaultGridCols: 4 },
+      json: { language: 'hu', name: 'Kitchen' },
     })
     expect(await response.json()).toMatchObject({
       language: 'hu',
-      defaultLayout: 'grid',
-      defaultGridCols: 4,
+      name: 'Kitchen',
     })
 
     const after = (await asEditor('/api/config', { method: 'PATCH', json: { name: 'Home' } }).then(

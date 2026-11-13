@@ -13,22 +13,14 @@ import {
 import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
-import { useConfig, useUpdateConfig } from '@/hooks'
-import type { SortOption, UserConfig } from '@/lib/types'
+import { useViewPreferences } from '@/hooks'
+import { GRID_COLS_RANGE } from '@/lib/view-preferences'
+import type { SortOption } from '@/lib/types'
 
 function DisplayOptionsMenu() {
   const t = useTranslations('TopBar')
-  const updateConfig = useUpdateConfig()
-  const { data: userConfig } = useConfig()
+  const { sort, layout, gridCols, update } = useViewPreferences()
   const [open, setOpen] = useState<boolean>(false)
-
-  const layoutGridCols = userConfig?.defaultGridCols || 5
-  const layout = userConfig?.defaultLayout || 'list'
-  const sort = userConfig?.defaultSort || 'updated-desc'
-
-  const handleUpdateConfig = (newConfig: Partial<UserConfig>) => {
-    updateConfig.mutate(newConfig)
-  }
 
   return (
     <Popover open={open} onOpenChange={(newValue) => setOpen(newValue)}>
@@ -47,10 +39,7 @@ function DisplayOptionsMenu() {
       <PopoverContent className="w-80 mx-2 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <Label htmlFor="sortSelect">{t('sortBy')}</Label>
-          <Select
-            onValueChange={(defaultSort: SortOption) => handleUpdateConfig({ defaultSort })}
-            defaultValue={sort}
-          >
+          <Select onValueChange={(newSort: SortOption) => update({ sort: newSort })} value={sort}>
             <SelectTrigger className="w-[180px]" id="sortSelect">
               <SelectValue />
             </SelectTrigger>
@@ -66,10 +55,8 @@ function DisplayOptionsMenu() {
         <div className="flex items-center justify-between">
           <Label htmlFor="layoutSelect">{t('layout')}</Label>
           <Select
-            onValueChange={(defaultLayout: 'list' | 'grid') =>
-              handleUpdateConfig({ defaultLayout })
-            }
-            defaultValue={layout}
+            onValueChange={(newLayout: 'list' | 'grid') => update({ layout: newLayout })}
+            value={layout}
           >
             <SelectTrigger className="w-[180px]" id="layoutSelect">
               <SelectValue />
@@ -82,13 +69,13 @@ function DisplayOptionsMenu() {
         </div>
         {layout === 'grid' && (
           <div className="flex items-center justify-between h-10">
-            <Label htmlFor="layoutSelect">{t('maxCols', { cols: layoutGridCols })}</Label>
+            <Label htmlFor="layoutSelect">{t('maxCols', { cols: gridCols })}</Label>
             <Slider
-              defaultValue={[layoutGridCols - 2]}
-              max={3}
+              value={[gridCols - GRID_COLS_RANGE.min]}
+              max={GRID_COLS_RANGE.max - GRID_COLS_RANGE.min}
               step={1}
               className="w-[180px]"
-              onValueChange={(value) => handleUpdateConfig({ defaultGridCols: value[0] + 2 })}
+              onValueChange={(value) => update({ gridCols: value[0] + GRID_COLS_RANGE.min })}
             />
           </div>
         )}

@@ -231,7 +231,7 @@ export async function tagNameTaken(
 
 // ---------- Config ----------
 
-const CONFIG_KEYS = ['name', 'language', 'defaultSort', 'defaultLayout', 'defaultGridCols'] as const
+const CONFIG_KEYS = ['name', 'language'] as const
 
 export async function getConfig(db: D1Database): Promise<UserConfig> {
   const { results } = await db
@@ -243,9 +243,6 @@ export async function getConfig(db: D1Database): Promise<UserConfig> {
   return {
     name: config.name || 'KONYHA',
     language: config.language || 'en',
-    defaultSort: (config.defaultSort as UserConfig['defaultSort']) || 'updated-asc',
-    defaultLayout: (config.defaultLayout as UserConfig['defaultLayout']) || undefined,
-    defaultGridCols: config.defaultGridCols ? parseInt(config.defaultGridCols, 10) : undefined,
   }
 }
 

@@ -12,7 +12,7 @@ import {
   TopBar,
   TopBarSearchSelect,
 } from '@/components/custom'
-import { useRecipes, useRecipeMutations, useConfirmDialog, useConfig } from '@/hooks'
+import { useRecipes, useRecipeMutations, useConfirmDialog, useViewPreferences } from '@/hooks'
 import type { Recipe } from '@/lib/types'
 import { useEditMode } from '@/providers/EditModeProvider'
 
@@ -23,8 +23,7 @@ export default function ArchivePage() {
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
 
-  const { data: userConfig } = useConfig()
-  const selectedLayout = userConfig?.defaultLayout || 'list'
+  const { layout: selectedLayout } = useViewPreferences()
 
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')

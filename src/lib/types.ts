@@ -32,9 +32,6 @@ export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' |
 export type UserConfig = {
   name: string
   language: string
-  defaultSort?: SortOption
-  defaultLayout?: 'grid' | 'list'
-  defaultGridCols?: number
 }
 
 export type ShoppingListItem = {

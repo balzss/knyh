@@ -41,6 +41,7 @@ The settings page links to `/auth/login`. Access guards that path, so you sign i
 - Export and import (JSON) are on the settings page in edit mode. Import replaces everything.
 - Dates are stored as ISO strings, and ingredients and instructions as JSON text.
 - The shopping list is only visible in edit mode.
+- Site settings (name, language) live in D1. How a visitor sorts and lays out the lists is saved in their own browser, so anyone can change it.
 
 ## Project layout
 

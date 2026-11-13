@@ -40,13 +40,7 @@ for (const recipe of data.recipes) {
     )
   }
 }
-for (const key of [
-  'name',
-  'language',
-  'defaultSort',
-  'defaultLayout',
-  'defaultGridCols',
-] as const) {
+for (const key of ['name', 'language'] as const) {
   const value = data.userConfig[key]
   if (value !== undefined) {
     lines.push(`INSERT INTO config (key, value) VALUES (${q(key)}, ${q(String(value))});`)
