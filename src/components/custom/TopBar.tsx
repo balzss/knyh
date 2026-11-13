@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslations } from 'use-intl'
 import { Menu } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
 import { IconButton } from '@/components/custom'
@@ -12,13 +13,14 @@ export function TopBar({
   customTopbarContent = <></>,
   hideSidebarToggleMobile = false,
 }: TopBarProps) {
+  const t = useTranslations('TopBar')
   const { toggleSidebar } = useSidebar()
   return (
     <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-0 border-b bg-background p-3">
       <IconButton
         className={hideSidebarToggleMobile ? 'hidden sm:flex' : ''}
         icon={<Menu />}
-        tooltip="Toggle Sidebar"
+        tooltip={t('toggleSidebar')}
         iconSize="normal"
         onClick={toggleSidebar}
       />

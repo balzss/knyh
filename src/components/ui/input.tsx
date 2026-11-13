@@ -2,8 +2,13 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-// TODO: Remove this workaround once Chrome Android fixes the password manager popup issue
-// https://github.com/chromium/chromium/issues/...
+// TODO: Remove this workaround once Chrome Android fixes the password manager popup issue.
+// Chrome on Android shows a password manager bar above the keyboard even for non-password
+// fields. type="search" doesn't trigger it, so we switch text-like inputs to search on
+// Android Chrome below 768px and strip the search styling (here and in src/globals.css).
+// To remove: delete this hook, `shouldApplyWorkaround`, `effectiveType` and the search
+// classes below, use `type={type}`, and delete the search block in src/globals.css.
+// To test on Android Chrome: no popup, input works, looks the same.
 function useAndroidChromeWorkaround() {
   const [isAndroidChrome, setIsAndroidChrome] = React.useState(false)
   
