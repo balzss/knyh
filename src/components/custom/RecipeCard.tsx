@@ -39,6 +39,14 @@ type RecipeCardProps = {
   highlight?: string
 }
 
+/*
+ * Card spacing, on a 4 px grid. The gap grows with the level of grouping:
+ *   4 px (1)   inside one line: icon and its label, the title and its meta line
+ *   8 px (2)   between siblings: tags, action buttons, meta items
+ *  12 px (3)   between groups in the card, and between cards (see PageLayout)
+ *  16 px (4)   the card's inset (12 px on phones)
+ * Padding lives on the Card only. The header and footer have none of their own.
+ */
 export function RecipeCard({
   tags,
   isSelected = false,
@@ -114,15 +122,16 @@ export function RecipeCard({
           setIsHovered(false)
         }
       }}
-      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md flex flex-col ${isSelected ? 'border-primary' : ''}`}
+      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''}`}
       tabIndex={0}
       {...longPressBind}
       role="article"
       aria-label={`Recipe: ${title}`}
     >
-      <CardHeader className="relative p-3 sm:p-6">
+      <CardHeader className="p-0">
         <Link
           to={getRecipeViewUrl(id)}
+          className="flex flex-col gap-1"
           onClick={(e) => {
             if (wasLongPress()) {
               e.preventDefault()
@@ -136,14 +145,12 @@ export function RecipeCard({
             }
           }}
         >
-          <CardTitle>
-            <div className="flex items-center gap-2">
-              <h3 className="flex-1 flex items-center gap-3">
-                <Highlight text={title} term={highlight} />
-              </h3>
-            </div>
+          <CardTitle className={cn('leading-snug', onSelect && 'pr-8')}>
+            <h3>
+              <Highlight text={title} term={highlight} />
+            </h3>
           </CardTitle>
-          <CardDescription className="flex gap-3 items-center select-none sm:select-text">
+          <CardDescription className="flex items-center gap-2 select-none sm:select-text">
             {recipeYield && (
               <div className="flex gap-1 items-center">
                 <Users size="1rem" /> {recipeYield}
@@ -157,7 +164,7 @@ export function RecipeCard({
           </CardDescription>
           <div
             className={cn(
-              'flex absolute top-0 right-0 transition-all duration-100 ease-in-out',
+              'flex absolute top-2 right-2 transition-all duration-100 ease-in-out',
               (isHovered || selectionMode) && !isDropdownOpen
                 ? 'opacity-100'
                 : 'sm:opacity-0 sm:invisible'
@@ -167,7 +174,7 @@ export function RecipeCard({
               <IconButton
                 icon={isSelected ? <CircleCheckBig /> : <Circle />}
                 tooltip={isSelected ? 'Unselect text placeholder' : 'Select text placeholder'}
-                className={cn('h-8 w-8', isSelected ? 'text-primary hover:text-primary' : '')}
+                className={cn('h-8 w-8', isSelected && 'text-primary hover:text-primary')}
                 onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
@@ -178,8 +185,8 @@ export function RecipeCard({
           </div>
         </Link>
       </CardHeader>
-      <CardFooter className="flex flex-col gap-4 items-start pb-3 mt-auto p-3 sm:p-6 pt-0 sm:pt-0">
-        <div className="flex gap-2 flex-wrap">
+      <CardFooter className="mt-auto flex-wrap items-end justify-between gap-x-3 gap-y-2 p-0">
+        <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <Badge
               key={tag.id}
@@ -195,7 +202,7 @@ export function RecipeCard({
           ))}
         </div>
         <div
-          className={`flex gap-4 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
+          className={`ml-auto flex gap-1 [&_button]:h-7 [&_button]:w-7 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >
           {archivedMode ? (
             editor && (

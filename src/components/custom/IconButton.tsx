@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
+import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 // interface IconButtonProps extends ButtonProps {
@@ -46,7 +47,11 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
             ref={ref}
             variant={variant}
             size="icon"
-            className={`${className} ${iconSize === 'small' ? 'h-6 w-6' : 'h-9 w-9'} ${isActive ? 'bg-accent text-accent-foreground' : ''}`}
+            className={cn(
+              iconSize === 'small' ? 'h-6 w-6' : 'h-9 w-9',
+              isActive && 'bg-accent text-accent-foreground',
+              className
+            )}
             asChild={!!href}
           >
             {href ? <Link to={href}>{icon}</Link> : icon}
