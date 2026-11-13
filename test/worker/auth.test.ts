@@ -49,6 +49,27 @@ describe('access rules', () => {
     }
   })
 
+  it('keeps archived recipes private', async () => {
+    const created = await asEditor('/api/recipes', {
+      method: 'POST',
+      json: [{ title: 'Hidden', ingredients: [], instructions: [], archived: true }],
+    })
+    const [hidden] = (await created.json()) as { id: string }[]
+    const ids = async (path: string, editor: boolean) =>
+      ((await (editor ? asEditor(path) : call(path))).json() as Promise<{ id: string }[]>).then(
+        (list) => list.map((recipe) => recipe.id)
+      )
+
+    // Visitors: an unfiltered list drops archived recipes, and asking for them is refused
+    expect(await ids('/api/recipes', false)).not.toContain(hidden.id)
+    expect(await ids('/api/recipes?archived=false', false)).not.toContain(hidden.id)
+    expect((await call('/api/recipes?archived=true')).status).toBe(401)
+
+    // The editor still sees them
+    expect(await ids('/api/recipes', true)).toContain(hidden.id)
+    expect(await ids('/api/recipes?archived=true', true)).toContain(hidden.id)
+  })
+
   it('blocks every write without a token', async () => {
     const writes: [string, string, unknown?][] = [
       ['POST', '/api/recipes', [{ title: 'x', ingredients: [], instructions: [] }]],

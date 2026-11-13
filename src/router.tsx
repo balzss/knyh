@@ -5,6 +5,7 @@ import ArchivePage from '@/pages/ArchivePage'
 import RandomPage from '@/pages/RandomPage'
 import SettingsPage from '@/pages/SettingsPage'
 import ShoppingListPage from '@/pages/ShoppingListPage'
+import { EditorOnly } from '@/components/custom'
 import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
 import NotFoundPage from '@/pages/NotFoundPage'
 
@@ -22,7 +23,14 @@ export const router = createBrowserRouter([
     element: <Root />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/archive', element: <ArchivePage /> },
+      {
+        path: '/archive',
+        element: (
+          <EditorOnly>
+            <ArchivePage />
+          </EditorOnly>
+        ),
+      },
       { path: '/random', element: <RandomPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/shopping-list', element: <ShoppingListPage /> },

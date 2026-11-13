@@ -91,7 +91,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
       icon: <Dices />,
       href: '/random',
     },
-    // The shopping list is private to the editor
+    // The shopping list and the archive are private to the editor
     ...(editor
       ? [
           {
@@ -99,13 +99,13 @@ export function AppSidebar({ path }: AppSidebarProps) {
             icon: <ShoppingCart />,
             href: '/shopping-list',
           },
+          {
+            displayName: t('archive'),
+            icon: <Archive />,
+            href: '/archive',
+          },
         ]
       : []),
-    {
-      displayName: t('archive'),
-      icon: <Archive />,
-      href: '/archive',
-    },
     {
       displayName: t('settings'),
       icon: <Settings />,

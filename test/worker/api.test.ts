@@ -49,8 +49,8 @@ describe('recipes', () => {
     const live = await createRecipe({ title: 'live' })
     const archived = await createRecipe({ title: 'old', archived: true })
 
-    const onlyArchived = (await (await call('/api/recipes?archived=true')).json()) as Recipe[]
-    const onlyLive = (await (await call('/api/recipes?archived=false')).json()) as Recipe[]
+    const onlyArchived = (await (await asEditor('/api/recipes?archived=true')).json()) as Recipe[]
+    const onlyLive = (await (await asEditor('/api/recipes?archived=false')).json()) as Recipe[]
 
     expect(onlyArchived.map((r) => r.id)).toContain(archived.id)
     expect(onlyArchived.map((r) => r.id)).not.toContain(live.id)

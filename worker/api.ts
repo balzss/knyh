@@ -74,9 +74,15 @@ api.get('/session', async (c) => c.json({ editor: await isEditor(c.env, c.req.ra
 
 api.get('/recipes', async (c) => {
   const archived = c.req.query('archived')
-  return c.json(
-    await db.listRecipes(c.env.DB, archived === undefined ? undefined : archived === 'true')
-  )
+  const wantsArchived = archived === undefined ? undefined : archived === 'true'
+
+  // Archived recipes are private. Visitors only ever get the live ones.
+  if (!(await isEditor(c.env, c.req.raw))) {
+    if (wantsArchived) return c.json({ message: 'Unauthorized' }, 401)
+    return c.json(await db.listRecipes(c.env.DB, false))
+  }
+
+  return c.json(await db.listRecipes(c.env.DB, wantsArchived))
 })
 
 api.post('/recipes', async (c) => {
