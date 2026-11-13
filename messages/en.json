@@ -78,12 +78,13 @@
     "newRecipe": "New recipe",
     "moreOptions": "More options",
     "resetChanges": "Reset changes",
-    "switchToForm": "Switch to form mode",
-    "switchToMarkdown": "Switch to markdown mode",
     "close": "Close",
     "cannotConvertTitle": "Discard the markdown?",
     "cannotConvertDescription": "The markdown is not a single complete recipe, so it cannot be shown in the form. Switching will discard it.",
-    "discard": "Discard"
+    "discard": "Discard",
+    "editorMode": "Editing mode",
+    "formMode": "Form",
+    "markdownMode": "Markdown"
   },
   "FormView": {
     "invalidRecipeData": "Recipe data is invalid",

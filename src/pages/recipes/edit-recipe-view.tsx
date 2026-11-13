@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
-import { X, Ellipsis } from 'lucide-react'
+import { X, Ellipsis, TextCursorInput, FileText } from 'lucide-react'
 import { TopBar, AppSidebar, IconButton } from '@/components/custom'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,11 @@ import type { RecipeDraft } from '@/lib/types'
  * `undefined` means the content can't be converted to the other mode.
  */
 export type DraftGetter = () => RecipeDraft | null | undefined
+
+const MODES = [
+  { value: 'form', icon: TextCursorInput, labelKey: 'formMode' },
+  { value: 'raw', icon: FileText, labelKey: 'markdownMode' },
+] as const
 
 type NewRecipeViewProps = {
   recipeId?: string
@@ -43,7 +49,8 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const recipeToEdit = recipeId ? recipes[0] : undefined
   const inNewRecipeMode = !recipeId // if there is no recipe id, this is a new recipe
 
-  const handleSwitchMode = async () => {
+  const handleSwitchMode = async (target: 'form' | 'raw') => {
+    if (target === mode) return
     const current = draftGetter.current?.()
 
     // Only ask when the markdown can't be read as a single recipe, because then it can't be carried over
@@ -58,7 +65,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
     }
 
     setDraft(current ?? null)
-    setMode((current) => (current === 'raw' ? 'form' : 'raw'))
+    setMode(target)
   }
 
   const handleClosePage = () => {
@@ -85,6 +92,27 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
             <span className="mr-auto sm:mr-4 font-bold">
               {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
             </span>
+            <div
+              role="group"
+              aria-label={t('editorMode')}
+              className="flex gap-0.5 rounded-md border p-0.5"
+            >
+              {MODES.map(({ value, icon: Icon, labelKey }) => (
+                <Button
+                  key={value}
+                  type="button"
+                  size="sm"
+                  variant={mode === value ? 'secondary' : 'ghost'}
+                  aria-pressed={mode === value}
+                  aria-label={t(labelKey)}
+                  className="h-7 gap-1.5 px-2"
+                  onClick={() => handleSwitchMode(value)}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t(labelKey)}</span>
+                </Button>
+              ))}
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <IconButton
@@ -97,9 +125,6 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               <DropdownMenuContent className="w-56">
                 <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
                   {t('resetChanges')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleSwitchMode}>
-                  {t(mode === 'raw' ? 'switchToForm' : 'switchToMarkdown')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

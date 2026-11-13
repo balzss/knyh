@@ -78,12 +78,13 @@
     "newRecipe": "Új recept",
     "moreOptions": "További lehetőségek",
     "resetChanges": "Változtatások visszavonása",
-    "switchToForm": "Váltás űrlap módra",
-    "switchToMarkdown": "Váltás markdown módra",
     "close": "Bezárás",
     "cannotConvertTitle": "Elveted a markdownt?",
     "cannotConvertDescription": "A markdown nem egyetlen teljes recept, ezért nem jeleníthető meg az űrlapon. A váltással elveted.",
-    "discard": "Elvetés"
+    "discard": "Elvetés",
+    "editorMode": "Szerkesztési mód",
+    "formMode": "Űrlap",
+    "markdownMode": "Markdown"
   },
   "FormView": {
     "invalidRecipeData": "Érvénytelen recept adatok",
