@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Recipe Manager" />
+    <meta name="theme-color" content="#101010" />
+    <link rel="icon" href="/cooking-pot.png" />
+    <title>KONYHA</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('knyh-theme') || 'dark'
+          var dark =
+            theme === 'dark' ||
+            (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.toggle('dark', dark)
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.code-editor {
+  outline: none;
+}
+
+.sortable-input-multiline {
+  field-sizing: content;
+}
+
+@layer base {
+  :root {
+    --background: 229 57% 100%;
+    --foreground: 229 63% 4%;
+    --muted: 229 12% 86%;
+    --muted-foreground: 229 10% 37%;
+    --popover: 0 0% 99%;
+    --popover-foreground: 229 63% 3%;
+    --card: 0 0% 99%;
+    --card-foreground: 229 63% 3%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --primary: 229 100% 62%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 229 20% 90%;
+    --secondary-foreground: 229 20% 30%;
+    --accent: 229 28% 85%;
+    --accent-foreground: 229 28% 25%;
+    --destructive: 3 100% 50%;
+    --destructive-foreground: 3 0% 100%;
+    --ring: 229 100% 62%;
+    --chart-1: 229 100% 62%;
+    --chart-2: 229 20% 90%;
+    --chart-3: 229 28% 85%;
+    --chart-4: 229 20% 93%;
+    --chart-5: 229 103% 62%;
+    --radius: 0.5rem;
+
+    --sidebar-background: var(--popover);
+    --sidebar-border: var(--border);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-ring: var(--ring);
+  }
+
+  .dark {
+    --background: 0 0% 6.27%;
+    --foreground: 252 37% 98%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 62.75%;
+    --popover: 0 0% 8.63%;
+    --popover-foreground: 252 37% 99%;
+    --card: 0 0% 6.27%;
+    --card-foreground: 252 37% 99%;
+    --border: 0 0% 15.69%;
+    --input: 0 0% 25.38%;
+    --primary: 27.06 100% 80%;
+    --primary-foreground: 0 0% 0%;
+    --accent: 27.06 0.22% 23.03%;
+    --accent-foreground: 0 0% 100%;
+
+    --secondary: var(--accent);
+    --secondary-foreground: var(--accent-foreground);
+    /* --secondary: 164.12 100% 80%; */
+    /* --secondary-foreground: 0 0% 0%; */
+
+    --destructive: 0 100% 75.1%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 27.06 100% 80%;
+    --chart-1: 27.06 100% 80%;
+    --chart-2: 164.12 100% 80%;
+    --chart-3: 27.06 0.22% 23.03%;
+    --chart-4: 164.12 100% 83%;
+    --chart-5: 27.06 103% 80%;
+
+    --sidebar-background: var(--popover);
+    --sidebar-border: var(--border);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-ring: var(--ring);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* TODO: Remove this workaround once Chrome Android fixes the password manager popup issue */
+/* This prevents search input decorations when using type="search" as workaround for Android Chrome */
+/* password manager popup appearing on non-password inputs */
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Additional fallback for other browsers */
+input[type=search] {
+  appearance: none;
+  -moz-appearance: none;
+}

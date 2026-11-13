@@ -1,0 +1,3 @@
+# Copy to .dev.vars for local development with `npm run dev`. Never commit .dev.vars.
+# Treats every request as the signed-in editor. Local only.
+DEV_AUTH_BYPASS=true
