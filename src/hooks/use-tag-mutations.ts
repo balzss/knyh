@@ -21,8 +21,11 @@ export const useTagMutations = () => {
   const renameTag = useMutation({
     mutationFn: ({ id, displayName }: RenameTagPayload) =>
       api<Tag>(`/api/tags/${id}`, { method: 'PATCH', json: { displayName } }),
-    // Recipes referencing this tag's id don't need invalidation because only the label changed.
-    onSuccess: invalidateTagsQuery,
+    onSuccess: () => {
+      invalidateTagsQuery()
+      // Every recipe carries its tags' names, so recipes that use this tag show the old name until refetched
+      queryClient.invalidateQueries({ queryKey: ['recipes'] })
+    },
   })
 
   const deleteTag = useMutation({
