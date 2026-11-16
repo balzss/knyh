@@ -20,7 +20,7 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
 import { useViewPreferences } from '@/hooks'
-import { GRID_COLS_RANGE } from '@/lib/view-preferences'
+import { DEFAULT_VIEW_PREFERENCES, GRID_COLS_RANGE } from '@/lib/view-preferences'
 import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@/lib/types'
 
 function DisplayOptionsMenu() {
@@ -38,6 +38,12 @@ function DisplayOptionsMenu() {
             icon={<SlidersHorizontal />}
             tooltip={t('filterAndViewOptions')}
             isActive={open}
+            showDot={status !== DEFAULT_VIEW_PREFERENCES.status}
+            aria-label={
+              status !== DEFAULT_VIEW_PREFERENCES.status
+                ? t('filterAndViewOptionsActive')
+                : t('filterAndViewOptions')
+            }
             onClick={() => setOpen((oldValue) => !oldValue)}
           />
         </span>

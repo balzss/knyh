@@ -206,6 +206,7 @@
     "clearSelection": "Kijelölés megszűntetése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
     "filterAndViewOptions": "Szűrő és nézet opciók",
+    "filterAndViewOptionsActive": "Szűrő és nézet opciók, szűrő aktív",
     "sortBy": "Rendezés",
     "random": "Véletlenszerű",
     "titleAsc": "Cím A-Z",

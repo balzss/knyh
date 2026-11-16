@@ -206,6 +206,7 @@
     "clearSelection": "Clear selection",
     "toggleSidebar": "Toggle sidebar",
     "filterAndViewOptions": "Filter and view options",
+    "filterAndViewOptionsActive": "Filter and view options, filter active",
     "sortBy": "Sort by",
     "random": "Random",
     "titleAsc": "Title A-Z",
