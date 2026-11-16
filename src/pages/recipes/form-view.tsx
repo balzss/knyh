@@ -212,6 +212,26 @@ export default function FormView({
           )}
         />
 
+        <div className="mb-3 flex gap-2">
+          <Controller
+            control={control}
+            name="yield"
+            render={({ field }) => (
+              <YieldDialog yieldValue={field.value || ''} onYieldValueChange={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="totalTime"
+            render={({ field }) => (
+              <TotalTimeDialog
+                totalTimeValue={field.value || ''}
+                onTotalTimeValueChange={field.onChange}
+              />
+            )}
+          />
+        </div>
+
         <div className="grid w-full items-center gap-2">
           <Label htmlFor="recipe-status">{t('status')}</Label>
           <Controller
@@ -230,27 +250,6 @@ export default function FormView({
                   ))}
                 </SelectContent>
               </Select>
-            )}
-          />
-          <p className="text-sm text-muted-foreground">{t('statusHint')}</p>
-        </div>
-
-        <div className="mb-3 flex gap-2">
-          <Controller
-            control={control}
-            name="yield"
-            render={({ field }) => (
-              <YieldDialog yieldValue={field.value || ''} onYieldValueChange={field.onChange} />
-            )}
-          />
-          <Controller
-            control={control}
-            name="totalTime"
-            render={({ field }) => (
-              <TotalTimeDialog
-                totalTimeValue={field.value || ''}
-                onTotalTimeValueChange={field.onChange}
-              />
             )}
           />
         </div>

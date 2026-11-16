@@ -111,8 +111,7 @@
     "stay": "Marad",
     "status": "Állapot",
     "status_development": "Fejlesztés alatt",
-    "status_ready": "Kész",
-    "statusHint": "A fejlesztés alatt álló receptek befejezetlenként jelennek meg a listában."
+    "status_ready": "Kész"
   },
   "RawView": {
     "badFormatting": "Rossz formázás",

@@ -111,8 +111,7 @@
     "stay": "Stay",
     "status": "Status",
     "status_development": "In development",
-    "status_ready": "Ready",
-    "statusHint": "Recipes in development are marked as unfinished in the list."
+    "status_ready": "Ready"
   },
   "RawView": {
     "badFormatting": "Bad formatting",

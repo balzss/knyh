@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLocale, useTranslations } from 'use-intl'
 import {
@@ -65,6 +65,8 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
   const [factor, setFactor] = useState(1)
   const [scaleOpen, setScaleOpen] = useState(false)
+  const [titleEl, setTitleEl] = useState<HTMLHeadingElement | null>(null)
+  const [titleOffscreen, setTitleOffscreen] = useState(false)
 
   const navigate = useNavigate()
   const t = useTranslations('RecipeView')
@@ -77,6 +79,17 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
 
   const { editor } = useEditMode()
   const { deleteRecipe, updateRecipe } = useRecipeMutations()
+
+  // Show the top bar title only once the main title has scrolled under the top bar (h-14 = 56px)
+  useEffect(() => {
+    if (!titleEl) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setTitleOffscreen(!entry.isIntersecting),
+      { rootMargin: '-56px 0px 0px 0px' }
+    )
+    observer.observe(titleEl)
+    return () => observer.disconnect()
+  }, [titleEl])
 
   const handleClosePage = () => {
     if (window.history.length && document.referrer === '') {
@@ -192,7 +205,12 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               onClick={handleClosePage}
               className="mr-2"
             />
-            <span className="mr-auto font-bold">{recipe.title}</span>
+            <span
+              className={`mr-auto font-bold truncate transition-opacity duration-150 ${titleOffscreen ? 'opacity-100' : 'opacity-0'}`}
+              aria-hidden={!titleOffscreen}
+            >
+              {recipe.title}
+            </span>
             <div className="flex gap-2 items-center">
               {editor && (
                 <IconButton
@@ -237,7 +255,9 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
       <main className="w-full mt-16 mx-auto">
         <PageLayout>
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold text-3xl md:text-4xl">{recipe?.title}</h1>
+            <h1 ref={setTitleEl} className="font-bold text-3xl md:text-4xl">
+              {recipe?.title}
+            </h1>
             <RecipeStatusBadge status={recipe.status} className="self-start my-1" />
             <div className="text-muted-foreground flex gap-4">
               {recipe?.yield && (
