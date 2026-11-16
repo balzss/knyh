@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { useTranslations } from 'use-intl'
 import { AnimatePresence, motion } from 'motion/react'
-import { SlidersHorizontal, Search, X } from 'lucide-react'
+import { SlidersHorizontal, Search, X, MoreVertical } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
@@ -140,13 +146,25 @@ type SelectAction = {
   disabled?: boolean
 }
 
+type MoreAction = {
+  icon: React.ReactNode
+  label: string
+  onClick: () => void
+}
+
 type TopBarSelectProps = {
   selectionLength: number
   onClearSelection: () => void
   selectActions: SelectAction[]
+  moreActions?: MoreAction[]
 }
 
-function TopBarSelect({ selectionLength, onClearSelection, selectActions }: TopBarSelectProps) {
+function TopBarSelect({
+  selectionLength,
+  onClearSelection,
+  selectActions,
+  moreActions = [],
+}: TopBarSelectProps) {
   const t = useTranslations('TopBar')
   return (
     <motion.div
@@ -177,6 +195,28 @@ function TopBarSelect({ selectionLength, onClearSelection, selectActions }: TopB
           disabled={disabled}
         />
       ))}
+      {moreActions.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <span>
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<MoreVertical />}
+                tooltip={t('moreActions')}
+              />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {moreActions.map(({ icon, label, onClick }, index) => (
+              <DropdownMenuItem key={index} className="gap-2" onClick={onClick}>
+                {icon}
+                {label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </motion.div>
   )
 }
@@ -193,6 +233,7 @@ export function TopBarSearchSelect({
   onClearSelection,
   selectionLength,
   selectActions,
+  moreActions,
 }: TopBarSearchSelectProps) {
   return (
     <AnimatePresence initial={false}>
@@ -201,6 +242,7 @@ export function TopBarSearchSelect({
           onClearSelection={onClearSelection}
           selectionLength={selectionLength}
           selectActions={selectActions}
+          moreActions={moreActions}
         />
       ) : (
         <TopBarSearch searchQuery={searchQuery} onSearchQueryChange={onSearchQueryChange} />

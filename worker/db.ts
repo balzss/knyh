@@ -172,7 +172,11 @@ export async function updateRecipe(
   if (updates.yield !== undefined) set('yield', updates.yield)
   if (updates.archived !== undefined) set('archived', updates.archived ? 1 : 0)
   if (updates.status !== undefined) set('status', updates.status)
-  set('updated_at', new Date().toISOString())
+  // Switching between development and ready is bookkeeping, not an edit to the recipe.
+  const statusOnly = Object.keys(updates).every(
+    (key) => key === 'status' || updates[key as keyof typeof updates] === undefined
+  )
+  if (!statusOnly) set('updated_at', new Date().toISOString())
 
   const statements = [
     db.prepare(`UPDATE recipes SET ${sets.join(', ')} WHERE id = ?`).bind(...values, id),

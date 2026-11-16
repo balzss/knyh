@@ -55,6 +55,9 @@
     "undo": "Undo"
   },
   "HomePage": {
+    "markDevelopment": "Mark as in development",
+    "markReady": "Mark as ready",
+    "statusChanged": "{count, plural, one {# recipe} other {# recipes}} marked as {status, select, ready {ready} other {in development}}",
     "archive": "Archive",
     "archivedItems": "{count, plural, one {# item archived} other {# items archived}}",
     "undo": "Undo",
@@ -199,6 +202,7 @@
   "TopBar": {
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
+    "moreActions": "More actions",
     "clearSelection": "Clear selection",
     "toggleSidebar": "Toggle sidebar",
     "filterAndViewOptions": "Filter and view options",

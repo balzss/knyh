@@ -53,6 +53,19 @@ describe('recipes', () => {
     expect(((await patched.json()) as Recipe[])[0].status).toBe('ready')
   })
 
+  it('keeps updatedAt when only the status changes', async () => {
+    const created = await createRecipe()
+    await new Promise((resolve) => setTimeout(resolve, 5))
+
+    const patched = await asEditor('/api/recipes', {
+      method: 'PATCH',
+      json: { ids: [created.id], data: { status: 'ready' } },
+    })
+    const [recipe] = (await patched.json()) as Recipe[]
+    expect(recipe.status).toBe('ready')
+    expect(recipe.updatedAt).toBe(created.updatedAt)
+  })
+
   it('rejects an unknown status', async () => {
     const response = await asEditor('/api/recipes', {
       method: 'POST',

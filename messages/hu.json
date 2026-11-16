@@ -55,6 +55,9 @@
     "undo": "Visszavonás"
   },
   "HomePage": {
+    "markDevelopment": "Megjelölés fejlesztés alattiként",
+    "markReady": "Megjelölés késznek",
+    "statusChanged": "{count, plural, one {# recept} other {# recept}} megjelölve: {status, select, ready {kész} other {fejlesztés alatt}}",
     "archive": "Archiválás",
     "archivedItems": "{count, plural, one {# recept archiválva} other {# receptek archiválva}}",
     "undo": "Visszavonás",
@@ -199,6 +202,7 @@
   "TopBar": {
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
+    "moreActions": "További műveletek",
     "clearSelection": "Kijelölés megszűntetése",
     "toggleSidebar": "Oldalső menü átkapcsolása",
     "filterAndViewOptions": "Szűrő és nézet opciók",

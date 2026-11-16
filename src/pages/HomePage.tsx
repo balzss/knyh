@@ -1,6 +1,6 @@
 import { useState, useDeferredValue, useMemo } from 'react'
 import { useTranslations } from 'use-intl'
-import { Archive, ListChecks, FilePlus, BookOpenText } from 'lucide-react'
+import { Archive, ListChecks, FilePlus, BookOpenText, Hammer, CircleCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
@@ -16,7 +16,7 @@ import {
 import { useRecipes, useRecipeMutations, useTags, useViewPreferences } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
-import type { Tag } from '@/lib/types'
+import type { RecipeStatus, Tag } from '@/lib/types'
 
 export default function HomePage() {
   const t = useTranslations('HomePage')
@@ -97,6 +97,18 @@ export default function HomePage() {
     )
   }
 
+  const handleSetStatusSelectedRecipes = (status: RecipeStatus) => {
+    updateRecipes.mutate(
+      { ids: selectionList, data: { status } },
+      {
+        onSuccess: () => {
+          myToast({ message: t('statusChanged', { count: selectionList.length, status }) })
+          setSelectionList([])
+        },
+      }
+    )
+  }
+
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <div className="flex w-full">
@@ -116,9 +128,21 @@ export default function HomePage() {
                 onClick: () => setSelectionList(filteredRecipes.map((r) => r.id)),
                 disabled: selectionList.length === filteredRecipes.length,
               },
+            ]}
+            moreActions={[
+              {
+                icon: <Hammer />,
+                label: t('markDevelopment'),
+                onClick: () => handleSetStatusSelectedRecipes('development'),
+              },
+              {
+                icon: <CircleCheck />,
+                label: t('markReady'),
+                onClick: () => handleSetStatusSelectedRecipes('ready'),
+              },
               {
                 icon: <Archive />,
-                tooltip: t('archive'),
+                label: t('archive'),
                 onClick: handleArchiveSelectedRecipes,
               },
             ]}
