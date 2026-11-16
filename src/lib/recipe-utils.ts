@@ -1,5 +1,5 @@
 // Recipe parsing & serialization utilities extracted from raw-view for reuse.
-import type { Recipe, GroupData } from './types'
+import { RECIPE_STATUSES, type Recipe, type GroupData, type RecipeStatus } from './types'
 import { normalizeTotalTime } from './time'
 
 type ParsedRecipe = {
@@ -8,6 +8,8 @@ type ParsedRecipe = {
   instructions: string[]
   yield: string
   totalTime: string
+  /** Absent when the markdown doesn't say */
+  status?: RecipeStatus
 }
 
 /**
@@ -56,6 +58,7 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
 
   let yieldValue = ''
   let totalTimeValue = ''
+  let statusValue: RecipeStatus | undefined
 
   while (i < lines.length && lines[i].trim() === '') i++
 
@@ -71,6 +74,10 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
           if (key === 'yield' || key === 'servings') yieldValue = value
           else if (key === 'time' || key === 'total_time' || key === 'duration')
             totalTimeValue = normalizeTotalTime(value)
+          else if (key === 'status') {
+            const status = value.toLowerCase()
+            statusValue = RECIPE_STATUSES.find((s) => s === status) ?? statusValue
+          }
         }
       }
       i++
@@ -112,18 +119,21 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
     instructions,
     yield: yieldValue,
     totalTime: totalTimeValue,
+    status: statusValue,
   }
 }
 
 /** Serialize a Recipe entity into markdown understood by parseMarkdown. */
 export function recipeToMarkdown(
-  recipe: Pick<Recipe, 'title' | 'ingredients' | 'instructions' | 'yield' | 'totalTime'>
+  recipe: Pick<Recipe, 'title' | 'ingredients' | 'instructions' | 'yield' | 'totalTime'> &
+    Partial<Pick<Recipe, 'status'>>
 ): string {
   const header = `# ${recipe.title}`
 
   const frontmatter: string[] = []
   if (recipe.yield) frontmatter.push(`yield: ${recipe.yield}`)
   if (recipe.totalTime) frontmatter.push(`time: ${recipe.totalTime}`)
+  if (recipe.status) frontmatter.push(`status: ${recipe.status}`)
 
   const frontmatterBlock = frontmatter.length ? `\n---\n${frontmatter.join('\n')}\n---\n` : ''
 

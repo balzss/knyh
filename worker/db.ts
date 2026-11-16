@@ -1,4 +1,11 @@
-import type { DatabaseSchema, GroupData, ShoppingListItem, Tag, UserConfig } from '../src/lib/types'
+import type {
+  DatabaseSchema,
+  GroupData,
+  RecipeStatus,
+  ShoppingListItem,
+  Tag,
+  UserConfig,
+} from '../src/lib/types'
 import { generateId } from '../src/lib/id'
 
 /** A recipe as sent over the wire: dates are ISO strings. */
@@ -9,6 +16,7 @@ type RecipeJson = {
   instructions: string[]
   tags: Tag[]
   archived: boolean
+  status: RecipeStatus
   totalTime: string | null
   yield: string | null
   createdAt: string
@@ -23,6 +31,7 @@ type RecipeInput = {
   totalTime?: string | null
   yield?: string | null
   archived?: boolean
+  status?: RecipeStatus
 }
 
 type RecipeRow = {
@@ -33,6 +42,7 @@ type RecipeRow = {
   total_time: string | null
   yield: string | null
   archived: number
+  status: RecipeStatus
   created_at: string
   updated_at: string
 }
@@ -72,6 +82,7 @@ const toRecipe = (row: RecipeRow, tags: Tag[]): RecipeJson => ({
   instructions: JSON.parse(row.instructions),
   tags,
   archived: Boolean(row.archived),
+  status: row.status,
   totalTime: row.total_time,
   yield: row.yield,
   createdAt: row.created_at,
@@ -106,8 +117,8 @@ function insertRecipeStatements(
   return [
     db
       .prepare(
-        `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, status, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .bind(
         id,
@@ -117,6 +128,7 @@ function insertRecipeStatements(
         recipe.totalTime ?? null,
         recipe.yield ?? null,
         recipe.archived ? 1 : 0,
+        recipe.status ?? 'development',
         createdAt,
         updatedAt
       ),
@@ -159,6 +171,7 @@ export async function updateRecipe(
   if (updates.totalTime !== undefined) set('total_time', updates.totalTime)
   if (updates.yield !== undefined) set('yield', updates.yield)
   if (updates.archived !== undefined) set('archived', updates.archived ? 1 : 0)
+  if (updates.status !== undefined) set('status', updates.status)
   set('updated_at', new Date().toISOString())
 
   const statements = [

@@ -20,7 +20,7 @@ for (const tag of data.tags) {
 }
 for (const recipe of data.recipes) {
   lines.push(
-    `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, created_at, updated_at) VALUES (` +
+    `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, status, created_at, updated_at) VALUES (` +
       [
         q(recipe.id),
         q(recipe.title),
@@ -29,6 +29,7 @@ for (const recipe of data.recipes) {
         q(recipe.totalTime),
         q(recipe.yield),
         recipe.archived ? 1 : 0,
+        q(recipe.status),
         q(new Date(recipe.createdAt).toISOString()),
         q(new Date(recipe.updatedAt).toISOString()),
       ].join(', ') +

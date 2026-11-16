@@ -70,6 +70,7 @@ describe('recipe-utils recipeToMarkdown', () => {
       yield: '3',
       totalTime: '0:15',
       archived: false,
+      status: 'ready',
       createdAt: new Date('2025-01-01T00:00:00.000Z'),
       updatedAt: new Date('2025-01-01T00:00:00.000Z'),
     }
@@ -82,6 +83,15 @@ describe('recipe-utils recipeToMarkdown', () => {
     expect(r.instructions).toEqual(recipe.instructions)
     expect(r.yield).toBe(recipe.yield)
     expect(r.totalTime).toBe(recipe.totalTime)
+    expect(r.status).toBe('ready')
+  })
+
+  it('reads the status from the metadata block and ignores unknown values', () => {
+    const md = (status: string) => `# Soup\n---\nstatus: ${status}\n---\n- water\n\n1. Boil`
+    expect(parseMarkdown(md('Ready'))[0].status).toBe('ready')
+    expect(parseMarkdown(md('development'))[0].status).toBe('development')
+    expect(parseMarkdown(md('finished'))[0].status).toBeUndefined()
+    expect(parseMarkdown('# Soup\n- water\n\n1. Boil')[0].status).toBeUndefined()
   })
 })
 

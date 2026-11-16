@@ -19,11 +19,13 @@ import { useEditMode } from '@/providers/EditModeProvider'
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
   const { editor } = useEditMode()
-  const { recipes, loading: recipesLoading } = useRecipes({ archived: true })
+  const { layout: selectedLayout, status: statusFilter } = useViewPreferences()
+  const { recipes, loading: recipesLoading } = useRecipes({
+    archived: true,
+    status: statusFilter === 'all' ? undefined : statusFilter,
+  })
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
-
-  const { layout: selectedLayout } = useViewPreferences()
 
   const [selectionList, setSelectionList] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')

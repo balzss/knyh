@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { DatabaseSchema, Tag, UserConfig, GroupData } from './types'
+import {
+  RECIPE_STATUSES,
+  type DatabaseSchema,
+  type Tag,
+  type UserConfig,
+  type GroupData,
+} from './types'
 import { normalizeTotalTime } from './time'
 
 /**
@@ -155,6 +161,8 @@ export function normalizeImportData(data: any): DatabaseSchema {
         createdAt,
         updatedAt,
         archived: recipe.archived || false,
+        // Files from before statuses existed hold finished recipes
+        status: RECIPE_STATUSES.includes(recipe.status) ? recipe.status : 'ready',
       }
     }),
     userConfig: {

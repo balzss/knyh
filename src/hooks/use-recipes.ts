@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { shuffleArray } from '@/lib/utils'
 import { api } from '@/lib/api'
-import type { Recipe, SortOption } from '@/lib/types'
+import type { Recipe, RecipeStatus, SortOption } from '@/lib/types'
 
 type UseRecipesOptions = {
   // An array of recipe IDs to fetch. If undefined, all recipes are considered.
@@ -13,6 +13,8 @@ type UseRecipesOptions = {
   archived?: boolean
   // An array of tag IDs to filter by. Only recipes containing ALL specified tags will be returned.
   tags?: string[]
+  // If set, returns only recipes with this status.
+  status?: RecipeStatus
 }
 
 /**
@@ -59,6 +61,10 @@ export const useRecipes = (options?: UseRecipesOptions) => {
         filteredRecipes = filteredRecipes.filter((recipe) =>
           options.tags!.every((tagId) => recipe.tags.some((tag) => tag.id === tagId))
         )
+      }
+
+      if (options?.status) {
+        filteredRecipes = filteredRecipes.filter((recipe) => recipe.status === options.status)
       }
 
       return filteredRecipes

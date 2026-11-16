@@ -7,6 +7,7 @@ type Recipe = {
   title: string
   tags: Tag[]
   archived: boolean
+  status: 'development' | 'ready'
   totalTime: string | null
   updatedAt: string
 }
@@ -34,6 +35,32 @@ async function createRecipe(overrides: Record<string, unknown> = {}): Promise<Re
 }
 
 describe('recipes', () => {
+  it('starts recipes in development and lets the editor mark them ready', async () => {
+    const created = await createRecipe()
+    expect(created.status).toBe('development')
+
+    const response = await asEditor(`/api/recipes/${created.id}`, {
+      method: 'PUT',
+      json: recipeBody({ status: 'ready' }),
+    })
+    expect(((await response.json()) as Recipe).status).toBe('ready')
+
+    // A save that doesn't mention the status leaves it alone
+    const patched = await asEditor('/api/recipes', {
+      method: 'PATCH',
+      json: { ids: [created.id], data: { title: 'Renamed' } },
+    })
+    expect(((await patched.json()) as Recipe[])[0].status).toBe('ready')
+  })
+
+  it('rejects an unknown status', async () => {
+    const response = await asEditor('/api/recipes', {
+      method: 'POST',
+      json: [recipeBody({ status: 'done' })],
+    })
+    expect(response.status).toBe(400)
+  })
+
   it('creates a recipe with tags and lists it publicly', async () => {
     const tag = await createTag('breakfast')
     const created = await createRecipe({ tags: [{ id: tag.id }] })

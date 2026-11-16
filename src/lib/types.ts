@@ -3,6 +3,9 @@ export type GroupData = {
   items: string[]
 }
 
+export const RECIPE_STATUSES = ['development', 'ready'] as const
+export type RecipeStatus = (typeof RECIPE_STATUSES)[number]
+
 export type Recipe = {
   id: string
   title: string
@@ -10,6 +13,7 @@ export type Recipe = {
   instructions: string[]
   tags: Tag[]
   archived?: boolean
+  status: RecipeStatus
   totalTime: string | null
   yield: string | null
   createdAt: Date
@@ -19,7 +23,7 @@ export type Recipe = {
 /** The part of a recipe the user edits. Carried between form and markdown mode. */
 export type RecipeDraft = Pick<
   Recipe,
-  'title' | 'ingredients' | 'instructions' | 'tags' | 'totalTime' | 'yield'
+  'title' | 'ingredients' | 'instructions' | 'tags' | 'totalTime' | 'yield' | 'status'
 >
 
 export type Tag = {

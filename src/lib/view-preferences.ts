@@ -1,4 +1,4 @@
-import type { SortOption } from './types'
+import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from './types'
 
 /** How a visitor likes to look at the recipe lists. Kept in the browser, not on the server. */
 export type ViewPreferences = {
@@ -6,12 +6,15 @@ export type ViewPreferences = {
   layout: 'list' | 'grid'
   /** The most columns the grid may use on a wide screen */
   gridCols: number
+  /** Which recipes to list: everything, or only one status */
+  status: RecipeStatus | 'all'
 }
 
 export const DEFAULT_VIEW_PREFERENCES: ViewPreferences = {
   sort: 'updated-desc',
   layout: 'list',
   gridCols: 5,
+  status: 'all',
 }
 
 export const GRID_COLS_RANGE = { min: 2, max: 5 } as const
@@ -34,7 +37,7 @@ export function parseViewPreferences(raw: string | null | undefined): ViewPrefer
     /* corrupt value: use the defaults */
   }
 
-  const { sort, layout, gridCols } = stored
+  const { sort, layout, gridCols, status } = stored
   return {
     sort: SORT_OPTIONS.includes(sort as SortOption)
       ? (sort as SortOption)
@@ -47,5 +50,9 @@ export function parseViewPreferences(raw: string | null | undefined): ViewPrefer
       gridCols <= GRID_COLS_RANGE.max
         ? gridCols
         : DEFAULT_VIEW_PREFERENCES.gridCols,
+    status:
+      status === 'all' || RECIPE_STATUSES.includes(status as RecipeStatus)
+        ? (status as ViewPreferences['status'])
+        : DEFAULT_VIEW_PREFERENCES.status,
   }
 }

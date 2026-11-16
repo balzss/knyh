@@ -62,7 +62,9 @@
     "selectTag": "Select tag",
     "emptyTitle": "No recipes yet",
     "emptyDescription": "Start by adding your first recipe.",
-    "emptyCta": "Add recipe"
+    "emptyCta": "Add recipe",
+    "emptyFilteredTitle": "No matching recipes",
+    "emptyFilteredDescription": "Change the status filter in the view options to see more."
   },
   "ArchivePage": {
     "restore": "Restore",
@@ -106,7 +108,11 @@
     "unsavedChanges": "Unsaved Changes",
     "unsavedChangesDescription": "You have unsaved changes. Are you sure you want to leave this page?",
     "leave": "Leave",
-    "stay": "Stay"
+    "stay": "Stay",
+    "status": "Status",
+    "status_development": "In development",
+    "status_ready": "Ready",
+    "statusHint": "Recipes in development are marked as unfinished in the list."
   },
   "RawView": {
     "badFormatting": "Bad formatting",
@@ -206,7 +212,11 @@
     "layout": "Layout",
     "list": "List",
     "grid": "Grid",
-    "maxCols": "Max cols: {cols}"
+    "maxCols": "Max cols: {cols}",
+    "showRecipes": "Show",
+    "statusAll": "All recipes",
+    "status_development": "In development",
+    "status_ready": "Ready"
   },
   "ConfirmDialog": {
     "deleteTitle": "Delete \"{name}\"",
@@ -227,5 +237,8 @@
   "Time": {
     "hours": "hrs",
     "minutes": "mins"
+  },
+  "RecipeStatus": {
+    "development": "In development"
   }
 }

@@ -29,6 +29,7 @@ export default function HomePage() {
     sort: sortOption,
     layout: selectedLayout,
     gridCols: layoutGridCols,
+    status: statusFilter,
   } = useViewPreferences()
 
   const tagParam = searchParams.get('tag')?.split(',')
@@ -36,6 +37,7 @@ export default function HomePage() {
     sort: sortOption,
     archived: false,
     tags: tagParam,
+    status: statusFilter === 'all' ? undefined : statusFilter,
   })
   const { tags: filterTags } = useTags({ ids: tagParam })
   const { updateRecipes } = useRecipeMutations()
@@ -149,8 +151,10 @@ export default function HomePage() {
             ))
           ) : (
             <EmptyState
-              title={t('emptyTitle')}
-              description={t('emptyDescription')}
+              title={t(statusFilter === 'all' ? 'emptyTitle' : 'emptyFilteredTitle')}
+              description={t(
+                statusFilter === 'all' ? 'emptyDescription' : 'emptyFilteredDescription'
+              )}
               icon={BookOpenText}
               action={
                 editor && (

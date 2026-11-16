@@ -54,6 +54,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         tags: base?.tags ?? [],
         totalTime: recipe.totalTime || null,
         yield: recipe.yield || null,
+        status: recipe.status ?? base?.status ?? 'development',
       }
     }
     return () => {
@@ -81,6 +82,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         totalTime: recipe.totalTime || '',
         yield: recipe.yield || '',
         archived: false,
+        status: recipe.status ?? 'development',
         createdAt: now,
         updatedAt: now,
       }))
@@ -105,6 +107,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         totalTime: firstRecipe.totalTime || initialRecipe?.totalTime || '',
         yield: firstRecipe.yield || initialRecipe?.yield || '',
         archived: initialRecipe?.archived ?? false,
+        status: firstRecipe.status ?? base?.status ?? 'development',
         createdAt: initialRecipe?.createdAt ?? now,
         updatedAt: now,
       }

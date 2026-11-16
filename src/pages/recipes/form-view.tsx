@@ -7,6 +7,13 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   PageLayout,
   SortableList,
   SortableGroups,
@@ -18,7 +25,7 @@ import {
 import { getRecipeViewUrl } from '@/lib/urls'
 import { getErrorMessage } from '@/lib/utils'
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
-import type { Tag, Recipe, RecipeDraft } from '@/lib/types'
+import { RECIPE_STATUSES, type Tag, type Recipe, type RecipeDraft } from '@/lib/types'
 import type { DraftGetter } from './edit-recipe-view'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
@@ -57,6 +64,7 @@ export default function FormView({
     defaultValues: {
       ingredients: [],
       instructions: [],
+      status: 'development',
       ...initialRecipe,
       tags: initialTags,
     },
@@ -86,6 +94,7 @@ export default function FormView({
         tags: values.tags ?? [],
         totalTime: values.totalTime ?? null,
         yield: values.yield ?? null,
+        status: values.status,
       }
     }
     return () => {
@@ -202,6 +211,29 @@ export default function FormView({
             />
           )}
         />
+
+        <div className="grid w-full items-center gap-2">
+          <Label htmlFor="recipe-status">{t('status')}</Label>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger id="recipe-status" className="w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {RECIPE_STATUSES.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {t(`status_${status}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+          <p className="text-sm text-muted-foreground">{t('statusHint')}</p>
+        </div>
 
         <div className="mb-3 flex gap-2">
           <Controller

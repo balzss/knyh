@@ -3,6 +3,7 @@ import { z, ZodError } from 'zod'
 import { isEditor, requireEditor, sameOriginWrites } from './auth'
 import type { Env } from './env'
 import * as db from './db'
+import { RECIPE_STATUSES } from '../src/lib/types'
 import {
   isValidDatabaseSchema,
   normalizeImportData,
@@ -19,6 +20,7 @@ const recipeSchema = z.object({
   totalTime: z.string().nullable().optional(),
   yield: z.string().nullable().optional(),
   archived: z.boolean().optional(),
+  status: z.enum(RECIPE_STATUSES).optional(),
 })
 
 const recipePatchSchema = recipeSchema.partial()

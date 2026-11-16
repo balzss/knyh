@@ -15,11 +15,11 @@ import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
 import { useViewPreferences } from '@/hooks'
 import { GRID_COLS_RANGE } from '@/lib/view-preferences'
-import type { SortOption } from '@/lib/types'
+import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@/lib/types'
 
 function DisplayOptionsMenu() {
   const t = useTranslations('TopBar')
-  const { sort, layout, gridCols, update } = useViewPreferences()
+  const { sort, layout, gridCols, status, update } = useViewPreferences()
   const [open, setOpen] = useState<boolean>(false)
 
   return (
@@ -49,6 +49,25 @@ function DisplayOptionsMenu() {
               <SelectItem value="title-desc">{t('titleDesc')}</SelectItem>
               <SelectItem value="updated-asc">{t('updatedAsc')}</SelectItem>
               <SelectItem value="updated-desc">{t('updatedDesc')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="statusSelect">{t('showRecipes')}</Label>
+          <Select
+            onValueChange={(newStatus: RecipeStatus | 'all') => update({ status: newStatus })}
+            value={status}
+          >
+            <SelectTrigger className="w-[180px]" id="statusSelect">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('statusAll')}</SelectItem>
+              {RECIPE_STATUSES.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {t(`status_${value}`)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

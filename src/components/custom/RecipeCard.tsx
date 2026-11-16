@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconButton, myToast, ShareDialog, Highlight } from '@/components/custom'
+import { IconButton, myToast, ShareDialog, Highlight, RecipeStatusBadge } from '@/components/custom'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useLongPress, useFormatTotalTime } from '@/hooks'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'
@@ -65,6 +65,8 @@ export function RecipeCard({
     const duplicatedRecipe = {
       ...recipeDataWithoutId,
       title: `${recipeData.title} (Copy)`,
+      // A copy is new work, so it starts out in development
+      status: 'development' as const,
     }
     createRecipe.mutate(duplicatedRecipe, {
       onSuccess: () => {
@@ -96,24 +98,33 @@ export function RecipeCard({
     [updateRecipe, recipeData, t]
   )
 
-  const { title, yield: recipeYield, totalTime, id } = recipeData
+  const { title, yield: recipeYield, totalTime, id, status } = recipeData
+  const inDevelopment = status === 'development'
   const recipeUrl = `${window.location.origin}${getRecipeViewUrl(id)}`
 
   const headerContent = (
     <>
       <CardTitle className={cn('leading-snug', onSelect && 'pr-8')}>
         <h3>
-          <Highlight text={title} term={highlight} />
+          <span className={cn(inDevelopment && 'opacity-75')}>
+            <Highlight text={title} term={highlight} />
+          </span>
         </h3>
       </CardTitle>
-      <CardDescription className="flex items-center gap-2 select-none sm:select-text">
+      <CardDescription
+        className={cn(
+          'flex flex-wrap items-center gap-x-3 gap-y-1 select-none sm:select-text',
+          inDevelopment && 'opacity-75'
+        )}
+      >
+        <RecipeStatusBadge status={status} variant="label" />
         {recipeYield && (
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center whitespace-nowrap">
             <Users size="1rem" /> {recipeYield}
           </div>
         )}
         {formatTotalTime(totalTime) && (
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center whitespace-nowrap">
             <Timer size="1rem" /> {formatTotalTime(totalTime)}
           </div>
         )}
@@ -153,7 +164,7 @@ export function RecipeCard({
           setIsHovered(false)
         }
       }}
-      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''} ${selectionMode ? 'cursor-pointer select-none' : ''}`}
+      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''} ${inDevelopment ? 'border-dashed' : ''} ${selectionMode ? 'cursor-pointer select-none' : ''}`}
       tabIndex={0}
       onClick={selectionMode ? () => onSelect?.(!isSelected) : undefined}
       {...longPressBind}
@@ -184,7 +195,7 @@ export function RecipeCard({
             as an action button (28 px, so 3 px above and below the 22 px tag), which keeps their
             centres on one line even when the tags wrap. */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+          <div className={cn('flex flex-wrap gap-x-2 gap-y-0.5', inDevelopment && 'opacity-75')}>
             {tags.map((tag) => (
               <Badge
                 key={tag.id}

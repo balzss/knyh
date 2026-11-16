@@ -9,16 +9,27 @@ describe('parseViewPreferences', () => {
   })
 
   it('reads valid stored values', () => {
-    const raw = JSON.stringify({ sort: 'title-desc', layout: 'grid', gridCols: 3 })
-    expect(parseViewPreferences(raw)).toEqual({ sort: 'title-desc', layout: 'grid', gridCols: 3 })
+    const raw = JSON.stringify({
+      sort: 'title-desc',
+      layout: 'grid',
+      gridCols: 3,
+      status: 'ready',
+    })
+    expect(parseViewPreferences(raw)).toEqual({
+      sort: 'title-desc',
+      layout: 'grid',
+      gridCols: 3,
+      status: 'ready',
+    })
   })
 
   it('falls back field by field for invalid values', () => {
-    const raw = JSON.stringify({ sort: 'sideways', layout: 'grid', gridCols: 99 })
+    const raw = JSON.stringify({ sort: 'sideways', layout: 'grid', gridCols: 99, status: 'done' })
     expect(parseViewPreferences(raw)).toEqual({
       sort: DEFAULT_VIEW_PREFERENCES.sort,
       layout: 'grid',
       gridCols: DEFAULT_VIEW_PREFERENCES.gridCols,
+      status: DEFAULT_VIEW_PREFERENCES.status,
     })
   })
 

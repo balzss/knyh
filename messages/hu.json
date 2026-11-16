@@ -62,7 +62,9 @@
     "selectTag": "Címke kiválasztása",
     "emptyTitle": "Még nincsenek receptek",
     "emptyDescription": "Kezdd az első recept hozzáadásával.",
-    "emptyCta": "Új recept"
+    "emptyCta": "Új recept",
+    "emptyFilteredTitle": "Nincs egyező recept",
+    "emptyFilteredDescription": "A nézetbeállításokban módosíthatod az állapotszűrőt."
   },
   "ArchivePage": {
     "restore": "Visszaállítás",
@@ -106,7 +108,11 @@
     "unsavedChanges": "Nem mentett változások",
     "unsavedChangesDescription": "Vannak nem mentett változásaid. Biztosan el akarod hagyni ezt az oldalt?",
     "leave": "Elhagy",
-    "stay": "Marad"
+    "stay": "Marad",
+    "status": "Állapot",
+    "status_development": "Fejlesztés alatt",
+    "status_ready": "Kész",
+    "statusHint": "A fejlesztés alatt álló receptek befejezetlenként jelennek meg a listában."
   },
   "RawView": {
     "badFormatting": "Rossz formázás",
@@ -206,7 +212,11 @@
     "layout": "Elrendezés",
     "list": "Lista",
     "grid": "Rács",
-    "maxCols": "Max oszlop: {cols}"
+    "maxCols": "Max oszlop: {cols}",
+    "showRecipes": "Mutat",
+    "statusAll": "Minden recept",
+    "status_development": "Fejlesztés alatt",
+    "status_ready": "Kész"
   },
   "ConfirmDialog": {
     "deleteTitle": "{name} törlése",
@@ -227,5 +237,8 @@
   "Time": {
     "hours": "óra",
     "minutes": "perc"
+  },
+  "RecipeStatus": {
+    "development": "Fejlesztés alatt"
   }
 }

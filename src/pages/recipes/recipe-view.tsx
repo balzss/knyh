@@ -30,6 +30,7 @@ import {
   myToast,
   Loader,
   RelativeTime,
+  RecipeStatusBadge,
 } from '@/components/custom'
 import { useRecipes, useRecipeMutations, useConfirmDialog, useFormatTotalTime } from '@/hooks'
 import { useEditMode } from '@/providers/EditModeProvider'
@@ -237,6 +238,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
         <PageLayout>
           <div className="flex flex-col gap-1">
             <h1 className="font-bold text-3xl md:text-4xl">{recipe?.title}</h1>
+            <RecipeStatusBadge status={recipe.status} className="self-start my-1" />
             <div className="text-muted-foreground flex gap-4">
               {recipe?.yield && (
                 <div className="flex gap-1 items-center">
