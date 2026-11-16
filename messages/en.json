@@ -52,6 +52,9 @@
     "recipeArchived": "Recipe archived",
     "recipeRestored": "Recipe restored",
     "recipeDuplicated": "Recipe duplicated",
+    "markDevelopment": "Mark as in development",
+    "markReady": "Mark as ready",
+    "statusChanged": "Recipe marked as {status, select, ready {ready} other {in development}}",
     "undo": "Undo"
   },
   "HomePage": {
@@ -153,6 +156,9 @@
     "recipeNotFoundDesc": "The recipe you're looking for doesn't exist or may have been deleted.",
     "backToHome": "Back to home",
     "recipeArchived": "Recipe archived",
+    "markDevelopment": "Mark as in development",
+    "markReady": "Mark as ready",
+    "statusChanged": "Recipe marked as {status, select, ready {ready} other {in development}}",
     "adjustAmounts": "Adjust amounts",
     "resetAmounts": "Back to the original amounts"
   },

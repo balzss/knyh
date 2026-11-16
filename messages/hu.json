@@ -52,6 +52,9 @@
     "recipeArchived": "Recept archiválva",
     "recipeRestored": "Recept visszállítva",
     "recipeDuplicated": "Recept duplikálva",
+    "markDevelopment": "Megjelölés fejlesztés alattiként",
+    "markReady": "Megjelölés késznek",
+    "statusChanged": "Recept megjelölve: {status, select, ready {kész} other {fejlesztés alatt}}",
     "undo": "Visszavonás"
   },
   "HomePage": {
@@ -153,6 +156,9 @@
     "recipeNotFoundDesc": "A keresett recept nem létezik vagy törölve lett.",
     "backToHome": "Vissza a főoldalra",
     "recipeArchived": "Recept archiválva",
+    "markDevelopment": "Megjelölés fejlesztés alattiként",
+    "markReady": "Megjelölés késznek",
+    "statusChanged": "Recept megjelölve: {status, select, ready {kész} other {fejlesztés alatt}}",
     "adjustAmounts": "Mennyiségek módosítása",
     "resetAmounts": "Vissza az eredeti mennyiségekhez"
   },

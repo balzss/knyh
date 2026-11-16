@@ -13,6 +13,8 @@ import {
   Timer,
   ArchiveRestore,
   Copy,
+  Hammer,
+  CircleCheck,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -100,6 +102,26 @@ export function RecipeCard({
 
   const { title, yield: recipeYield, totalTime, id, status } = recipeData
   const inDevelopment = status === 'development'
+
+  const handleToggleStatus = useCallback(() => {
+    const { id, ...data } = recipeData
+    const previous = data.status
+    const next = previous === 'development' ? 'ready' : 'development'
+    updateRecipe.mutate(
+      { id, data: { ...data, status: next } },
+      {
+        onSuccess: () => {
+          myToast({
+            message: t('statusChanged', { status: next }),
+            action: {
+              label: t('undo'),
+              onClick: () => updateRecipe.mutate({ id, data: { ...data, status: previous } }),
+            },
+          })
+        },
+      }
+    )
+  }, [updateRecipe, recipeData, t])
   const recipeUrl = `${window.location.origin}${getRecipeViewUrl(id)}`
 
   const headerContent = (
@@ -251,6 +273,14 @@ export function RecipeCard({
                     <DropdownMenuItem onClick={handleDuplicateRecipe}>
                       <Copy className="mr-2 h-4 w-4" />
                       {t('duplicate')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleToggleStatus}>
+                      {inDevelopment ? (
+                        <CircleCheck className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Hammer className="mr-2 h-4 w-4" />
+                      )}
+                      {inDevelopment ? t('markReady') : t('markDevelopment')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleArchiveRecipe()}>
                       <Archive className="mr-2 h-4 w-4" />

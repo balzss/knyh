@@ -11,6 +11,8 @@ import {
   Trash2,
   Archive,
   Calculator,
+  Hammer,
+  CircleCheck,
 } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
@@ -142,6 +144,27 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
     }
   }
 
+  const handleToggleStatus = () => {
+    if (!recipe) return
+    const { id, ...data } = recipe
+    const previous = data.status
+    const next = previous === 'development' ? 'ready' : 'development'
+    updateRecipe.mutate(
+      { id, data: { ...data, status: next } },
+      {
+        onSuccess: () => {
+          myToast({
+            message: t('statusChanged', { status: next }),
+            action: {
+              label: t('undo'),
+              onClick: () => updateRecipe.mutate({ id, data: { ...data, status: previous } }),
+            },
+          })
+        },
+      }
+    )
+  }
+
   // Show loading state
   if (loading) {
     return (
@@ -235,6 +258,14 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
                   </DropdownMenuItem>
                   {editor && (
                     <>
+                      <DropdownMenuItem onClick={handleToggleStatus}>
+                        {recipe.status === 'development' ? (
+                          <CircleCheck className="mr-2 h-4 w-4" />
+                        ) : (
+                          <Hammer className="mr-2 h-4 w-4" />
+                        )}
+                        {recipe.status === 'development' ? t('markReady') : t('markDevelopment')}
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleArchiveRecipe}>
                         <Archive className="mr-2 h-4 w-4" />
                         {t('archiveRecipe')}
