@@ -6,11 +6,14 @@ type ParsedRecipe = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
+  notes: string[]
   yield: string
   totalTime: string
   /** Absent when the markdown doesn't say */
   status?: RecipeStatus
 }
+
+const NOTES_HEADING = /^##\s+notes\s*$/i
 
 /**
  * Parse a markdown document that may contain one or multiple recipes.
@@ -101,22 +104,31 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
 
   while (i < lines.length && lines[i].trim() === '') i++
 
+  // Everything after the ingredients is a step, until a "## Notes" heading starts the notes
   const instructions: string[] = []
+  const notes: string[] = []
+  let inNotes = false
   while (i < lines.length) {
     let line = lines[i].trim()
-    if (line === '') {
-      i++
+    i++
+    if (line === '') continue
+    if (NOTES_HEADING.test(line)) {
+      inNotes = true
       continue
     }
-    line = line.replace(/^(?:\d+[.)]|[-*])\s+/, '')
-    instructions.push(line)
-    i++
+    if (inNotes) {
+      notes.push(line.replace(/^[-*]\s+/, ''))
+    } else {
+      line = line.replace(/^(?:\d+[.)]|[-*])\s+/, '')
+      instructions.push(line)
+    }
   }
 
   return {
     title,
     ingredients: ingredients.length ? [{ label: '', items: ingredients }] : [], // Convert string[] to GroupData[]
     instructions,
+    notes,
     yield: yieldValue,
     totalTime: totalTimeValue,
     status: statusValue,
@@ -126,7 +138,7 @@ export function parseSingleRecipe(md: string): ParsedRecipe | null {
 /** Serialize a Recipe entity into markdown understood by parseMarkdown. */
 export function recipeToMarkdown(
   recipe: Pick<Recipe, 'title' | 'ingredients' | 'instructions' | 'yield' | 'totalTime'> &
-    Partial<Pick<Recipe, 'status'>>
+    Partial<Pick<Recipe, 'status' | 'notes'>>
 ): string {
   const header = `# ${recipe.title}`
 
@@ -142,7 +154,10 @@ export function recipeToMarkdown(
     .map((i) => `- ${i}`)
     .join('\n')
   const instructions = recipe.instructions.map((s, idx) => `${idx + 1}. ${s}`).join('\n')
-  return `${header}${frontmatterBlock}\n${ingredients}\n\n${instructions}`
+  const notes = recipe.notes?.length
+    ? `\n\n## Notes\n${recipe.notes.map((n) => `- ${n}`).join('\n')}`
+    : ''
+  return `${header}${frontmatterBlock}\n${ingredients}\n\n${instructions}${notes}`
 }
 
 /**

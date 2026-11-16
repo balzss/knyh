@@ -9,7 +9,6 @@ import {
   Pencil,
   Circle,
   CircleCheckBig,
-  Users,
   Timer,
   ArchiveRestore,
   Copy,
@@ -100,7 +99,7 @@ export function RecipeCard({
     [updateRecipe, recipeData, t]
   )
 
-  const { title, yield: recipeYield, totalTime, id, status } = recipeData
+  const { title, totalTime, id, status } = recipeData
   const inDevelopment = status === 'development'
 
   const handleToggleStatus = useCallback(() => {
@@ -140,11 +139,6 @@ export function RecipeCard({
         )}
       >
         <RecipeStatusBadge status={status} variant="label" />
-        {recipeYield && (
-          <div className="flex gap-1 items-center whitespace-nowrap">
-            <Users size="1rem" /> {recipeYield}
-          </div>
-        )}
         {formatTotalTime(totalTime) && (
           <div className="flex gap-1 items-center whitespace-nowrap">
             <Timer size="1rem" /> {formatTotalTime(totalTime)}

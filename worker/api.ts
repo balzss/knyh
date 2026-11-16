@@ -16,6 +16,8 @@ const recipeSchema = z.object({
   title: z.string().trim().min(1).max(500),
   ingredients: z.array(groupSchema).default([]),
   instructions: z.array(z.string()).default([]),
+  // Optional with no default, so a save that leaves it out keeps what is stored
+  notes: z.array(z.string()).optional(),
   tags: z.array(z.object({ id: z.string() })).default([]),
   totalTime: z.string().nullable().optional(),
   yield: z.string().nullable().optional(),
@@ -79,7 +81,9 @@ api.get('/recipes', async (c) => {
   // Archived recipes are private. Visitors only ever get the live ones.
   if (!(await isEditor(c.env, c.req.raw))) {
     if (wantsArchived) return c.json({ message: 'Unauthorized' }, 401)
-    return c.json(await db.listRecipes(c.env.DB, false))
+    // Notes are for the editor only
+    const recipes = await db.listRecipes(c.env.DB, false)
+    return c.json(recipes.map((recipe) => ({ ...recipe, notes: [] })))
   }
 
   return c.json(await db.listRecipes(c.env.DB, wantsArchived))

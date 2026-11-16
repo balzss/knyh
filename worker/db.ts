@@ -14,6 +14,7 @@ type RecipeJson = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
+  notes: string[]
   tags: Tag[]
   archived: boolean
   status: RecipeStatus
@@ -27,6 +28,7 @@ type RecipeInput = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
+  notes?: string[]
   tags?: { id: string }[]
   totalTime?: string | null
   yield?: string | null
@@ -39,6 +41,7 @@ type RecipeRow = {
   title: string
   ingredients: string
   instructions: string
+  notes: string
   total_time: string | null
   yield: string | null
   archived: number
@@ -80,6 +83,7 @@ const toRecipe = (row: RecipeRow, tags: Tag[]): RecipeJson => ({
   title: row.title,
   ingredients: JSON.parse(row.ingredients),
   instructions: JSON.parse(row.instructions),
+  notes: JSON.parse(row.notes),
   tags,
   archived: Boolean(row.archived),
   status: row.status,
@@ -117,14 +121,15 @@ function insertRecipeStatements(
   return [
     db
       .prepare(
-        `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, status, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO recipes (id, title, ingredients, instructions, notes, total_time, yield, archived, status, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .bind(
         id,
         recipe.title,
         JSON.stringify(recipe.ingredients),
         JSON.stringify(recipe.instructions),
+        JSON.stringify(recipe.notes ?? []),
         recipe.totalTime ?? null,
         recipe.yield ?? null,
         recipe.archived ? 1 : 0,
@@ -168,6 +173,7 @@ export async function updateRecipe(
   if (updates.title !== undefined) set('title', updates.title)
   if (updates.ingredients !== undefined) set('ingredients', JSON.stringify(updates.ingredients))
   if (updates.instructions !== undefined) set('instructions', JSON.stringify(updates.instructions))
+  if (updates.notes !== undefined) set('notes', JSON.stringify(updates.notes))
   if (updates.totalTime !== undefined) set('total_time', updates.totalTime)
   if (updates.yield !== undefined) set('yield', updates.yield)
   if (updates.archived !== undefined) set('archived', updates.archived ? 1 : 0)

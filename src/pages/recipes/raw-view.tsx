@@ -51,6 +51,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         title: recipe.title,
         ingredients: mergeIngredientGroups(base?.ingredients, recipe.ingredients),
         instructions: recipe.instructions,
+        notes: recipe.notes,
         tags: base?.tags ?? [],
         totalTime: recipe.totalTime || null,
         yield: recipe.yield || null,
@@ -78,6 +79,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         title: recipe.title,
         ingredients: recipe.ingredients,
         instructions: recipe.instructions,
+        notes: recipe.notes,
         tags: [], // bulk recipes don't have tags initially
         totalTime: recipe.totalTime || '',
         yield: recipe.yield || '',
@@ -103,6 +105,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         title: firstRecipe.title,
         ingredients: firstRecipe.ingredients,
         instructions: firstRecipe.instructions,
+        notes: firstRecipe.notes,
         tags: base?.tags ?? [],
         totalTime: firstRecipe.totalTime || initialRecipe?.totalTime || '',
         yield: firstRecipe.yield || initialRecipe?.yield || '',
@@ -193,6 +196,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
                 <li>{t('ruleOptionalMeta')}</li>
                 <li>{t('ruleIngredientsSimple')}</li>
                 <li>{t('ruleInstructionsSimple')}</li>
+                <li>{t('ruleNotes')}</li>
                 <li>{t('ruleBulk')}</li>
               </ul>
               <p className="text-xs text-muted-foreground">{t('hintTips')}</p>

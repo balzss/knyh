@@ -66,6 +66,7 @@ describe('recipe-utils recipeToMarkdown', () => {
       title: 'Roundtrip',
       ingredients: [{ label: '', items: ['ing 1', 'ing 2'] }],
       instructions: ['Do A', 'Do B'],
+      notes: [],
       tags: [],
       yield: '3',
       totalTime: '0:15',
@@ -92,6 +93,48 @@ describe('recipe-utils recipeToMarkdown', () => {
     expect(parseMarkdown(md('development'))[0].status).toBe('development')
     expect(parseMarkdown(md('finished'))[0].status).toBeUndefined()
     expect(parseMarkdown('# Soup\n- water\n\n1. Boil')[0].status).toBeUndefined()
+  })
+})
+
+describe('notes in markdown', () => {
+  const md =
+    '# Soup\n- water\n- salt\n\n1. Boil\n2. Season\n\n## Notes\n- Less salt next time\n- From Grandma'
+
+  it('reads a trailing Notes section and keeps it out of the steps', () => {
+    const [r] = parseMarkdown(md)
+    expect(r.instructions).toEqual(['Boil', 'Season'])
+    expect(r.notes).toEqual(['Less salt next time', 'From Grandma'])
+  })
+
+  it('accepts the heading in any case and notes without a dash', () => {
+    const [r] = parseMarkdown('# Soup\n- water\n\nBoil\n\n## NOTES\nplain note')
+    expect(r.instructions).toEqual(['Boil'])
+    expect(r.notes).toEqual(['plain note'])
+  })
+
+  it('gives no notes when the section is missing', () => {
+    expect(parseMarkdown('# Soup\n- water\n\n1. Boil')[0].notes).toEqual([])
+  })
+
+  it('keeps notes with the right recipe when several are pasted together', () => {
+    const [a, b] = parseMarkdown(`${md}\n\n# Toast\n- bread\n\n1. Toast it`)
+    expect(a.notes).toHaveLength(2)
+    expect(b.notes).toEqual([])
+    expect(b.instructions).toEqual(['Toast it'])
+  })
+
+  it('roundtrips notes and writes no section when there are none', () => {
+    const recipe = {
+      title: 'Soup',
+      ingredients: [{ label: '', items: ['water'] }],
+      instructions: ['Boil'],
+      yield: '',
+      totalTime: '',
+    }
+    expect(recipeToMarkdown({ ...recipe, notes: [] })).not.toContain('Notes')
+    const out = recipeToMarkdown({ ...recipe, notes: ['a', 'b'] })
+    expect(parseMarkdown(out)[0].notes).toEqual(['a', 'b'])
+    expect(parseMarkdown(out)[0].instructions).toEqual(['Boil'])
   })
 })
 

@@ -155,6 +155,10 @@ export function normalizeImportData(data: any): DatabaseSchema {
       return {
         ...recipe,
         ingredients,
+        // Files from before notes existed have none. Anything that isn't text is dropped.
+        notes: Array.isArray(recipe.notes)
+          ? recipe.notes.filter((note: unknown) => typeof note === 'string')
+          : [],
         tags,
         totalTime,
         yield: yield_,

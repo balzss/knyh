@@ -11,6 +11,8 @@ export type Recipe = {
   title: string
   ingredients: GroupData[]
   instructions: string[]
+  /** Tips, substitutions and anything else worth remembering, one per entry */
+  notes: string[]
   tags: Tag[]
   archived?: boolean
   status: RecipeStatus
@@ -23,7 +25,7 @@ export type Recipe = {
 /** The part of a recipe the user edits. Carried between form and markdown mode. */
 export type RecipeDraft = Pick<
   Recipe,
-  'title' | 'ingredients' | 'instructions' | 'tags' | 'totalTime' | 'yield' | 'status'
+  'title' | 'ingredients' | 'instructions' | 'notes' | 'tags' | 'totalTime' | 'yield' | 'status'
 >
 
 export type Tag = {

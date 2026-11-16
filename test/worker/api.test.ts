@@ -9,6 +9,7 @@ type Recipe = {
   archived: boolean
   status: 'development' | 'ready'
   totalTime: string | null
+  notes: string[]
   updatedAt: string
 }
 
@@ -64,6 +65,39 @@ describe('recipes', () => {
     const [recipe] = (await patched.json()) as Recipe[]
     expect(recipe.status).toBe('ready')
     expect(recipe.updatedAt).toBe(created.updatedAt)
+  })
+
+  it('starts with no notes', async () => {
+    const created = await createRecipe()
+    expect(created.notes).toEqual([])
+  })
+
+  it('stores notes and keeps them when a save leaves them out', async () => {
+    const created = await createRecipe({ notes: ['use less salt', 'from Grandma'] })
+    expect(created.notes).toEqual(['use less salt', 'from Grandma'])
+
+    // The markdown editor saves without notes. That must not wipe them.
+    const saved = await asEditor(`/api/recipes/${created.id}`, {
+      method: 'PUT',
+      json: recipeBody({ title: 'Renamed' }),
+    })
+    expect(((await saved.json()) as Recipe).notes).toEqual(['use less salt', 'from Grandma'])
+
+    const cleared = await asEditor(`/api/recipes/${created.id}`, {
+      method: 'PUT',
+      json: recipeBody({ notes: [] }),
+    })
+    expect(((await cleared.json()) as Recipe).notes).toEqual([])
+  })
+
+  it('hides notes from visitors but not from the editor', async () => {
+    const created = await createRecipe({ notes: ['private tip'] })
+
+    const visitor = (await (await call('/api/recipes')).json()) as Recipe[]
+    expect(visitor.find((r) => r.id === created.id)?.notes).toEqual([])
+
+    const editor = (await (await asEditor('/api/recipes')).json()) as Recipe[]
+    expect(editor.find((r) => r.id === created.id)?.notes).toEqual(['private tip'])
   })
 
   it('rejects an unknown status', async () => {

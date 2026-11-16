@@ -20,12 +20,13 @@ for (const tag of data.tags) {
 }
 for (const recipe of data.recipes) {
   lines.push(
-    `INSERT INTO recipes (id, title, ingredients, instructions, total_time, yield, archived, status, created_at, updated_at) VALUES (` +
+    `INSERT INTO recipes (id, title, ingredients, instructions, notes, total_time, yield, archived, status, created_at, updated_at) VALUES (` +
       [
         q(recipe.id),
         q(recipe.title),
         q(JSON.stringify(recipe.ingredients)),
         q(JSON.stringify(recipe.instructions)),
+        q(JSON.stringify(recipe.notes)),
         q(recipe.totalTime),
         q(recipe.yield),
         recipe.archived ? 1 : 0,

@@ -62,6 +62,32 @@ function ScaledText({
   )
 }
 
+/** Text with its web addresses turned into links */
+function LinkifiedText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(https?:\/\/\S+)/).map((part, index) => {
+        if (index % 2 === 0) return part
+        // Punctuation at the end of a sentence isn't part of the address
+        const [, url, trailing] = /^(.*?)([.,;:!?)]*)$/.exec(part) ?? [part, part, '']
+        return (
+          <span key={index}>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline break-all"
+            >
+              {url}
+            </a>
+            {trailing}
+          </span>
+        )
+      })}
+    </>
+  )
+}
+
 export default function RecipeView({ recipeId }: RecipeViewProps) {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set())
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
@@ -94,11 +120,7 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
   }, [titleEl])
 
   const handleClosePage = () => {
-    if (window.history.length && document.referrer === '') {
-      navigate(-1)
-    } else {
-      navigate('/', { replace: true })
-    }
+    navigate('/', { replace: true })
   }
 
   const handleIngredientCheckChange = (checked: boolean, index: number) => {
@@ -386,6 +408,18 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               ))}
             </ol>
           </div>
+          {editor && recipe.notes.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl text-muted-foreground mt-4">{t('notes')}</h2>
+              <ul className="flex flex-col gap-2 ml-4 list-disc text-md leading-6">
+                {recipe.notes.map((note, index) => (
+                  <li key={index}>
+                    <LinkifiedText text={note} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className="mt-8 text-xs italic text-muted-foreground">
             {recipe?.updatedAt && (
               <p>

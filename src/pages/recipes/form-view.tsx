@@ -64,6 +64,7 @@ export default function FormView({
     defaultValues: {
       ingredients: [],
       instructions: [],
+      notes: [],
       status: 'development',
       ...initialRecipe,
       tags: initialTags,
@@ -91,6 +92,7 @@ export default function FormView({
         title: values.title ?? '',
         ingredients: values.ingredients ?? [],
         instructions: values.instructions ?? [],
+        notes: values.notes ?? [],
         tags: values.tags ?? [],
         totalTime: values.totalTime ?? null,
         yield: values.yield ?? null,
@@ -191,6 +193,20 @@ export default function FormView({
             <SortableList
               label={t('instructions')}
               addItemLabel={t('addInstruction')}
+              items={field.value}
+              onItemsChange={field.onChange}
+              multiLine
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="notes"
+          render={({ field }) => (
+            <SortableList
+              label={t('notes')}
+              addItemLabel={t('addNote')}
               items={field.value}
               onItemsChange={field.onChange}
               multiLine

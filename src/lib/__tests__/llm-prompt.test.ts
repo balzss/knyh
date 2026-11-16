@@ -11,6 +11,8 @@ describe('LLM recipe prompt', () => {
       'time:',
       'dash and a space',
       'blank line',
+      'two hash signs',
+      'Notes',
     ]) {
       expect(LLM_RECIPE_PROMPT, part).toContain(part)
     }
@@ -47,6 +49,9 @@ describe('LLM recipe prompt', () => {
       '- 2 slices of bread',
       '',
       'Toast the bread.',
+      '',
+      '## Notes',
+      '- Serve with butter.',
     ].join('\n')
 
     const [soup, toast] = parseMarkdown(reply)
@@ -56,5 +61,7 @@ describe('LLM recipe prompt', () => {
     expect(soup.ingredients).toEqual([{ label: '', items: ['800 g tomatoes', '1 onion'] }])
     expect(soup.instructions).toHaveLength(2)
     expect(toast.title).toBe('Toast')
+    expect(toast.instructions).toEqual(['Toast the bread.'])
+    expect(toast.notes).toEqual(['Serve with butter.'])
   })
 })
