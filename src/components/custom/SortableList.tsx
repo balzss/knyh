@@ -146,6 +146,16 @@ export function SortableList({
       ])
     }
 
+    if (e.key === 'Backspace' && e.currentTarget.value === '' && currentIndex > 0) {
+      e.preventDefault()
+      const prev = inputRefs.current[internalItems[currentIndex - 1].id]
+      if (prev) {
+        prev.focus()
+        prev.setSelectionRange(prev.value.length, prev.value.length)
+      }
+      updateItems(internalItems.filter((item) => item.id !== itemId))
+    }
+
     if (e.key === 'ArrowDown') {
       if (currentIndex < internalItems.length - 1) {
         inputRefs.current[internalItems[currentIndex + 1].id]?.focus()
