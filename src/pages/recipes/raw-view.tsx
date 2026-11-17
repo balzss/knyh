@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState, type MutableRefObject } from 'react'
 import { useTranslations } from 'use-intl'
-import { FileWarning, Save, HelpCircle } from 'lucide-react'
+import { FileWarning, HelpCircle } from 'lucide-react'
 import EditorModule from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-markdown'
@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button'
 import { PageLayout, HelpDialog, LlmPrompt, myToast } from '@/components/custom'
 import { useRecipeMutations } from '@/hooks'
 import { getErrorMessage } from '@/lib/utils'
+import { getRecipeEditUrl } from '@/lib/urls'
 import type { Recipe, RecipeDraft } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
 import type { DraftGetter } from './edit-recipe-view'
+import { useSaveAction, type SaveAction } from './use-save-action'
 
 // The package is CommonJS (`exports.default = Editor`). Depending on the bundler's interop, the default
 // import is the component itself or the whole exports object, so accept both.
@@ -24,9 +26,15 @@ type RawViewProps = {
   /** Content carried over from form mode */
   draft?: RecipeDraft | null
   draftGetter?: MutableRefObject<DraftGetter | null>
+  onSaveActionChange?: (action: SaveAction | null) => void
 }
 
-export default function RawView({ initialRecipe, draft, draftGetter }: RawViewProps) {
+export default function RawView({
+  initialRecipe,
+  draft,
+  draftGetter,
+  onSaveActionChange,
+}: RawViewProps) {
   const t = useTranslations('RawView')
   const tForm = useTranslations('FormView') // reuse success messages
   const navigate = useNavigate()
@@ -92,7 +100,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
       createRecipe.mutate(payloads, {
         onError: showSaveError,
         onSuccess: (created) => {
-          navigate(`/recipes/${created[0].id}`)
+          navigate('/')
           myToast({
             message: `${created.length} ${created.length === 1 ? tForm('recipeCreated') : 'recipes created!'}`,
           })
@@ -120,8 +128,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
           { id: initialRecipe.id, data: payload },
           {
             onError: showSaveError,
-            onSuccess: (updated) => {
-              navigate(`/recipes/${updated.id}`)
+            onSuccess: () => {
               myToast({ message: tForm('recipeUpdated') })
             },
           }
@@ -130,13 +137,19 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
         createRecipe.mutate(payload, {
           onError: showSaveError,
           onSuccess: (created) => {
-            navigate(`/recipes/${created[0].id}`)
+            navigate(getRecipeEditUrl(created[0].id), { replace: true })
             myToast({ message: tForm('recipeCreated') })
           },
         })
       }
     }
   }
+
+  useSaveAction(onSaveActionChange, {
+    label: isMultipleRecipes ? `Save ${parsed.length} recipes` : t('saveRecipe'),
+    disabled: !isValid || isSaving,
+    onSave: handleSave,
+  })
 
   const renderCheckButton = () => {
     if (!isValid) {
@@ -159,18 +172,7 @@ export default function RawView({ initialRecipe, draft, draftGetter }: RawViewPr
       )
     }
 
-    const buttonText = isMultipleRecipes ? `Save ${parsed.length} recipes` : t('saveRecipe')
-
-    return (
-      <Button
-        className="justify-self-start mb-2"
-        onClick={handleSave}
-        disabled={!isValid || isSaving}
-      >
-        <Save />
-        {buttonText}
-      </Button>
-    )
+    return null
   }
 
   return (

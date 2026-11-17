@@ -140,7 +140,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
         )}
         <SidebarContent className={isMobile ? '' : 'mt-16'}>
           <SidebarGroup>
-            {editor && (
+            {editor && !isMobile && (
               <div className="mb-4">
                 <Button
                   variant={path === '/new' ? 'outline' : 'default'}

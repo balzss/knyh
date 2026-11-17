@@ -5,7 +5,7 @@ import ArchivePage from '@/pages/ArchivePage'
 import RandomPage from '@/pages/RandomPage'
 import SettingsPage from '@/pages/SettingsPage'
 import ShoppingListPage from '@/pages/ShoppingListPage'
-import { EditorOnly } from '@/components/custom'
+import { EditorOnly, BottomNav } from '@/components/custom'
 import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
 import NotFoundPage from '@/pages/NotFoundPage'
 
@@ -13,6 +13,7 @@ function Root() {
   return (
     <Providers>
       <Outlet />
+      <BottomNav />
       <ScrollRestoration />
     </Providers>
   )

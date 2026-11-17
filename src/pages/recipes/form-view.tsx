@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, type MutableRefObject } from 'react'
 import { useTranslations } from 'use-intl'
-import { Save } from 'lucide-react'
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -22,11 +20,12 @@ import {
   TotalTimeDialog,
   myToast,
 } from '@/components/custom'
-import { getRecipeViewUrl } from '@/lib/urls'
+import { getRecipeEditUrl } from '@/lib/urls'
 import { getErrorMessage } from '@/lib/utils'
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import { RECIPE_STATUSES, type Tag, type Recipe, type RecipeDraft } from '@/lib/types'
 import type { DraftGetter } from './edit-recipe-view'
+import { useSaveAction, type SaveAction } from './use-save-action'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {
   tags: Tag[]
@@ -38,6 +37,7 @@ type FormViewProps = {
   /** Content carried over from markdown mode */
   draft?: RecipeDraft | null
   draftGetter?: MutableRefObject<DraftGetter | null>
+  onSaveActionChange?: (action: SaveAction | null) => void
 }
 
 export default function FormView({
@@ -45,6 +45,7 @@ export default function FormView({
   resetTrigger,
   draft,
   draftGetter,
+  onSaveActionChange,
 }: FormViewProps) {
   const t = useTranslations('FormView')
   const navigate = useNavigate()
@@ -134,8 +135,9 @@ export default function FormView({
         },
         {
           onError: showSaveError,
-          onSuccess: (updatedRecipe) => {
-            navigate(getRecipeViewUrl(updatedRecipe.id))
+          onSuccess: () => {
+            // Stay on the page; the saved values become the new baseline
+            reset(submitData)
             myToast({
               message: t('recipeUpdated'),
             })
@@ -146,7 +148,7 @@ export default function FormView({
       createRecipe.mutate(submitData, {
         onError: showSaveError,
         onSuccess: (newlyCreatedRecipes) => {
-          navigate(getRecipeViewUrl(newlyCreatedRecipes[0].id))
+          navigate(getRecipeEditUrl(newlyCreatedRecipes[0].id), { replace: true })
           myToast({
             message: t('recipeCreated'),
           })
@@ -155,9 +157,17 @@ export default function FormView({
     }
   }
 
+  const submit = handleSubmit(onSubmit)
+
+  useSaveAction(onSaveActionChange, {
+    label: t('saveRecipe'),
+    disabled: !isValid || !isDirty,
+    onSave: () => void submit(),
+  })
+
   return (
     <PageLayout>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form onSubmit={submit} className="flex flex-col gap-6">
         <div className="grid w-full items-center gap-2">
           <Label htmlFor="recipe-title">{t('recipeTitle')}</Label>
           <Input
@@ -268,13 +278,6 @@ export default function FormView({
               </Select>
             )}
           />
-        </div>
-
-        <div className="mb-3">
-          <Button disabled={!isValid || !isDirty} type="submit">
-            <Save />
-            {t('saveRecipe')}
-          </Button>
         </div>
       </form>
     </PageLayout>

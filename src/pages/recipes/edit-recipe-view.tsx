@@ -1,17 +1,22 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
-import { X, Ellipsis, TextCursorInput, FileText } from 'lucide-react'
+import { X, Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
 import { TopBar, AppSidebar, IconButton } from '@/components/custom'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import FormView from './form-view'
 import RawView from './raw-view'
+import type { SaveAction } from './use-save-action'
 import { useRecipes, useConfirmDialog } from '@/hooks'
 import type { RecipeDraft } from '@/lib/types'
 
@@ -36,6 +41,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   // What the user entered, handed from one mode to the other when switching
   const [draft, setDraft] = useState<RecipeDraft | null>(null)
   const draftGetter = useRef<DraftGetter | null>(null)
+  const [saveAction, setSaveAction] = useState<SaveAction | null>(null)
   const { confirm } = useConfirmDialog()
 
   const t = useTranslations('EditRecipeView')
@@ -86,33 +92,26 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               iconSize="normal"
               variant="ghost"
               icon={<X />}
+              className={inNewRecipeMode ? 'hidden sm:flex' : ''}
               tooltip={t('close')}
               onClick={handleClosePage}
             />
             <span className="mr-auto sm:mr-4 font-bold">
               {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
             </span>
-            <div
-              role="group"
-              aria-label={t('editorMode')}
-              className="flex gap-0.5 rounded-md border p-0.5"
-            >
-              {MODES.map(({ value, icon: Icon, labelKey }) => (
-                <Button
-                  key={value}
-                  type="button"
-                  size="sm"
-                  variant={mode === value ? 'secondary' : 'ghost'}
-                  aria-pressed={mode === value}
-                  aria-label={t(labelKey)}
-                  className="h-7 gap-1.5 px-2"
-                  onClick={() => handleSwitchMode(value)}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{t(labelKey)}</span>
-                </Button>
-              ))}
-            </div>
+            {saveAction && (
+              <Button
+                type="button"
+                size="sm"
+                variant={saveAction.disabled ? 'ghost' : 'default'}
+                aria-label={saveAction.label}
+                disabled={saveAction.disabled}
+                onClick={saveAction.onSave}
+              >
+                <Save className="h-4 w-4" />
+                <span className="hidden sm:inline">{saveAction.label}</span>
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <IconButton
@@ -123,6 +122,19 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
                 />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>{t('editorMode')}</DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={mode}
+                  onValueChange={(value) => handleSwitchMode(value as typeof mode)}
+                >
+                  {MODES.map(({ value, icon: Icon, labelKey }) => (
+                    <DropdownMenuRadioItem key={value} value={value} className="gap-2">
+                      <Icon className="h-4 w-4" />
+                      {t(labelKey)}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
                   {t('resetChanges')}
                 </DropdownMenuItem>
@@ -136,13 +148,19 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
       {(inNewRecipeMode || recipeToEdit) && (
         <main className="w-full mt-16 mx-auto">
           {mode === 'raw' ? (
-            <RawView initialRecipe={recipeToEdit} draft={draft} draftGetter={draftGetter} />
+            <RawView
+              initialRecipe={recipeToEdit}
+              draft={draft}
+              draftGetter={draftGetter}
+              onSaveActionChange={setSaveAction}
+            />
           ) : (
             <FormView
               initialRecipe={recipeToEdit}
               resetTrigger={formResetTrigger}
               draft={draft}
               draftGetter={draftGetter}
+              onSaveActionChange={setSaveAction}
             />
           )}
         </main>
