@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 import type { Idea, Recipe } from '@shared/types'
 
 type IdeaInput = { title: string; notes?: string[] }

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { BookOpenText, FilePlus, Lightbulb, ShoppingCart } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 
 export function BottomNav() {
   const t = useTranslations('Navigation')

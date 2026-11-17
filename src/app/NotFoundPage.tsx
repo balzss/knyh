@@ -3,7 +3,7 @@ import { useTranslations } from 'use-intl'
 import { FileQuestion } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TopBar } from '@/components/custom/TopBar'
-import { AppSidebar } from '@/components/custom/AppSidebar'
+import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/custom/PageLayout'
 import { EmptyState } from '@/components/custom/EmptyState'
 

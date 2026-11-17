@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigationGuard } from '@/providers/NavigationGuardProvider'
+import { useNavigationGuard } from '@/app/providers/NavigationGuardProvider'
 
 interface UseFormNavigationGuardOptions {
   isDirty: boolean

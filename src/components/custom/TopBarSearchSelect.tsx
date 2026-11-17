@@ -21,7 +21,7 @@ import { Label } from '@/components/ui/label'
 import { TextInput } from './TextInput'
 import { IconButton } from './IconButton'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 import { DEFAULT_VIEW_PREFERENCES, GRID_COLS_RANGE } from '@/lib/view-preferences'
 import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@shared/types'
 

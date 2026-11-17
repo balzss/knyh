@@ -36,12 +36,12 @@ import { SiGithub } from '@icons-pack/react-simple-icons'
 import { useTags } from '@/hooks/use-tags'
 import { useTagMutations } from '@/hooks/use-tag-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
-import { myToast } from './myToast'
-import { RenameTagDialog } from './RenameTagDialog'
+import { myToast } from '@/components/custom/myToast'
+import { RenameTagDialog } from '@/components/custom/RenameTagDialog'
 import { SidebarItemRow } from './SidebarItemRow'
 import type { Tag } from '@shared/types'
 import { getErrorMessage } from '@/lib/utils'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 
 const buildTime = new Date(__BUILD_TIME__).toLocaleString([], {
   dateStyle: 'medium',

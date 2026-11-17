@@ -33,7 +33,7 @@ import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 import { useLongPress } from '@/hooks/use-long-press'
 import { useFormatTotalTime } from '@/hooks/use-format-total-time'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 
 type RecipeCardProps = {
   tags: Tag[]

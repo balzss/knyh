@@ -10,13 +10,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { TopBar } from '@/components/custom/TopBar'
-import { AppSidebar } from '@/components/custom/AppSidebar'
+import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/custom/PageLayout'
 import { useConfig } from '@/hooks/use-config'
 import { useUpdateConfig } from '@/hooks/use-update-config'
 import { useImportExport } from '@/hooks/use-import-export'
-import { useTheme, type Theme } from '@/providers/ThemeProvider'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 
 type Language = 'hu' | 'en'
 

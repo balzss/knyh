@@ -3,7 +3,7 @@ import { useTranslations } from 'use-intl'
 import {
   ConfirmDialogContext,
   type ConfirmDialogContextType,
-} from '@/providers/confirm-dialog-context'
+} from '@/app/providers/confirm-dialog-context'
 
 interface UseConfirmDialogExtended extends ConfirmDialogContextType {
   confirmDelete: (params: { name?: string }) => Promise<boolean>

@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { TopBar } from '@/components/custom/TopBar'
-import { AppSidebar } from '@/components/custom/AppSidebar'
+import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/custom/PageLayout'
 import { IconButton } from '@/components/custom/IconButton'
 import { ShareDialog } from '@/components/custom/ShareDialog'
@@ -36,7 +36,7 @@ import { useRecipes } from '@/hooks/use-recipes'
 import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useFormatTotalTime } from '@/hooks/use-format-total-time'
-import { useEditMode } from '@/providers/EditModeProvider'
+import { useEditMode } from '@/app/providers/EditModeProvider'
 import { getRecipeEditUrl } from '@/lib/urls'
 import { formatAmount, scaleLine } from '@/lib/scale-quantity'
 

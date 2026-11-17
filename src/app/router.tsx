@@ -5,7 +5,7 @@ import {
   ScrollRestoration,
   useParams,
 } from 'react-router-dom'
-import Providers from '@/providers'
+import Providers from '@/app/providers/index'
 import HomePage from '@/pages/HomePage'
 import ArchivePage from '@/pages/ArchivePage'
 import IdeasPage from '@/pages/IdeasPage'
@@ -13,9 +13,9 @@ import RandomPage from '@/pages/RandomPage'
 import SettingsPage from '@/pages/SettingsPage'
 import ShoppingListPage from '@/pages/ShoppingListPage'
 import { EditorOnly } from '@/components/custom/EditorOnly'
-import { BottomNav } from '@/components/custom/BottomNav'
+import { BottomNav } from '@/app/layout/BottomNav'
 import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
-import NotFoundPage from '@/pages/NotFoundPage'
+import NotFoundPage from './NotFoundPage'
 
 // Old /recipes/... links were shared before the move to /r/...
 function LegacyRecipeRedirect({ suffix = '' }: { suffix?: string }) {
