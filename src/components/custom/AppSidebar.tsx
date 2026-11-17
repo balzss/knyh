@@ -37,7 +37,7 @@ import { useTags, useTagMutations, useConfirmDialog } from '@/hooks'
 import { myToast } from './myToast'
 import { RenameTagDialog } from './RenameTagDialog'
 import { SidebarItemRow } from './SidebarItemRow'
-import type { Tag } from '@/lib/types'
+import type { Tag } from '@shared/types'
 import { getErrorMessage } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
 

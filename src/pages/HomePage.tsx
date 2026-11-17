@@ -16,7 +16,7 @@ import {
 import { useRecipes, useRecipeMutations, useTags, useViewPreferences } from '@/hooks'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/providers/EditModeProvider'
-import type { RecipeStatus, Tag } from '@/lib/types'
+import type { RecipeStatus, Tag } from '@shared/types'
 
 export default function HomePage() {
   const t = useTranslations('HomePage')

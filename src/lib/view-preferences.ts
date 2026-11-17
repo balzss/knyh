@@ -1,4 +1,4 @@
-import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from './types'
+import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@shared/types'
 
 /** How a visitor likes to look at the recipe lists. Kept in the browser, not on the server. */
 export type ViewPreferences = {

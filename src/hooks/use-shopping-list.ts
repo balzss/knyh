@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useEditMode } from '@/providers/EditModeProvider'
-import type { ShoppingListItem } from '@/lib/types'
+import type { ShoppingListItem } from '@shared/types'
 
 /**
  * Hook to fetch shopping list items. The list is only readable in edit mode.

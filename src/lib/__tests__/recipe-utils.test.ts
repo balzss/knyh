@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
-import type { Recipe } from '@/lib/types'
+import type { Recipe } from '@shared/types'
 
 describe('recipe-utils parseMarkdown', () => {
   it('parses a single minimal recipe', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseTotalTime, normalizeTotalTime, formatTotalTime } from '@/lib/time'
+import { parseTotalTime, normalizeTotalTime, formatTotalTime } from '../time'
 
 const en = { hours: 'hrs', minutes: 'mins' }
 const hu = { hours: 'óra', minutes: 'perc' }

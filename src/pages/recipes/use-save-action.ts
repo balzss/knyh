@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import type { RecipeDraft } from '@/lib/types'
+import type { RecipeDraft } from '@shared/types'
 
 /** Reads the in-progress recipe from whichever edit view is mounted. */
 export type DraftGetter = () => RecipeDraft | null | undefined

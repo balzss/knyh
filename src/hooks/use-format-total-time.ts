@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useTranslations } from 'use-intl'
-import { formatTotalTime } from '@/lib/time'
+import { formatTotalTime } from '@shared/time'
 
 /** Returns a function that writes a stored total time in the current language. */
 export function useFormatTotalTime() {

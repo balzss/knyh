@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { cn, shuffleArray, generateId, getErrorMessage } from '@/lib/utils'
+import { cn, shuffleArray, getErrorMessage } from '@/lib/utils'
+import { generateId } from '@shared/id'
 
 // Helper to compare arrays as multisets
 function sameMembers<T>(a: T[], b: T[]) {

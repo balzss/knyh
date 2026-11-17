@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import type { DatabaseSchema, UserConfig } from '@/lib/types'
+import type { DatabaseSchema, UserConfig } from '@shared/types'
 import { myToast } from '@/components/custom/myToast'
 
 type UseImportExportOptions = {

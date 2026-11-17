@@ -23,7 +23,7 @@ import { IconButton } from './IconButton'
 import { useViewPreferences } from '@/hooks'
 import { useEditMode } from '@/providers/EditModeProvider'
 import { DEFAULT_VIEW_PREFERENCES, GRID_COLS_RANGE } from '@/lib/view-preferences'
-import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@/lib/types'
+import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@shared/types'
 
 function DisplayOptionsMenu() {
   const t = useTranslations('TopBar')

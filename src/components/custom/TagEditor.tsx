@@ -17,7 +17,7 @@ import { IconButton } from './IconButton'
 import { useTags, useTagMutations } from '@/hooks'
 import { myToast } from './myToast'
 import { getErrorMessage } from '@/lib/utils'
-import type { Tag } from '@/lib/types'
+import type { Tag } from '@shared/types'
 
 type TagEditorProps = {
   tags: Tag[]

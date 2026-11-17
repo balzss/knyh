@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { IconButton } from './IconButton'
 import { SortableList } from './SortableList'
-import type { Idea } from '@/lib/types'
+import type { Idea } from '@shared/types'
 
 type IdeaCardProps = {
   idea: Idea

@@ -1,6 +1,6 @@
 // Recipe parsing & serialization utilities extracted from raw-view for reuse.
-import { RECIPE_STATUSES, type Recipe, type GroupData, type RecipeStatus } from './types'
-import { normalizeTotalTime } from './time'
+import { RECIPE_STATUSES, type Recipe, type GroupData, type RecipeStatus } from '@shared/types'
+import { normalizeTotalTime } from '@shared/time'
 
 type ParsedRecipe = {
   title: string

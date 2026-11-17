@@ -13,7 +13,7 @@ import {
   TopBarSearchSelect,
 } from '@/components/custom'
 import { useRecipes, useRecipeMutations, useConfirmDialog, useViewPreferences } from '@/hooks'
-import type { Recipe } from '@/lib/types'
+import type { Recipe } from '@shared/types'
 import { useEditMode } from '@/providers/EditModeProvider'
 
 export default function ArchivePage() {

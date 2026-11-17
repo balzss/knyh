@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import type { Recipe } from '@/lib/types'
+import type { Recipe } from '@shared/types'
 
 // The type for creating a recipe (all fields except the server-generated id)
 type CreateRecipePayload = Omit<Recipe, 'id'>

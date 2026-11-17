@@ -10,7 +10,7 @@ import {
   TagEditor,
 } from '@/components/custom'
 import { useRecipes } from '@/hooks'
-import type { Tag } from '@/lib/types'
+import type { Tag } from '@shared/types'
 
 export default function RandomPage() {
   const t = useTranslations('RandomRecipePage')

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import type { Recipe } from '@/lib/types'
+import type { Recipe } from '@shared/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,11 +28,6 @@ export function getErrorMessage(err: unknown, fallback = 'Unknown error'): strin
   }
   return fallback
 }
-
-export { generateId } from './id'
-
-// Re-export recipe parsing utilities (barrel style)
-export { parseMarkdown, parseSingleRecipe, recipeToMarkdown } from './recipe-utils'
 
 export function queryRecipes(recipes: Recipe[], query: string): Recipe[] {
   // Regex to strip diacritical marks for accent-insensitive search

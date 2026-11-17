@@ -3,12 +3,12 @@ import { z, ZodError } from 'zod'
 import { isEditor, requireEditor, sameOriginWrites } from './auth'
 import type { Env } from './env'
 import * as db from './db'
-import { RECIPE_STATUSES } from '../src/lib/types'
+import { RECIPE_STATUSES } from '../shared/types'
 import {
   isValidDatabaseSchema,
   normalizeImportData,
   validateUniqueIds,
-} from '../src/lib/import-validation'
+} from '../shared/import-validation'
 
 const groupSchema = z.object({ label: z.string(), items: z.array(z.string()) })
 

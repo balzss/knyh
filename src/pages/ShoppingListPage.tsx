@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useShoppingList, useShoppingListMutations } from '@/hooks'
-import type { ShoppingListItem } from '@/lib/types'
+import type { ShoppingListItem } from '@shared/types'
 
 export default function ShoppingListPage() {
   const t = useTranslations('ShoppingListPage')

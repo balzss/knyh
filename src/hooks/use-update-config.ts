@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import type { UserConfig } from '@/lib/types'
+import type { UserConfig } from '@shared/types'
 
 export function useUpdateConfig() {
   const queryClient = useQueryClient()

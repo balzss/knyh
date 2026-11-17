@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import type { Tag } from '@/lib/types'
+import type { Tag } from '@shared/types'
 
 type CreateTagPayload = { displayName: string }
 type RenameTagPayload = { id: string; displayName: string }

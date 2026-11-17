@@ -6,8 +6,8 @@ import type {
   ShoppingListItem,
   Tag,
   UserConfig,
-} from '../src/lib/types'
-import { generateId } from '../src/lib/id'
+} from '../shared/types'
+import { generateId } from '../shared/id'
 
 /** A recipe as sent over the wire: dates are ISO strings. */
 type RecipeJson = {

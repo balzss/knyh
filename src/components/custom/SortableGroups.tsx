@@ -3,7 +3,7 @@ import { ChevronsUp, ChevronsDown, ListX, ListPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SortableList } from './SortableList'
 import { GroupLabelEdit } from './GroupLabelEdit'
-import type { GroupData } from '@/lib/types'
+import type { GroupData } from '@shared/types'
 
 type SortableGroupsProps = {
   data?: GroupData[]

@@ -3,7 +3,7 @@
  * Run with: npm run db:gen-seed
  */
 import { readFileSync, writeFileSync } from 'node:fs'
-import { isValidDatabaseSchema, normalizeImportData } from '../src/lib/import-validation'
+import { isValidDatabaseSchema, normalizeImportData } from '../shared/import-validation'
 
 const raw = JSON.parse(readFileSync('db/seed-data.json', 'utf8'))
 if (!isValidDatabaseSchema(raw)) throw new Error('db/seed-data.json is not a valid library file')

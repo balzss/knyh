@@ -1,7 +1,7 @@
 import { useTranslations } from 'use-intl'
 import { Hammer } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { RecipeStatus } from '@/lib/types'
+import type { RecipeStatus } from '@shared/types'
 
 type RecipeStatusBadgeProps = {
   status: RecipeStatus

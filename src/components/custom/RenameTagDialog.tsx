@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useTagMutations } from '@/hooks'
 import { ApiError } from '@/lib/api'
-import type { Tag } from '@/lib/types'
+import type { Tag } from '@shared/types'
 import { myToast } from './myToast'
 
 type RenameTagDialogProps = {

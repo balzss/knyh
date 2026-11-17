@@ -2,7 +2,10 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-plugin'
 
-const alias = { '@': fileURLToPath(new URL('./src', import.meta.url)) }
+const alias = {
+  '@': fileURLToPath(new URL('./src', import.meta.url)),
+  '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
+}
 
 export default defineConfig({
   test: {
@@ -12,7 +15,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           globals: true,
-          include: ['src/**/*.test.ts'],
+          include: ['src/**/*.test.ts', 'shared/**/*.test.ts'],
         },
         resolve: { alias },
       },

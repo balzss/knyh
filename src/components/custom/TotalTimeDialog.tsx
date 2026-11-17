@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { useFormatTotalTime } from '@/hooks'
-import { parseTotalTime, normalizeTotalTime } from '@/lib/time'
+import { parseTotalTime, normalizeTotalTime } from '@shared/time'
 
 type TotalTimeDialogProps = {
   totalTimeValue: string

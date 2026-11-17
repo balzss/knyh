@@ -11,5 +11,12 @@
     "isolatedModules": true,
     "types": ["@cloudflare/workers-types", "@cloudflare/vitest-plugin/types"]
   },
-  "include": ["worker", "src/lib/id.ts", "src/lib/types.ts", "src/lib/import-validation.ts", "test/worker"]
+  "include": [
+    "worker",
+    "shared/id.ts",
+    "shared/types.ts",
+    "shared/time.ts",
+    "shared/import-validation.ts",
+    "test/worker"
+  ]
 }

@@ -15,7 +15,7 @@ import {
 } from '@/components/custom'
 import { Input } from '@/components/ui/input'
 import { useConfirmDialog, useIdeaMutations, useIdeas } from '@/hooks'
-import type { FromIdeaState, Idea } from '@/lib/types'
+import type { FromIdeaState, Idea } from '@shared/types'
 import { getRecipeEditUrl } from '@/lib/urls'
 
 export default function IdeasPage() {

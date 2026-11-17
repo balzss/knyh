@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeImportData, validateUniqueIds } from '@/lib/import-validation'
+import { normalizeImportData, validateUniqueIds } from '../import-validation'
 
 const library = (recipe: Record<string, unknown>) => ({
   recipes: [
