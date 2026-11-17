@@ -37,7 +37,7 @@ export default function HomePage() {
     sort: sortOption,
     archived: false,
     tags: tagParam,
-    status: statusFilter === 'all' ? undefined : statusFilter,
+    status: !editor ? 'ready' : statusFilter === 'all' ? undefined : statusFilter,
   })
   const { tags: filterTags } = useTags({ ids: tagParam })
   const { updateRecipes } = useRecipeMutations()

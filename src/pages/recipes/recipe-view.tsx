@@ -420,18 +420,20 @@ export default function RecipeView({ recipeId }: RecipeViewProps) {
               </ul>
             </div>
           )}
-          <div className="mt-8 text-xs italic text-muted-foreground">
-            {recipe?.updatedAt && (
-              <p>
-                {t('modified')}: <RelativeTime date={recipe.updatedAt} />
-              </p>
-            )}
-            {recipe?.createdAt && (
-              <p className="mt-1">
-                {t('created')}: <RelativeTime date={recipe.createdAt} />
-              </p>
-            )}
-          </div>
+          {editor && (
+            <div className="mt-8 text-xs italic text-muted-foreground">
+              {recipe?.updatedAt && (
+                <p>
+                  {t('modified')}: <RelativeTime date={recipe.updatedAt} />
+                </p>
+              )}
+              {recipe?.createdAt && (
+                <p className="mt-1">
+                  {t('created')}: <RelativeTime date={recipe.createdAt} />
+                </p>
+              )}
+            </div>
+          )}
         </PageLayout>
       </main>
     </div>

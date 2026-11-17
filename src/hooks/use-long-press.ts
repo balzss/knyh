@@ -13,6 +13,8 @@ interface UseLongPressReturn {
     onPointerDown: (e: React.PointerEvent) => void
     onPointerUp: (e: React.PointerEvent) => void
     onPointerCancel: (e: React.PointerEvent) => void
+    onContextMenu: (e: React.MouseEvent) => void
+    style: React.CSSProperties
   }
   wasLongPress: () => boolean
   cancel: () => void
@@ -29,6 +31,7 @@ export function useLongPress(
   const timeoutRef = useRef<number | null>(null)
   const activatedRef = useRef(false)
   const startTimeRef = useRef<number>(0)
+  const isTouchRef = useRef(false)
 
   const clear = useCallback(() => {
     if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
@@ -39,6 +42,8 @@ export function useLongPress(
   const start = useCallback(
     (e?: React.TouchEvent | React.PointerEvent) => {
       if (!enabled) return
+      if (e && 'pointerType' in e) isTouchRef.current = e.pointerType === 'touch'
+      else if (e) isTouchRef.current = true
       if (e?.target instanceof Element && e.target.closest(IGNORED_TARGETS)) return
       activatedRef.current = false
       startTimeRef.current = Date.now()
@@ -78,6 +83,15 @@ export function useLongPress(
     [enabled, clear]
   )
 
+  // Touch long presses on links open the browser's own link menu (Android) or preview (iOS), which hides
+  // ours. Mouse right-clicks keep the native menu.
+  const onContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if (enabled && isTouchRef.current) e.preventDefault()
+    },
+    [enabled]
+  )
+
   const wasLongPress = useCallback(() => {
     return activatedRef.current
   }, [])
@@ -102,6 +116,8 @@ export function useLongPress(
       onPointerDown: start,
       onPointerUp: end,
       onPointerCancel: cancel,
+      onContextMenu,
+      style: enabled ? { WebkitTouchCallout: 'none' } : {},
     },
     wasLongPress,
     cancel: clear,

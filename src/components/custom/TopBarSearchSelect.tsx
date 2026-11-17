@@ -20,12 +20,15 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { TextInput, IconButton } from '@/components/custom'
 import { useViewPreferences } from '@/hooks'
+import { useEditMode } from '@/providers/EditModeProvider'
 import { DEFAULT_VIEW_PREFERENCES, GRID_COLS_RANGE } from '@/lib/view-preferences'
 import { RECIPE_STATUSES, type RecipeStatus, type SortOption } from '@/lib/types'
 
 function DisplayOptionsMenu() {
   const t = useTranslations('TopBar')
   const { sort, layout, gridCols, status, update } = useViewPreferences()
+  const { editor } = useEditMode()
+  const statusFilterActive = editor && status !== DEFAULT_VIEW_PREFERENCES.status
   const [open, setOpen] = useState<boolean>(false)
 
   return (
@@ -38,11 +41,9 @@ function DisplayOptionsMenu() {
             icon={<SlidersHorizontal />}
             tooltip={t('filterAndViewOptions')}
             isActive={open}
-            showDot={status !== DEFAULT_VIEW_PREFERENCES.status}
+            showDot={statusFilterActive}
             aria-label={
-              status !== DEFAULT_VIEW_PREFERENCES.status
-                ? t('filterAndViewOptionsActive')
-                : t('filterAndViewOptions')
+              statusFilterActive ? t('filterAndViewOptionsActive') : t('filterAndViewOptions')
             }
             onClick={() => setOpen((oldValue) => !oldValue)}
           />
@@ -64,25 +65,27 @@ function DisplayOptionsMenu() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center justify-between">
-          <Label htmlFor="statusSelect">{t('showRecipes')}</Label>
-          <Select
-            onValueChange={(newStatus: RecipeStatus | 'all') => update({ status: newStatus })}
-            value={status}
-          >
-            <SelectTrigger className="w-[180px]" id="statusSelect">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t('statusAll')}</SelectItem>
-              {RECIPE_STATUSES.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {t(`status_${value}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {editor && (
+          <div className="flex items-center justify-between">
+            <Label htmlFor="statusSelect">{t('showRecipes')}</Label>
+            <Select
+              onValueChange={(newStatus: RecipeStatus | 'all') => update({ status: newStatus })}
+              value={status}
+            >
+              <SelectTrigger className="w-[180px]" id="statusSelect">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('statusAll')}</SelectItem>
+                {RECIPE_STATUSES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`status_${value}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <Label htmlFor="layoutSelect">{t('layout')}</Label>
           <Select
