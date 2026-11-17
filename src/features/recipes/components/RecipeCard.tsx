@@ -1,39 +1,17 @@
-import { useTranslations } from 'use-intl'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import {
-  Archive,
-  Share2,
-  EllipsisVertical,
-  Pencil,
-  Circle,
-  CircleCheckBig,
-  Timer,
-  ArchiveRestore,
-  Copy,
-  Hammer,
-  CircleCheck,
-} from 'lucide-react'
+import { Circle, CircleCheckBig, Timer } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { IconButton } from '@/components/inputs/IconButton'
-import { myToast } from '@/components/feedback/toast'
-import { ShareDialog } from './ShareDialog'
+import { RecipeCardActions } from './RecipeCardActions'
 import { Highlight } from './Highlight'
 import { RecipeStatusBadge } from './RecipeStatusBadge'
 import type { Recipe, Tag } from '@shared/types'
-import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
 import { useLongPress } from '@/hooks/use-long-press'
 import { useFormatTotalTime } from '@/features/recipes/hooks/use-format-total-time'
-import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'
-import { useEditMode } from '@/app/providers/EditModeProvider'
+import { getRecipeViewUrl } from '@/lib/urls'
 
 type RecipeCardProps = {
   tags: Tag[]
@@ -54,10 +32,7 @@ export function RecipeCard({
   recipeData,
   highlight,
 }: RecipeCardProps) {
-  const t = useTranslations('RecipeCard')
-  const { editor } = useEditMode()
   const formatTotalTime = useFormatTotalTime()
-  const { updateRecipe, createRecipe } = useRecipeMutations()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
   const { bind: longPressBind, wasLongPress } = useLongPress(
@@ -67,67 +42,8 @@ export function RecipeCard({
     { enabled: !selectionMode }
   )
 
-  const handleDuplicateRecipe = useCallback(async () => {
-    const { id: _id, ...recipeDataWithoutId } = recipeData
-    const duplicatedRecipe = {
-      ...recipeDataWithoutId,
-      title: `${recipeData.title} (Copy)`,
-      // A copy is new work, so it starts out in development
-      status: 'development' as const,
-    }
-    createRecipe.mutate(duplicatedRecipe, {
-      onSuccess: () => {
-        myToast({
-          message: t('recipeDuplicated'),
-        })
-      },
-    })
-  }, [createRecipe, recipeData, t])
-
-  const handleArchiveRecipe = useCallback(
-    (archived: boolean = true) => {
-      const { id, ...data } = recipeData
-      updateRecipe.mutate(
-        { id, data: { ...data, archived } },
-        {
-          onSuccess: () => {
-            myToast({
-              message: archived ? t('recipeArchived') : t('recipeRestored'),
-              action: {
-                label: t('undo'),
-                onClick: () => updateRecipe.mutate({ id, data: { ...data, archived: !archived } }),
-              },
-            })
-          },
-        }
-      )
-    },
-    [updateRecipe, recipeData, t]
-  )
-
   const { title, totalTime, id, status } = recipeData
   const inDevelopment = status === 'development'
-
-  const handleToggleStatus = useCallback(() => {
-    const { id, ...data } = recipeData
-    const previous = data.status
-    const next = previous === 'development' ? 'ready' : 'development'
-    updateRecipe.mutate(
-      { id, data: { ...data, status: next } },
-      {
-        onSuccess: () => {
-          myToast({
-            message: t('statusChanged', { status: next }),
-            action: {
-              label: t('undo'),
-              onClick: () => updateRecipe.mutate({ id, data: { ...data, status: previous } }),
-            },
-          })
-        },
-      }
-    )
-  }, [updateRecipe, recipeData, t])
-  const recipeUrl = `${window.location.origin}${getRecipeViewUrl(id)}`
 
   const headerContent = (
     <>
@@ -236,61 +152,11 @@ export function RecipeCard({
         <div
           className={`ml-auto flex gap-2 [&_a]:h-7 [&_a]:w-7 [&_button]:h-7 [&_button]:w-7 ${isHovered || isDropdownOpen ? 'opacity-100' : 'sm:opacity-0 sm:invisible'} ${selectionMode ? 'invisible' : ''} transition-all duration-100 ease-in-out`}
         >
-          {archivedMode ? (
-            editor && (
-              <IconButton
-                icon={<ArchiveRestore />}
-                tooltip={t('restore')}
-                iconSize="small"
-                onClick={() => handleArchiveRecipe(false)}
-              />
-            )
-          ) : (
-            <>
-              {editor && (
-                <IconButton
-                  icon={<Pencil />}
-                  tooltip={t('edit')}
-                  iconSize="small"
-                  href={getRecipeEditUrl(id)}
-                />
-              )}
-              <ShareDialog
-                title={title}
-                trigger={<IconButton icon={<Share2 />} tooltip={t('share')} iconSize="small" />}
-                recipeUrl={recipeUrl}
-              />
-              {editor && (
-                <DropdownMenu onOpenChange={setIsDropdownOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <IconButton
-                      icon={<EllipsisVertical />}
-                      tooltip={t('moreOptions')}
-                      iconSize="small"
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleDuplicateRecipe}>
-                      <Copy className="mr-2 h-4 w-4" />
-                      {t('duplicate')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleToggleStatus}>
-                      {inDevelopment ? (
-                        <CircleCheck className="mr-2 h-4 w-4" />
-                      ) : (
-                        <Hammer className="mr-2 h-4 w-4" />
-                      )}
-                      {inDevelopment ? t('markReady') : t('markDevelopment')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleArchiveRecipe()}>
-                      <Archive className="mr-2 h-4 w-4" />
-                      {t('archive')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </>
-          )}
+          <RecipeCardActions
+            recipeData={recipeData}
+            archivedMode={archivedMode}
+            onMenuOpenChange={setIsDropdownOpen}
+          />
         </div>
       </CardFooter>
     </Card>
