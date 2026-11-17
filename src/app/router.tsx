@@ -6,15 +6,15 @@ import {
   useParams,
 } from 'react-router-dom'
 import Providers from '@/app/providers/index'
-import HomePage from '@/pages/HomePage'
-import ArchivePage from '@/pages/ArchivePage'
+import HomePage from '@/features/recipes/pages/HomePage'
+import ArchivePage from '@/features/recipes/pages/ArchivePage'
 import IdeasPage from '@/features/ideas/IdeasPage'
-import RandomPage from '@/pages/RandomPage'
+import RandomPage from '@/features/recipes/pages/RandomPage'
 import SettingsPage from '@/features/settings/SettingsPage'
 import ShoppingListPage from '@/features/shopping-list/ShoppingListPage'
 import { EditorOnly } from '@/components/layout/EditorOnly'
 import { BottomNav } from '@/app/layout/BottomNav'
-import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
+import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/features/recipes/routes'
 import NotFoundPage from './NotFoundPage'
 
 // Old /recipes/... links were shared before the move to /r/...

@@ -8,14 +8,18 @@ import 'prismjs/components/prism-markdown'
 import './custom-prism-theme.css'
 import { Button } from '@/components/ui/button'
 import { PageLayout } from '@/components/layout/PageLayout'
-import { HelpDialog } from '@/components/custom/HelpDialog'
-import { LlmPrompt } from '@/components/custom/LlmPrompt'
+import { HelpDialog } from './HelpDialog'
+import { LlmPrompt } from './LlmPrompt'
 import { myToast } from '@/components/feedback/toast'
-import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
+import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
 import { getErrorMessage } from '@/lib/utils'
 import { getRecipeEditUrl } from '@/lib/urls'
 import type { Recipe, RecipeDraft } from '@shared/types'
-import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
+import {
+  parseMarkdown,
+  recipeToMarkdown,
+  mergeIngredientGroups,
+} from '@/features/recipes/lib/recipe-utils'
 import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 

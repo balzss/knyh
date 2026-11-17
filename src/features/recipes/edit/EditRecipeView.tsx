@@ -17,10 +17,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import FormView from './form-view'
-import RawView from './raw-view'
+import FormView from './FormView'
+import RawView from './RawView'
 import type { DraftGetter, SaveAction } from './use-save-action'
-import { useRecipes } from '@/hooks/use-recipes'
+import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'

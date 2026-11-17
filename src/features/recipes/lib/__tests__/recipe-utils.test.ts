@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
+import {
+  parseMarkdown,
+  recipeToMarkdown,
+  mergeIngredientGroups,
+} from '@/features/recipes/lib/recipe-utils'
 import type { Recipe } from '@shared/types'
 
 describe('recipe-utils parseMarkdown', () => {

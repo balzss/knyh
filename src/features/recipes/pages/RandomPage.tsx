@@ -4,10 +4,10 @@ import { Dices } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/layout/PageLayout'
-import { RecipeCard } from '@/components/custom/RecipeCard'
+import { RecipeCard } from '@/features/recipes/components/RecipeCard'
 import { IconButton } from '@/components/inputs/IconButton'
 import { TagEditor } from '@/features/tags/TagEditor'
-import { useRecipes } from '@/hooks/use-recipes'
+import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import type { Tag } from '@shared/types'
 
 export default function RandomPage() {

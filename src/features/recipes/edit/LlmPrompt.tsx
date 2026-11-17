@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'use-intl'
 import { Check, Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { LLM_RECIPE_PROMPT } from '@/lib/llm-prompt'
+import { LLM_RECIPE_PROMPT } from '@/features/recipes/lib/llm-prompt'
 import { myToast } from '@/components/feedback/toast'
 
 const COPIED_MESSAGE_MS = 2000

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatAmount, parseFactor, scaleLine } from '@/lib/scale-quantity'
+import { formatAmount, parseFactor, scaleLine } from '@/features/recipes/lib/scale-quantity'
 
 const scaled = (text: string, factor: number, separator: '.' | ',' = '.') => {
   const { amount, rest } = scaleLine(text, factor, separator)

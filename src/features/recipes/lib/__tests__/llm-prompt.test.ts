@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { LLM_RECIPE_PROMPT } from '@/lib/llm-prompt'
-import { parseMarkdown } from '@/lib/recipe-utils'
+import { LLM_RECIPE_PROMPT } from '@/features/recipes/lib/llm-prompt'
+import { parseMarkdown } from '@/features/recipes/lib/recipe-utils'
 
 describe('LLM recipe prompt', () => {
   it('describes each part of the format the parser reads', () => {

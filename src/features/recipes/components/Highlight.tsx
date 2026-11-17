@@ -1,5 +1,5 @@
 import React from 'react'
-import { highlightSegments } from '@/lib/highlight'
+import { highlightSegments } from '@/features/recipes/lib/highlight'
 
 type HighlightProps = {
   text: string

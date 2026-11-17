@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { EditorOnly } from '@/components/layout/EditorOnly'
-import RecipeView from './recipe-view'
-import EditRecipeView from './edit-recipe-view'
+import RecipeView from '@/features/recipes/pages/RecipeView'
+import EditRecipeView from '@/features/recipes/edit/EditRecipeView'
 
 export function RecipeRoute() {
   const { id } = useParams()

@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { parseFactor } from '@/lib/scale-quantity'
+import { parseFactor } from '@/features/recipes/lib/scale-quantity'
 
 type ScaleDialogProps = {
   open: boolean
