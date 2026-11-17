@@ -29,7 +29,11 @@ export default function Providers({ children }: { children: ReactNode }) {
               <ConfirmDialogProvider>
                 <NavigationGuardProvider>
                   <SidebarProvider>{children}</SidebarProvider>
-                  <Toaster toastOptions={{ style: { padding: '0.5rem 1rem' } }} />
+                  <Toaster
+                    toastOptions={{ style: { padding: '0.5rem 1rem' } }}
+                    // Keep toasts above the bottom nav (4rem, 1px border, safe area) on phones.
+                    mobileOffset={{ bottom: 'calc(5rem + 1px + env(safe-area-inset-bottom))' }}
+                  />
                 </NavigationGuardProvider>
               </ConfirmDialogProvider>
             </EditModeProvider>

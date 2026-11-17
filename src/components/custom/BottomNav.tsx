@@ -31,7 +31,8 @@ export function BottomNav() {
 
   return (
     <>
-      <div aria-hidden className="h-16 pb-[env(safe-area-inset-bottom)]" />
+      {/* Same height as the nav below: 4rem, its 1px top border and the bottom safe area. */}
+      <div aria-hidden className="h-[calc(4rem+1px+env(safe-area-inset-bottom))]" />
       <nav className="fixed bottom-0 left-0 z-50 grid h-16 w-full grid-cols-3 border-0 border-t bg-background pb-[env(safe-area-inset-bottom)] box-content">
         {items.map(({ href, label, icon, isActive }) => (
           <Link

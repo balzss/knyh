@@ -24,45 +24,53 @@ export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
     navigator.clipboard.writeText(recipeUrl || '')
   }
 
+  const canShare = typeof navigator !== 'undefined' && !!navigator.share
+
   const handleShare = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title,
-          url: recipeUrl,
-        })
-        .catch((error) => console.error('Error sharing:', error))
-    } else {
-      console.log('Web Share API not supported in this browser.')
-    }
+    navigator
+      .share({
+        title,
+        url: recipeUrl,
+      })
+      .catch((error) => {
+        // Dismissing the share sheet rejects with AbortError, which isn't a failure.
+        if (error?.name !== 'AbortError') console.error('Error sharing:', error)
+      })
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
+      {/* The dialog is portaled, but React events still bubble to the trigger's ancestors (e.g. the
+          recipe card's long-press and selection handlers), so stop them here. */}
+      <DialogContent
+        className="w-[calc(100%-2rem)] sm:max-w-lg rounded-lg gap-4"
+        // Autofocusing the input makes iOS zoom the page, which pushes the fixed dialog partly off screen.
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-6 py-3">
-          <div className="flex gap-3">
-            <Input
-              defaultValue={recipeUrl}
-              readOnly
-              inputMode="none"
-              className="selection:bg-primary selection:text-black focus-visible:ring-0"
-            />
-          </div>
-          <div className="flex gap-3 justify-end">
-            <Button variant="outline" onClick={handleCopyUrl}>
-              <Clipboard />
-              {t('copy')}
-            </Button>
+        <Input
+          defaultValue={recipeUrl}
+          readOnly
+          inputMode="none"
+          className="min-w-0 truncate text-base sm:text-sm selection:bg-primary selection:text-black focus-visible:ring-0"
+        />
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
+          <Button variant="outline" onClick={handleCopyUrl}>
+            <Clipboard />
+            {t('copy')}
+          </Button>
+          {canShare && (
             <Button onClick={handleShare} variant="outline">
               <Share />
               {t('shareViaDevice')}
             </Button>
-          </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
