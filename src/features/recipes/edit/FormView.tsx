@@ -40,7 +40,7 @@ type FormViewProps = {
   onSaveActionChange?: (action: SaveAction | null) => void
 }
 
-export default function FormView({
+export function FormView({
   initialRecipe,
   resetTrigger,
   draft,

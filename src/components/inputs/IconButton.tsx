@@ -4,15 +4,6 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-// interface IconButtonProps extends ButtonProps {
-//   icon: React.ReactNode
-//   tooltip: React.ReactNode
-//   variant?: 'default' | 'ghost' | 'secondary' | 'outline'
-//   onClick?: (e: React.SyntheticEvent) => void
-//   iconSize?: 'normal' | 'small'
-//   isActive?: boolean
-// }
-
 type IconButtonProps = ButtonProps & {
   icon: React.ReactNode
   tooltip: React.ReactNode

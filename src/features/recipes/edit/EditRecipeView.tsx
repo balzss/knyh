@@ -17,8 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import FormView from './FormView'
-import RawView from './RawView'
+import { FormView } from './FormView'
+import { RawView } from './RawView'
 import type { DraftGetter, SaveAction } from './use-save-action'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'

@@ -43,10 +43,6 @@ export default function HomePage() {
   const { tags: filterTags } = useTags({ ids: tagParam })
   const { updateRecipes } = useRecipeMutations()
 
-  // Construct the current path with search parameters for the sidebar
-  // TODO maybe move this logic inside the sidebar?
-  const currentPath = '/' + (searchParams.toString() ? `?${searchParams.toString()}` : '')
-
   const { selection, select, selectAll, clear, topBarMode } = useRecipeSelection()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
@@ -103,7 +99,7 @@ export default function HomePage() {
   return (
     <PageShell
       hideSidebarToggleMobile={topBarMode === 'select'}
-      sidebarPath={currentPath}
+      sidebarPath="/"
       mainClassName="w-full mt-14"
       topBarContent={
         <TopBarSearchSelect

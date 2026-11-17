@@ -1,5 +1,5 @@
 import { useTranslations } from 'use-intl'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   Sidebar,
   SidebarContent,
@@ -31,19 +31,8 @@ import { SidebarNavLink } from './SidebarNavLink'
 import { SidebarTagList } from './SidebarTagList'
 
 type AppSidebarProps = {
+  /** The page this sidebar is on, which highlights its entry. Pages without an entry leave it out. */
   path?: string
-}
-
-// Extract tags from URL parameters if present
-function getSelectedTagsFromPath(currentPath?: string) {
-  if (!currentPath) return []
-  try {
-    const url = new URL(currentPath, 'http://localhost')
-    const tagParam = url.searchParams.get('tag')
-    return tagParam ? tagParam.split(',') : []
-  } catch {
-    return []
-  }
 }
 
 export function AppSidebar({ path }: AppSidebarProps) {
@@ -51,7 +40,9 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const { isMobile, setOpenMobile } = useSidebar()
   const { editor } = useEditMode()
 
-  const selectedTagIds = getSelectedTagsFromPath(path)
+  // Tags are only filtered on the recipe list
+  const [searchParams] = useSearchParams()
+  const selectedTagIds = path === '/' ? (searchParams.get('tag')?.split(',') ?? []) : []
 
   return (
     <Sidebar>

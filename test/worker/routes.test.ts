@@ -4,11 +4,7 @@ import { testEnv } from './helpers'
 
 describe('auth redirect', () => {
   it('sends the visitor back into the app', async () => {
-    const response = await app.request(
-      'https://knyh.test/auth/login?next=/r/new',
-      {},
-      testEnv
-    )
+    const response = await app.request('https://knyh.test/auth/login?next=/r/new', {}, testEnv)
     expect(response.status).toBe(302)
     expect(response.headers.get('location')).toBe('/r/new')
   })

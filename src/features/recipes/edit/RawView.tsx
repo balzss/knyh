@@ -36,12 +36,7 @@ type RawViewProps = {
   onSaveActionChange?: (action: SaveAction | null) => void
 }
 
-export default function RawView({
-  initialRecipe,
-  draft,
-  draftGetter,
-  onSaveActionChange,
-}: RawViewProps) {
+export function RawView({ initialRecipe, draft, draftGetter, onSaveActionChange }: RawViewProps) {
   const t = useTranslations('RawView')
   const tForm = useTranslations('FormView') // reuse success messages
   const navigate = useNavigate()
