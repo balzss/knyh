@@ -12,8 +12,11 @@ import NotFoundPage from '@/pages/NotFoundPage'
 function Root() {
   return (
     <Providers>
-      <Outlet />
-      <BottomNav />
+      {/* SidebarProvider is a flex row; stack the page above the BottomNav spacer */}
+      <div className="flex w-full min-w-0 flex-col">
+        <Outlet />
+        <BottomNav />
+      </div>
       <ScrollRestoration />
     </Providers>
   )
