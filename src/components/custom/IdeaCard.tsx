@@ -3,8 +3,8 @@ import { useTranslations } from 'use-intl'
 import { ArrowDown, ArrowUp, ArrowUpToLine, Hammer, Trash2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { IconButton } from './IconButton'
-import { SortableList } from './SortableList'
+import { IconButton } from '@/components/inputs/IconButton'
+import { SortableList } from '@/components/inputs/SortableList'
 import type { Idea } from '@shared/types'
 
 type IdeaCardProps = {

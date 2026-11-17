@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { PencilLine, Check } from 'lucide-react'
 import { IconButton } from './IconButton'
-import { myToast } from './myToast'
+import { myToast } from '@/components/feedback/toast'
 
 type Action = {
   icon: React.ReactNode

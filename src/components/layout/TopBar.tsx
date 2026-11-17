@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { Menu } from 'lucide-react'
 import { useSidebar } from '@/components/ui/sidebar'
-import { IconButton } from './IconButton'
+import { IconButton } from '@/components/inputs/IconButton'
 
 type TopBarProps = {
   customTopbarContent?: React.ReactNode

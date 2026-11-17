@@ -1,5 +1,5 @@
 import React, { useState, type ReactNode } from 'react'
-import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { ConfirmDialogContext, type ConfirmDialogOptions } from './confirm-dialog-context'
 
 interface ConfirmDialogProviderProps {

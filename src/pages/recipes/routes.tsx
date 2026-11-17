@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { EditorOnly } from '@/components/custom/EditorOnly'
+import { EditorOnly } from '@/components/layout/EditorOnly'
 import RecipeView from './recipe-view'
 import EditRecipeView from './edit-recipe-view'
 

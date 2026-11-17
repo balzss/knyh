@@ -2,10 +2,10 @@ import { useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { X, Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
-import { TopBar } from '@/components/custom/TopBar'
+import { TopBar } from '@/components/layout/TopBar'
 import { AppSidebar } from '@/app/layout/AppSidebar'
-import { IconButton } from '@/components/custom/IconButton'
-import { myToast } from '@/components/custom/myToast'
+import { IconButton } from '@/components/inputs/IconButton'
+import { myToast } from '@/components/feedback/toast'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

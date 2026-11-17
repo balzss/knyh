@@ -3,7 +3,7 @@ import { useTranslations } from 'use-intl'
 import { Check, Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LLM_RECIPE_PROMPT } from '@/lib/llm-prompt'
-import { myToast } from './myToast'
+import { myToast } from '@/components/feedback/toast'
 
 const COPIED_MESSAGE_MS = 2000
 

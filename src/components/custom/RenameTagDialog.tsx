@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 import { useTagMutations } from '@/hooks/use-tag-mutations'
 import { ApiError } from '@/lib/api'
 import type { Tag } from '@shared/types'
-import { myToast } from './myToast'
+import { myToast } from '@/components/feedback/toast'
 
 type RenameTagDialogProps = {
   /** The tag being renamed. The dialog is open while this is set. */

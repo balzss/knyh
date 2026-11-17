@@ -13,10 +13,10 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
-import { IconButton } from './IconButton'
+import { IconButton } from '@/components/inputs/IconButton'
 import { useTags } from '@/hooks/use-tags'
 import { useTagMutations } from '@/hooks/use-tag-mutations'
-import { myToast } from './myToast'
+import { myToast } from '@/components/feedback/toast'
 import { getErrorMessage } from '@/lib/utils'
 import type { Tag } from '@shared/types'
 

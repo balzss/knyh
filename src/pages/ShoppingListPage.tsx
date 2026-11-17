@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
 import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
-import { TopBar } from '@/components/custom/TopBar'
+import { TopBar } from '@/components/layout/TopBar'
 import { AppSidebar } from '@/app/layout/AppSidebar'
-import { PageLayout } from '@/components/custom/PageLayout'
-import { IconButton } from '@/components/custom/IconButton'
-import { EditorOnly } from '@/components/custom/EditorOnly'
-import { SortableList } from '@/components/custom/SortableList'
+import { PageLayout } from '@/components/layout/PageLayout'
+import { IconButton } from '@/components/inputs/IconButton'
+import { EditorOnly } from '@/components/layout/EditorOnly'
+import { SortableList } from '@/components/inputs/SortableList'
 import { CheckedItemsList } from '@/components/custom/CheckedItemsList'
 import {
   DropdownMenu,

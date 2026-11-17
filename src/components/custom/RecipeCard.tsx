@@ -23,8 +23,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconButton } from './IconButton'
-import { myToast } from './myToast'
+import { IconButton } from '@/components/inputs/IconButton'
+import { myToast } from '@/components/feedback/toast'
 import { ShareDialog } from './ShareDialog'
 import { Highlight } from './Highlight'
 import { RecipeStatusBadge } from './RecipeStatusBadge'
