@@ -46,12 +46,19 @@ The settings page links to `/auth/login`. Access guards that path, so you sign i
 ## Project layout
 
 ```
-src/        React app (pages, components, hooks, providers)
-worker/     Worker: API routes (api.ts), D1 queries (db.ts), Access check (auth.ts)
-migrations/ D1 schema migrations
-db/         Seed data
-test/       Worker tests (run in the Workers runtime)
+src/app/        Entry point, router, providers and the app shell (sidebar, page frame)
+src/features/   One folder per feature: recipes, tags, ideas, shopping-list, settings
+src/components/ Generic UI: shadcn primitives (ui/), layout, inputs, feedback
+src/hooks/      Hooks shared by several features
+src/lib/        Generic helpers (API client, URLs, view preferences)
+shared/         Types and helpers both the app and the Worker import
+worker/         Worker: API routes (api.ts), D1 queries (db/), Access check (auth.ts)
+migrations/     D1 schema migrations
+db/             Seed data
+test/           Worker tests (run in the Workers runtime)
 ```
+
+The rules for where code goes, how files are named and what may import what are in [.github/copilot-instructions.md](.github/copilot-instructions.md).
 
 ## License
 
