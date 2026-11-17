@@ -6,7 +6,7 @@ import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { RecipeCard } from '@/components/custom/RecipeCard'
 import { IconButton } from '@/components/inputs/IconButton'
-import { TagEditor } from '@/components/custom/TagEditor'
+import { TagEditor } from '@/features/tags/TagEditor'
 import { useRecipes } from '@/hooks/use-recipes'
 import type { Tag } from '@shared/types'
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { IntlProvider } from 'use-intl'
-import { useConfig } from '@/hooks/use-config'
+import { useConfig } from '@/features/settings/use-config'
 import en from '../../../messages/en.json'
 import hu from '../../../messages/hu.json'
 

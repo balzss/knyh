@@ -12,9 +12,9 @@ import {
 import { TopBar } from '@/components/layout/TopBar'
 import { AppSidebar } from '@/app/layout/AppSidebar'
 import { PageLayout } from '@/components/layout/PageLayout'
-import { useConfig } from '@/hooks/use-config'
-import { useUpdateConfig } from '@/hooks/use-update-config'
-import { useImportExport } from '@/hooks/use-import-export'
+import { useConfig } from './use-config'
+import { useUpdateConfig } from './use-update-config'
+import { useImportExport } from './use-import-export'
 import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
 import { useEditMode } from '@/app/providers/EditModeProvider'
 

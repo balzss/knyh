@@ -22,7 +22,7 @@ import RawView from './raw-view'
 import type { DraftGetter, SaveAction } from './use-save-action'
 import { useRecipes } from '@/hooks/use-recipes'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
-import { useIdeaMutations } from '@/hooks/use-ideas'
+import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
 

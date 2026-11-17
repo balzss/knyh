@@ -7,14 +7,14 @@ import { PageLayout } from '@/components/layout/PageLayout'
 import { IconButton } from '@/components/inputs/IconButton'
 import { EditorOnly } from '@/components/layout/EditorOnly'
 import { SortableList } from '@/components/inputs/SortableList'
-import { CheckedItemsList } from '@/components/custom/CheckedItemsList'
+import { CheckedItemsList } from './CheckedItemsList'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useShoppingList, useShoppingListMutations } from '@/hooks/use-shopping-list'
+import { useShoppingList, useShoppingListMutations } from './use-shopping-list'
 import type { ShoppingListItem } from '@shared/types'
 
 export default function ShoppingListPage() {
