@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
-import { SortableInput } from '@/components/custom'
+import { SortableInput } from './SortableInput'
 
 type ListItem = {
   id: string

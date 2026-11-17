@@ -1,18 +1,9 @@
 import { useContext, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
-import { ConfirmDialogContext } from '@/providers/ConfirmDialogProvider'
-
-export interface ConfirmDialogOptions {
-  title: string
-  description: string
-  confirmText?: string
-  cancelText?: string
-  destructive?: boolean // If true, confirm button is styled as destructive
-}
-
-export interface ConfirmDialogContextType {
-  confirm: (options: ConfirmDialogOptions) => Promise<boolean>
-}
+import {
+  ConfirmDialogContext,
+  type ConfirmDialogContextType,
+} from '@/providers/confirm-dialog-context'
 
 interface UseConfirmDialogExtended extends ConfirmDialogContextType {
   confirmDelete: (params: { name?: string }) => Promise<boolean>

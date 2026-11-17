@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import FormView from './form-view'
 import RawView from './raw-view'
-import type { SaveAction } from './use-save-action'
+import type { DraftGetter, SaveAction } from './use-save-action'
 import { useRecipes, useConfirmDialog, useIdeaMutations } from '@/hooks'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@/lib/types'
@@ -25,7 +25,6 @@ import type { FromIdeaState, RecipeDraft } from '@/lib/types'
  * Reads what the user has entered in the current view. `null` means nothing to carry over,
  * `undefined` means the content can't be converted to the other mode.
  */
-export type DraftGetter = () => RecipeDraft | null | undefined
 
 const MODES = [
   { value: 'form', icon: TextCursorInput, labelKey: 'formMode' },

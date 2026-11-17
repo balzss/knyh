@@ -1,7 +1,8 @@
 import { Fragment, useState, useEffect } from 'react'
 import { ChevronsUp, ChevronsDown, ListX, ListPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { SortableList, GroupLabelEdit } from '@/components/custom'
+import { SortableList } from './SortableList'
+import { GroupLabelEdit } from './GroupLabelEdit'
 import type { GroupData } from '@/lib/types'
 
 type SortableGroupsProps = {

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import type { DatabaseSchema, UserConfig } from '@/lib/types'
-import { myToast } from '@/components/custom'
+import { myToast } from '@/components/custom/myToast'
 
 type UseImportExportOptions = {
   onConfigImported?: (config: UserConfig) => void

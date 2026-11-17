@@ -23,7 +23,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconButton, myToast, ShareDialog, Highlight, RecipeStatusBadge } from '@/components/custom'
+import { IconButton } from './IconButton'
+import { myToast } from './myToast'
+import { ShareDialog } from './ShareDialog'
+import { Highlight } from './Highlight'
+import { RecipeStatusBadge } from './RecipeStatusBadge'
 import type { Recipe, Tag } from '@/lib/types'
 import { useRecipeMutations, useLongPress, useFormatTotalTime } from '@/hooks'
 import { getRecipeViewUrl, getRecipeEditUrl } from '@/lib/urls'

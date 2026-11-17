@@ -24,7 +24,7 @@ import { getRecipeEditUrl } from '@/lib/urls'
 import { getErrorMessage } from '@/lib/utils'
 import { useRecipeMutations, useTags, useFormNavigationGuard } from '@/hooks'
 import { RECIPE_STATUSES, type Tag, type Recipe, type RecipeDraft } from '@/lib/types'
-import type { DraftGetter } from './edit-recipe-view'
+import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 
 type RecipeForm = Omit<Recipe, 'id' | 'tags'> & {

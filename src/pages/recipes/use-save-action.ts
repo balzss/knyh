@@ -1,4 +1,8 @@
 import { useEffect, useRef } from 'react'
+import type { RecipeDraft } from '@/lib/types'
+
+/** Reads the in-progress recipe from whichever edit view is mounted. */
+export type DraftGetter = () => RecipeDraft | null | undefined
 
 /** The save button the edit page shows in its top bar, owned by whichever view is mounted. */
 export type SaveAction = {

@@ -1,8 +1,6 @@
-import React, { createContext, useState, type ReactNode } from 'react'
+import React, { useState, type ReactNode } from 'react'
 import { ConfirmDialog } from '@/components/custom/ConfirmDialog'
-import type { ConfirmDialogOptions, ConfirmDialogContextType } from '@/hooks/use-confirm-dialog'
-
-export const ConfirmDialogContext = createContext<ConfirmDialogContextType | null>(null)
+import { ConfirmDialogContext, type ConfirmDialogOptions } from './confirm-dialog-context'
 
 interface ConfirmDialogProviderProps {
   children: ReactNode

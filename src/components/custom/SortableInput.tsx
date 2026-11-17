@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
-import { IconButton } from '@/components/custom'
+import { IconButton } from './IconButton'
 
 interface SortableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {

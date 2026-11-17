@@ -1,4 +1,4 @@
-import { Loader } from '@/components/custom'
+import { Loader } from './Loader'
 
 type LayoutVariant = 'list' | 'grid'
 type PageLayoutProps = {

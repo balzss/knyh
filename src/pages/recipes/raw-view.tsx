@@ -13,7 +13,7 @@ import { getErrorMessage } from '@/lib/utils'
 import { getRecipeEditUrl } from '@/lib/urls'
 import type { Recipe, RecipeDraft } from '@/lib/types'
 import { parseMarkdown, recipeToMarkdown, mergeIngredientGroups } from '@/lib/recipe-utils'
-import type { DraftGetter } from './edit-recipe-view'
+import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 
 // The package is CommonJS (`exports.default = Editor`). Depending on the bundler's interop, the default

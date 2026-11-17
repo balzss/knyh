@@ -11,7 +11,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { TextInput } from '@/components/custom'
+import { TextInput } from './TextInput'
 
 type YieldDialogProps = {
   yieldValue: string

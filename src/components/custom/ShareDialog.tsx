@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { myToast } from '@/components/custom'
+import { myToast } from './myToast'
 
 type ShareDialogProps = {
   trigger: React.ReactNode

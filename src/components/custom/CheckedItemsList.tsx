@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { X, ChevronDown, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { IconButton } from '@/components/custom'
+import { IconButton } from './IconButton'
 
 type CheckedItemsListProps = {
   items: string[]

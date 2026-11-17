@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { X } from 'lucide-react'
-import { IconButton } from '@/components/custom'
+import { IconButton } from './IconButton'
 
 interface ActionButtonConfig {
   icon: React.ReactNode
