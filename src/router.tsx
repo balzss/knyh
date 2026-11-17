@@ -2,6 +2,7 @@ import { createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom
 import Providers from '@/providers'
 import HomePage from '@/pages/HomePage'
 import ArchivePage from '@/pages/ArchivePage'
+import IdeasPage from '@/pages/IdeasPage'
 import RandomPage from '@/pages/RandomPage'
 import SettingsPage from '@/pages/SettingsPage'
 import ShoppingListPage from '@/pages/ShoppingListPage'
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
           </EditorOnly>
         ),
       },
+      { path: '/ideas', element: <IdeasPage /> },
       { path: '/random', element: <RandomPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/shopping-list', element: <ShoppingListPage /> },

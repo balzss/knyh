@@ -24,6 +24,8 @@ type SortableListProps = {
   onItemBlur?: (items: string[]) => void
   className?: string
   multiLine?: boolean
+  /** Drops an item that is still empty once focus leaves it */
+  removeEmptyOnBlur?: boolean
   showCheckboxes?: boolean
   onItemChecked?: (item: string) => void
 }
@@ -36,6 +38,7 @@ export function SortableList({
   onItemBlur,
   className = '',
   multiLine,
+  removeEmptyOnBlur = false,
   showCheckboxes = false,
   onItemChecked,
 }: SortableListProps) {
@@ -118,7 +121,15 @@ export function SortableList({
     updateItems(updatedItems)
   }
 
-  const handleItemBlur = () => {
+  // Only the item that lost focus can be dropped. The one that just gained it may be new and empty.
+  const handleItemBlur = (itemId: string) => {
+    const blurred = internalItems.find((item) => item.id === itemId)
+    if (removeEmptyOnBlur && blurred && blurred.value.trim() === '') {
+      const remaining = internalItems.filter((item) => item.id !== itemId)
+      updateItems(remaining)
+      onItemBlur?.(remaining.map((item) => item.value))
+      return
+    }
     onItemBlur?.(internalItems.map((item) => item.value))
   }
 
@@ -135,6 +146,11 @@ export function SortableList({
     itemId: string
   ) => {
     const currentIndex = internalItems.findIndex((item) => item.id === itemId)
+
+    if (e.key === 'Escape' && !e.nativeEvent.isComposing) {
+      e.currentTarget.blur()
+      return
+    }
 
     // In multi-line lists Shift+Enter keeps the default line break
     if (e.key === 'Enter' && !(multiLine && e.shiftKey) && !e.nativeEvent.isComposing) {
@@ -194,7 +210,7 @@ export function SortableList({
                   onChange={(e) => handleItemChange(e, id)}
                   onRemoveSelf={() => handleRemoveItem(id)}
                   onKeyDown={(e) => handleKeydown(e, id)}
-                  onInputBlur={handleItemBlur}
+                  onInputBlur={() => handleItemBlur(id)}
                   autoFocus={autoFocus}
                   multiLine={multiLine}
                   noAnimate={noAnimate}

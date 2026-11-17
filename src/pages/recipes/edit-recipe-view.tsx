@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { X, Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
-import { TopBar, AppSidebar, IconButton } from '@/components/custom'
+import { TopBar, AppSidebar, IconButton, myToast } from '@/components/custom'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -17,8 +17,9 @@ import {
 import FormView from './form-view'
 import RawView from './raw-view'
 import type { SaveAction } from './use-save-action'
-import { useRecipes, useConfirmDialog } from '@/hooks'
-import type { RecipeDraft } from '@/lib/types'
+import { useRecipes, useConfirmDialog, useIdeaMutations } from '@/hooks'
+import { ApiError } from '@/lib/api'
+import type { FromIdeaState, RecipeDraft } from '@/lib/types'
 
 /**
  * Reads what the user has entered in the current view. `null` means nothing to carry over,
@@ -45,9 +46,14 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const { confirm } = useConfirmDialog()
 
   const t = useTranslations('EditRecipeView')
+  const tIdeas = useTranslations('IdeasPage')
   const [mode, setMode] = useState<'form' | 'raw'>('form')
 
   const navigate = useNavigate()
+  const location = useLocation()
+  const { restoreIdea } = useIdeaMutations()
+  // Set when this recipe was just made from an idea
+  const fromIdea = (location.state as FromIdeaState | null)?.fromIdea
   const { recipes } = useRecipes({
     ids: recipeId ? [recipeId] : [],
   })
@@ -74,12 +80,34 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
     setMode(target)
   }
 
-  const handleClosePage = () => {
+  const leavePage = () => {
     if (window.history.length > 1 && document.referrer === '') {
       navigate(-1)
     } else {
       navigate('/', { replace: true })
     }
+  }
+
+  // A recipe made from an idea goes back to being an idea when closed. The server refuses once
+  // the recipe has been saved with changes. Then it stays, and Close just leaves.
+  const handleClosePage = () => {
+    if (!fromIdea || !recipeId) return leavePage()
+    if (restoreIdea.isPending) return
+    restoreIdea.mutate(
+      { recipeId, idea: fromIdea.idea, index: fromIdea.index },
+      {
+        onSuccess: () => {
+          navigate('/ideas', { replace: true })
+          myToast({ message: tIdeas('undone') })
+        },
+        onError: (error) => {
+          if (!(error instanceof ApiError && error.status === 409)) {
+            myToast({ message: tIdeas('undoFailed') })
+          }
+          leavePage()
+        },
+      }
+    )
   }
 
   return (

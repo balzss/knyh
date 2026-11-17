@@ -8,7 +8,8 @@
     "archive": "Archívum",
     "settings": "Beállítások",
     "new-recipe-button": "Új recept",
-    "github": "GitHub"
+    "github": "GitHub",
+    "ideas": "Ötletek"
   },
   "TagActions": {
     "renameTag": "Címke átnevezése",
@@ -191,6 +192,26 @@
     "clearList": "Lista törlése",
     "uncheckAll": "Összes tétel kipálás megszüntetése",
     "removeChecked": "Kipipált tételek eltávolítása"
+  },
+  "IdeasPage": {
+    "title": "Ötletek",
+    "quickAddLabel": "Új ötlet",
+    "quickAddPlaceholder": "Írj le egy ötletet",
+    "addNote": "Jegyzet hozzáadása",
+    "titleLabel": "Ötlet címe",
+    "startDeveloping": "Fejlesztés megkezdése",
+    "moveUp": "Feljebb",
+    "moveDown": "Lejjebb",
+    "moveToTop": "Legfelülre",
+    "delete": "Ötlet törlése",
+    "emptyTitle": "Még nincs ötlet",
+    "emptyDescription": "Írd fel, amit ki szeretnél próbálni. Jegyzeteket, tippeket és linkeket menet közben adhatsz hozzá.",
+    "developFailed": "Nem sikerült megkezdeni az ötlet fejlesztését. Próbáld újra.",
+    "saveFailed": "Nem sikerült menteni az ötletet. Próbáld újra.",
+    "undoFailed": "Nem sikerült visszavonni. Próbáld újra.",
+    "developTitle": "Megkezded a(z) \"{title}\" fejlesztését?",
+    "developDescription": "Az ötletből fejlesztés alatt álló recept lesz, és lekerül erről a listáról. Ha mentés előtt bezárod a szerkesztőt, az ötlet visszakerül.",
+    "undone": "Az ötlet visszakerült a listára"
   },
   "YieldDialog": {
     "setYield": "Adag beállítása",

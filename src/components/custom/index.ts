@@ -1,6 +1,7 @@
 export { AppSidebar } from './AppSidebar'
 export { IconButton } from './IconButton'
 export { PageLayout } from './PageLayout'
+export { IdeaCard } from './IdeaCard'
 export { RecipeCard } from './RecipeCard'
 export { RecipeStatusBadge } from './RecipeStatusBadge'
 export { SortableInput } from './SortableInput'

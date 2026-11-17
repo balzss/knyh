@@ -34,19 +34,35 @@ const configSchema = z
     language: z.enum(['en', 'hu']),
   })
   .partial()
+const ideaSchema = z.object({
+  title: z.string().trim().min(1).max(500),
+  notes: z.array(z.string()).default([]),
+})
+const ideaRestoreSchema = z.object({
+  recipeId: z.string(),
+  index: z.number().int().min(0),
+  idea: z.object({
+    id: z.string(),
+    title: z.string().trim().min(1).max(500),
+    notes: z.array(z.string()),
+    createdAt: z.string(),
+  }),
+})
+const ideaOrderSchema = z.object({ ids: z.array(z.string()) })
 const shoppingListSchema = z.array(z.object({ text: z.string().max(500), checked: z.boolean() }))
 
 export const api = new Hono<{ Bindings: Env }>()
 
 api.use('*', sameOriginWrites)
 
-// Everything that changes data, and the shopping list, needs a valid Access token.
+// Everything that changes data, and the private lists, need a valid Access token.
 api.use('*', async (c, next) => {
   const method = c.req.method
   const isRead = method === 'GET' || method === 'HEAD'
   if (
     isRead &&
     !c.req.path.startsWith('/api/shopping-list') &&
+    !c.req.path.startsWith('/api/ideas') &&
     !c.req.path.startsWith('/api/export')
   ) {
     return next()
@@ -167,6 +183,48 @@ api.put('/shopping-list', async (c) => {
   return c.json({ message: 'Shopping list updated successfully' })
 })
 
+// ---------- Ideas (editor only) ----------
+
+api.get('/ideas', async (c) => c.json(await db.listIdeas(c.env.DB)))
+
+api.post('/ideas', async (c) => {
+  const input = ideaSchema.parse(await c.req.json())
+  return c.json(await db.createIdea(c.env.DB, input), 201)
+})
+
+// Registered before '/ideas/:id' so 'order' is not read as an id.
+api.put('/ideas/order', async (c) => {
+  const { ids } = ideaOrderSchema.parse(await c.req.json())
+  return c.json(await db.reorderIdeas(c.env.DB, ids))
+})
+
+api.put('/ideas/:id', async (c) => {
+  const input = ideaSchema.parse(await c.req.json())
+  const idea = await db.updateIdea(c.env.DB, c.req.param('id'), input)
+  return idea ? c.json(idea) : c.json({ message: 'Idea not found' }, 404)
+})
+
+api.delete('/ideas/:id', async (c) => {
+  const deleted = await db.deleteIdea(c.env.DB, c.req.param('id'))
+  return deleted
+    ? c.json({ message: 'Idea deleted successfully' })
+    : c.json({ message: 'Idea not found' }, 404)
+})
+
+api.post('/ideas/:id/develop', async (c) => {
+  const recipe = await db.developIdea(c.env.DB, c.req.param('id'))
+  return recipe ? c.json(recipe, 201) : c.json({ message: 'Idea not found' }, 404)
+})
+
+// Undoes 'develop': removes the recipe and puts the idea back in its place.
+api.post('/ideas/restore', async (c) => {
+  const { recipeId, idea, index } = ideaRestoreSchema.parse(await c.req.json())
+  const result = await db.undevelopIdea(c.env.DB, recipeId, idea, index)
+  return result === 'restored'
+    ? c.json(await db.listIdeas(c.env.DB))
+    : c.json({ message: 'The recipe was edited, so it was kept' }, 409)
+})
+
 // ---------- Import / export (editor only) ----------
 
 api.get('/export', async (c) => c.json(await db.exportAll(c.env.DB)))
@@ -183,6 +241,10 @@ api.post('/import', async (c) => {
   await db.importAll(c.env.DB, data)
   return c.json({
     message: 'Import successful',
-    imported: { recipes: data.recipes.length, tags: data.tags.length },
+    imported: {
+      recipes: data.recipes.length,
+      tags: data.tags.length,
+      ideas: data.ideas.length,
+    },
   })
 })

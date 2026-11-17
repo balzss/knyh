@@ -175,6 +175,23 @@ export function normalizeImportData(data: any): DatabaseSchema {
       language: data.userConfig.language || 'en',
     },
     shoppingList: data.shoppingList || [],
+    // Files from before ideas existed have none. Entries without an id and a title are dropped.
+    ideas: Array.isArray(data.ideas)
+      ? data.ideas
+          .filter(
+            (idea: any) =>
+              typeof idea?.id === 'string' && typeof idea?.title === 'string' && idea.title !== ''
+          )
+          .map((idea: any) => ({
+            id: idea.id,
+            title: idea.title,
+            notes: Array.isArray(idea.notes)
+              ? idea.notes.filter((note: unknown) => typeof note === 'string')
+              : [],
+            createdAt:
+              typeof idea.createdAt === 'string' ? idea.createdAt : new Date().toISOString(),
+          }))
+      : [],
   }
 }
 
@@ -198,6 +215,15 @@ export function validateUniqueIds(data: DatabaseSchema): { valid: boolean; error
       return { valid: false, error: `Duplicate tag ID: ${tag.id}` }
     }
     tagIds.add(tag.id)
+  }
+
+  // Check idea ID uniqueness
+  const ideaIds = new Set<string>()
+  for (const idea of data.ideas) {
+    if (ideaIds.has(idea.id)) {
+      return { valid: false, error: `Duplicate idea ID: ${idea.id}` }
+    }
+    ideaIds.add(idea.id)
   }
 
   return { valid: true }

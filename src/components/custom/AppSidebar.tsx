@@ -24,6 +24,7 @@ import {
   Settings,
   Archive,
   FilePlus,
+  Lightbulb,
   ShoppingCart,
   BookOpenText,
   Dices,
@@ -97,9 +98,14 @@ export function AppSidebar({ path }: AppSidebarProps) {
       icon: <Dices />,
       href: '/random',
     },
-    // The shopping list and the archive are private to the editor
+    // The ideas, the shopping list and the archive are private to the editor
     ...(editor
       ? [
+          {
+            displayName: t('ideas'),
+            icon: <Lightbulb />,
+            href: '/ideas',
+          },
           {
             displayName: t('shopping-list'),
             icon: <ShoppingCart />,

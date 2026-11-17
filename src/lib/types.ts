@@ -45,9 +45,22 @@ export type ShoppingListItem = {
   checked: boolean
 }
 
+/** A recipe worth developing someday. The list is ordered by priority, first is next. */
+export type Idea = {
+  id: string
+  title: string
+  /** Things to try, things to keep in mind, source URLs. They become the recipe's notes. */
+  notes: string[]
+  createdAt: string
+}
+
+/** Router state on the editor page of a recipe that was just made from an idea. Lets Close undo it. */
+export type FromIdeaState = { fromIdea: { idea: Idea; index: number } }
+
 export type DatabaseSchema = {
   recipes: Recipe[]
   tags: Tag[]
   userConfig: UserConfig
   shoppingList: ShoppingListItem[]
+  ideas: Idea[]
 }

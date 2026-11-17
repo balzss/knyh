@@ -45,6 +45,7 @@ export function useImportExport(options: UseImportExportOptions = {}) {
       queryClient.invalidateQueries({ queryKey: ['tags'] })
       queryClient.invalidateQueries({ queryKey: ['userConfig'] })
       queryClient.invalidateQueries({ queryKey: ['shoppingList'] })
+      queryClient.invalidateQueries({ queryKey: ['ideas'] })
     },
     onError: (error: unknown) => {
       const msg = error instanceof Error ? error.message : 'Unknown error'

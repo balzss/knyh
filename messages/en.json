@@ -8,7 +8,8 @@
     "archive": "Archive",
     "settings": "Settings",
     "new-recipe-button": "New recipe",
-    "github": "GitHub"
+    "github": "GitHub",
+    "ideas": "Ideas"
   },
   "TagActions": {
     "renameTag": "Rename tag",
@@ -191,6 +192,26 @@
     "clearList": "Clear list",
     "uncheckAll": "Uncheck all items",
     "removeChecked": "Remove checked items"
+  },
+  "IdeasPage": {
+    "title": "Ideas",
+    "quickAddLabel": "New idea",
+    "quickAddPlaceholder": "Jot down an idea",
+    "addNote": "Add note",
+    "titleLabel": "Idea title",
+    "startDeveloping": "Start developing",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "moveToTop": "Move to top",
+    "delete": "Delete idea",
+    "emptyTitle": "No ideas yet",
+    "emptyDescription": "Jot down a dish you want to try. Add notes, tips and links as you find them.",
+    "developFailed": "Could not start developing this idea. Try again.",
+    "saveFailed": "Could not save the idea. Try again.",
+    "undoFailed": "Could not undo. Try again.",
+    "developTitle": "Start developing \"{title}\"?",
+    "developDescription": "This turns the idea into a recipe in development and takes it off this list. Closing the editor before you save changes puts the idea back.",
+    "undone": "Idea put back on the list"
   },
   "YieldDialog": {
     "setYield": "Set yield",
