@@ -11,6 +11,7 @@ import { TagEditor } from '@/features/tags/TagEditor'
 import { EmptyState } from '@/components/layout/EmptyState'
 import { TopBarSearchSelect } from '@/features/recipes/components/TopBarSearchSelect'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
+import { useRecipeSelection } from '@/features/recipes/hooks/use-recipe-selection'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
 import { useTags } from '@/features/tags/use-tags'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
@@ -46,7 +47,7 @@ export default function HomePage() {
   // TODO maybe move this logic inside the sidebar?
   const currentPath = '/' + (searchParams.toString() ? `?${searchParams.toString()}` : '')
 
-  const [selectionList, setSelectionList] = useState<string[]>([])
+  const { selection, select, selectAll, clear, topBarMode } = useRecipeSelection()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
@@ -54,16 +55,6 @@ export default function HomePage() {
   const filteredRecipes = useMemo(() => {
     return queryRecipes(recipes, deferredSearchQuery)
   }, [recipes, deferredSearchQuery])
-
-  const handleCardSelect = (id: string, selected: boolean) => {
-    setSelectionList((prevList) => {
-      if (selected) {
-        return prevList.includes(id) ? prevList : [...prevList, id]
-      } else {
-        return prevList.filter((item) => item !== id)
-      }
-    })
-  }
 
   const handleTagFilterChange = (newTags: Tag[]) => {
     if (!newTags.length) {
@@ -77,21 +68,21 @@ export default function HomePage() {
 
   const handleArchiveSelectedRecipes = () => {
     updateRecipes.mutate(
-      { ids: selectionList, data: { archived: true } },
+      { ids: selection, data: { archived: true } },
       {
         onSuccess: () => {
           myToast({
-            message: t('archivedItems', { count: selectionList.length }),
+            message: t('archivedItems', { count: selection.length }),
             action: {
               label: t('undo'),
               onClick: () =>
                 updateRecipes.mutate({
-                  ids: selectionList,
+                  ids: selection,
                   data: { archived: false },
                 }),
             },
           })
-          setSelectionList([])
+          clear()
         },
       }
     )
@@ -99,17 +90,16 @@ export default function HomePage() {
 
   const handleSetStatusSelectedRecipes = (status: RecipeStatus) => {
     updateRecipes.mutate(
-      { ids: selectionList, data: { status } },
+      { ids: selection, data: { status } },
       {
         onSuccess: () => {
-          myToast({ message: t('statusChanged', { count: selectionList.length, status }) })
-          setSelectionList([])
+          myToast({ message: t('statusChanged', { count: selection.length, status }) })
+          clear()
         },
       }
     )
   }
 
-  const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
     <PageShell
       hideSidebarToggleMobile={topBarMode === 'select'}
@@ -120,14 +110,14 @@ export default function HomePage() {
           mode={topBarMode}
           searchQuery={searchQuery}
           onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-          onClearSelection={() => setSelectionList([])}
-          selectionLength={selectionList.length}
+          onClearSelection={() => clear()}
+          selectionLength={selection.length}
           selectActions={[
             {
               icon: <ListChecks />,
               tooltip: 'Select all',
-              onClick: () => setSelectionList(filteredRecipes.map((r) => r.id)),
-              disabled: selectionList.length === filteredRecipes.length,
+              onClick: () => selectAll(filteredRecipes.map((r) => r.id)),
+              disabled: selection.length === filteredRecipes.length,
             },
           ]}
           moreActions={[
@@ -165,11 +155,11 @@ export default function HomePage() {
             <RecipeCard
               key={recipe.id}
               highlight={searchQuery}
-              selectionMode={selectionList.length > 0}
+              selectionMode={selection.length > 0}
               tags={recipe.tags}
               recipeData={recipe}
-              isSelected={selectionList.includes(recipe.id)}
-              onSelect={editor ? (selected) => handleCardSelect(recipe.id, selected) : undefined}
+              isSelected={selection.includes(recipe.id)}
+              onSelect={editor ? (selected) => select(recipe.id, selected) : undefined}
             />
           ))
         ) : (

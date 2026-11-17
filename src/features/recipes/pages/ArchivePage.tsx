@@ -10,6 +10,7 @@ import { myToast } from '@/components/feedback/toast'
 import { EmptyState } from '@/components/layout/EmptyState'
 import { TopBarSearchSelect } from '@/features/recipes/components/TopBarSearchSelect'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
+import { useRecipeSelection } from '@/features/recipes/hooks/use-recipe-selection'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
@@ -27,46 +28,34 @@ export default function ArchivePage() {
   const { updateRecipes, deleteRecipes } = useRecipeMutations()
   const { confirmDelete } = useConfirmDialog()
 
-  const [selectionList, setSelectionList] = useState<string[]>([])
+  const { selection, select, selectAll, clear, topBarMode } = useRecipeSelection()
   const [searchQuery, setSearchQuery] = useState<string>('')
 
   const handleUnarchive = () => {
     updateRecipes.mutate(
-      { ids: selectionList, data: { archived: false } },
+      { ids: selection, data: { archived: false } },
       {
         onSuccess: () => {
-          setSelectionList([])
+          clear()
         },
       }
     )
   }
 
   const handleBulkDelete = async () => {
-    if (selectionList.length === 0) return
+    if (selection.length === 0) return
     // Reuse confirm dialog; show count in name
-    const confirmed = await confirmDelete({ name: `${selectionList.length} item(s)` })
+    const confirmed = await confirmDelete({ name: `${selection.length} item(s)` })
     if (!confirmed) return
-    deleteRecipes.mutate(selectionList, {
+    deleteRecipes.mutate(selection, {
       onSuccess: (ids) => {
         myToast({
           message: `${ids.length} recipe${ids.length === 1 ? '' : 's'} deleted`,
         })
-        setSelectionList([])
+        clear()
       },
     })
   }
-
-  const handleCardSelect = (id: string, selected: boolean) => {
-    setSelectionList((prevList) => {
-      if (selected) {
-        return prevList.includes(id) ? prevList : [...prevList, id]
-      } else {
-        return prevList.filter((item) => item !== id)
-      }
-    })
-  }
-
-  const topBarMode = selectionList.length > 0 ? 'select' : 'search'
 
   return (
     <PageShell
@@ -78,14 +67,14 @@ export default function ArchivePage() {
           mode={topBarMode}
           searchQuery={searchQuery}
           onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-          onClearSelection={() => setSelectionList([])}
-          selectionLength={selectionList.length}
+          onClearSelection={() => clear()}
+          selectionLength={selection.length}
           selectActions={[
             {
               icon: <ListChecks />,
               tooltip: 'Select all',
-              onClick: () => setSelectionList(recipes.map((r) => r.id)),
-              disabled: selectionList.length === recipes.length,
+              onClick: () => selectAll(recipes.map((r) => r.id)),
+              disabled: selection.length === recipes.length,
             },
             {
               icon: <ArchiveRestore />,
@@ -121,11 +110,11 @@ export default function ArchivePage() {
             return (
               <RecipeCard
                 key={recipe.id}
-                selectionMode={selectionList.length > 0}
+                selectionMode={selection.length > 0}
                 recipeData={recipe}
                 tags={recipe.tags}
-                isSelected={selectionList.includes(recipe.id)}
-                onSelect={editor ? (selected) => handleCardSelect(recipe.id, selected) : undefined}
+                isSelected={selection.includes(recipe.id)}
+                onSelect={editor ? (selected) => select(recipe.id, selected) : undefined}
                 archivedMode
               />
             )
