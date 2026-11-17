@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { SortableList } from '@/components/inputs/SortableList'
-import { SortableGroups } from '@/components/inputs/SortableGroups'
+import { SortableGroups } from './SortableGroups'
 import { TagEditor } from '@/features/tags/TagEditor'
 import { YieldDialog } from '@/features/recipes/components/YieldDialog'
 import { TotalTimeDialog } from '@/features/recipes/components/TotalTimeDialog'
