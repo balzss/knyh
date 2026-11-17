@@ -136,7 +136,8 @@ export function SortableList({
   ) => {
     const currentIndex = internalItems.findIndex((item) => item.id === itemId)
 
-    if (e.key === 'Enter' && !multiLine) {
+    // In multi-line lists Shift+Enter keeps the default line break
+    if (e.key === 'Enter' && !(multiLine && e.shiftKey) && !e.nativeEvent.isComposing) {
       e.preventDefault()
       updateItems([
         ...internalItems.slice(0, currentIndex + 1),
