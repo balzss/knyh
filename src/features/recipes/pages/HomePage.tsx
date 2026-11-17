@@ -3,13 +3,12 @@ import { useTranslations } from 'use-intl'
 import { Archive, ListChecks, FilePlus, BookOpenText, Hammer, CircleCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { AppSidebar } from '@/app/layout/AppSidebar'
+import { PageShell } from '@/app/layout/PageShell'
 import { RecipeCard } from '@/features/recipes/components/RecipeCard'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { myToast } from '@/components/feedback/toast'
 import { TagEditor } from '@/features/tags/TagEditor'
 import { EmptyState } from '@/components/layout/EmptyState'
-import { TopBar } from '@/components/layout/TopBar'
 import { TopBarSearchSelect } from '@/features/recipes/components/TopBarSearchSelect'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
@@ -112,88 +111,86 @@ export default function HomePage() {
 
   const topBarMode = selectionList.length > 0 ? 'select' : 'search'
   return (
-    <div className="flex w-full">
-      <TopBar
-        hideSidebarToggleMobile={topBarMode === 'select'}
-        customTopbarContent={
-          <TopBarSearchSelect
-            mode={topBarMode}
-            searchQuery={searchQuery}
-            onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-            onClearSelection={() => setSelectionList([])}
-            selectionLength={selectionList.length}
-            selectActions={[
-              {
-                icon: <ListChecks />,
-                tooltip: 'Select all',
-                onClick: () => setSelectionList(filteredRecipes.map((r) => r.id)),
-                disabled: selectionList.length === filteredRecipes.length,
-              },
-            ]}
-            moreActions={[
-              {
-                icon: <Hammer />,
-                label: t('markDevelopment'),
-                onClick: () => handleSetStatusSelectedRecipes('development'),
-              },
-              {
-                icon: <CircleCheck />,
-                label: t('markReady'),
-                onClick: () => handleSetStatusSelectedRecipes('ready'),
-              },
-              {
-                icon: <Archive />,
-                label: t('archive'),
-                onClick: handleArchiveSelectedRecipes,
-              },
-            ]}
-          />
-        }
-      />
-      <AppSidebar path={currentPath} />
-      <main className="w-full mt-14">
-        {tagParam && (
-          <TagEditor
-            label={t('filter')}
-            buttonLabel={t('selectTag')}
-            tags={filterTags}
-            onTagChange={handleTagFilterChange}
-            className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+    <PageShell
+      hideSidebarToggleMobile={topBarMode === 'select'}
+      sidebarPath={currentPath}
+      mainClassName="w-full mt-14"
+      topBarContent={
+        <TopBarSearchSelect
+          mode={topBarMode}
+          searchQuery={searchQuery}
+          onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
+          onClearSelection={() => setSelectionList([])}
+          selectionLength={selectionList.length}
+          selectActions={[
+            {
+              icon: <ListChecks />,
+              tooltip: 'Select all',
+              onClick: () => setSelectionList(filteredRecipes.map((r) => r.id)),
+              disabled: selectionList.length === filteredRecipes.length,
+            },
+          ]}
+          moreActions={[
+            {
+              icon: <Hammer />,
+              label: t('markDevelopment'),
+              onClick: () => handleSetStatusSelectedRecipes('development'),
+            },
+            {
+              icon: <CircleCheck />,
+              label: t('markReady'),
+              onClick: () => handleSetStatusSelectedRecipes('ready'),
+            },
+            {
+              icon: <Archive />,
+              label: t('archive'),
+              onClick: handleArchiveSelectedRecipes,
+            },
+          ]}
+        />
+      }
+    >
+      {tagParam && (
+        <TagEditor
+          label={t('filter')}
+          buttonLabel={t('selectTag')}
+          tags={filterTags}
+          onTagChange={handleTagFilterChange}
+          className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+        />
+      )}
+      <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
+        {filteredRecipes.length > 0 ? (
+          filteredRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              highlight={searchQuery}
+              selectionMode={selectionList.length > 0}
+              tags={recipe.tags}
+              recipeData={recipe}
+              isSelected={selectionList.includes(recipe.id)}
+              onSelect={editor ? (selected) => handleCardSelect(recipe.id, selected) : undefined}
+            />
+          ))
+        ) : (
+          <EmptyState
+            title={t(statusFilter === 'all' ? 'emptyTitle' : 'emptyFilteredTitle')}
+            description={t(
+              statusFilter === 'all' ? 'emptyDescription' : 'emptyFilteredDescription'
+            )}
+            icon={BookOpenText}
+            action={
+              editor && (
+                <Button asChild>
+                  <Link to="/r/new" className="inline-flex items-center gap-2">
+                    <FilePlus /> {tNav('new-recipe-button')}
+                  </Link>
+                </Button>
+              )
+            }
           />
         )}
-        <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
-          {filteredRecipes.length > 0 ? (
-            filteredRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                highlight={searchQuery}
-                selectionMode={selectionList.length > 0}
-                tags={recipe.tags}
-                recipeData={recipe}
-                isSelected={selectionList.includes(recipe.id)}
-                onSelect={editor ? (selected) => handleCardSelect(recipe.id, selected) : undefined}
-              />
-            ))
-          ) : (
-            <EmptyState
-              title={t(statusFilter === 'all' ? 'emptyTitle' : 'emptyFilteredTitle')}
-              description={t(
-                statusFilter === 'all' ? 'emptyDescription' : 'emptyFilteredDescription'
-              )}
-              icon={BookOpenText}
-              action={
-                editor && (
-                  <Button asChild>
-                    <Link to="/r/new" className="inline-flex items-center gap-2">
-                      <FilePlus /> {tNav('new-recipe-button')}
-                    </Link>
-                  </Button>
-                )
-              }
-            />
-          )}
-        </PageLayout>
-      </main>
-    </div>
+      </PageLayout>
+    </PageShell>
   )
 }

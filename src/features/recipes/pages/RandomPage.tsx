@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'use-intl'
 import { Dices } from 'lucide-react'
-import { TopBar } from '@/components/layout/TopBar'
-import { AppSidebar } from '@/app/layout/AppSidebar'
+import { PageShell } from '@/app/layout/PageShell'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { RecipeCard } from '@/features/recipes/components/RecipeCard'
 import { IconButton } from '@/components/inputs/IconButton'
@@ -25,37 +24,35 @@ export default function RandomPage() {
   const recipe = recipes.length > 0 ? recipes[rollIndex % recipes.length] : undefined
 
   return (
-    <div className="flex w-full">
-      <TopBar
-        customTopbarContent={
-          <div className="flex items-center gap-2">
-            <span className="mr-auto sm:mr-4 font-bold">{t('title')}</span>
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<Dices />}
-              tooltip={t('rollNew')}
-              onClick={() => setRollIndex((i) => i + 1)}
-            />
-          </div>
-        }
-      />
-      <AppSidebar path="/random" />
-      <main className="w-full mt-14">
-        <PageLayout variant="list">
-          <TagEditor
-            label={t('filter')}
-            buttonLabel={t('selectTag')}
-            tags={tagFilter}
-            onTagChange={(newTags) => {
-              setTagFilter(newTags)
-              // Reset the roll index so the first result after changing filters is the 0th
-              setRollIndex(0)
-            }}
+    <PageShell
+      sidebarPath="/random"
+      mainClassName="w-full mt-14"
+      topBarContent={
+        <div className="flex items-center gap-2">
+          <span className="mr-auto sm:mr-4 font-bold">{t('title')}</span>
+          <IconButton
+            iconSize="normal"
+            variant="ghost"
+            icon={<Dices />}
+            tooltip={t('rollNew')}
+            onClick={() => setRollIndex((i) => i + 1)}
           />
-          {recipe && <RecipeCard key={recipe.id} tags={recipe.tags} recipeData={recipe} />}
-        </PageLayout>
-      </main>
-    </div>
+        </div>
+      }
+    >
+      <PageLayout variant="list">
+        <TagEditor
+          label={t('filter')}
+          buttonLabel={t('selectTag')}
+          tags={tagFilter}
+          onTagChange={(newTags) => {
+            setTagFilter(newTags)
+            // Reset the roll index so the first result after changing filters is the 0th
+            setRollIndex(0)
+          }}
+        />
+        {recipe && <RecipeCard key={recipe.id} tags={recipe.tags} recipeData={recipe} />}
+      </PageLayout>
+    </PageShell>
   )
 }

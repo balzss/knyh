@@ -9,8 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { TopBar } from '@/components/layout/TopBar'
-import { AppSidebar } from '@/app/layout/AppSidebar'
+import { PageShell } from '@/app/layout/PageShell'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { useConfig } from './use-config'
 import { useUpdateConfig } from './use-update-config'
@@ -33,93 +32,90 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex w-full">
-      <TopBar
-        customTopbarContent={
-          <div className="flex items-center gap-2">
-            <span className="mr-4 font-bold ">{t('settings')}</span>
-          </div>
-        }
-      />
-      <AppSidebar path="/settings" />
-      <main className="w-full mt-16 mx-auto">
-        <PageLayout>
-          <div className="flex flex-col gap-2 mb-3">
-            <Label>{t('theme')}</Label>
-            <Select onValueChange={(value) => setTheme(value as Theme)} value={theme}>
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dark">{t('dark')}</SelectItem>
-                <SelectItem value="light">{t('light')}</SelectItem>
-                <SelectItem value="system">{t('system')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+    <PageShell
+      sidebarPath="/settings"
+      topBarContent={
+        <div className="flex items-center gap-2">
+          <span className="mr-4 font-bold ">{t('settings')}</span>
+        </div>
+      }
+    >
+      <PageLayout>
+        <div className="flex flex-col gap-2 mb-3">
+          <Label>{t('theme')}</Label>
+          <Select onValueChange={(value) => setTheme(value as Theme)} value={theme}>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="dark">{t('dark')}</SelectItem>
+              <SelectItem value="light">{t('light')}</SelectItem>
+              <SelectItem value="system">{t('system')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-          {editor && (
-            <>
-              {!configLoading && (
-                <div className="flex flex-col gap-2">
-                  <Label>{t('language')}</Label>
-                  <Select onValueChange={handleLanguageChange} value={config?.language}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="hu">Magyar</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              <div className="flex flex-col items-start gap-2 mt-4">
-                <Label>{t('data')}</Label>
-
-                <Button onClick={handleExport} variant="outline">
-                  <Download />
-                  {t('export')}
-                </Button>
-                <Button asChild variant="outline" className="cursor-pointer">
-                  <Label htmlFor="import-button">
-                    <FileUp />
-                    {t('import')}
-                  </Label>
-                </Button>
-                <input
-                  type="file"
-                  id="import-button"
-                  className="hidden"
-                  onChange={handleImport}
-                  accept=".json"
-                />
+        {editor && (
+          <>
+            {!configLoading && (
+              <div className="flex flex-col gap-2">
+                <Label>{t('language')}</Label>
+                <Select onValueChange={handleLanguageChange} value={config?.language}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="hu">Magyar</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </>
-          )}
-          <div className="flex flex-col items-start gap-2 mt-6">
-            <Label>{t('editMode')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {editor ? t('editModeOn') : t('editModeOff')}
-            </p>
-            {editor ? (
-              <Button asChild variant="outline">
-                <a href="/cdn-cgi/access/logout">
-                  <LogOut />
-                  {t('signOut')}
-                </a>
-              </Button>
-            ) : (
-              <Button asChild>
-                <a href="/auth/login?next=/settings">
-                  <LogIn />
-                  {t('signIn')}
-                </a>
-              </Button>
             )}
-          </div>
-        </PageLayout>
-      </main>
-    </div>
+            <div className="flex flex-col items-start gap-2 mt-4">
+              <Label>{t('data')}</Label>
+
+              <Button onClick={handleExport} variant="outline">
+                <Download />
+                {t('export')}
+              </Button>
+              <Button asChild variant="outline" className="cursor-pointer">
+                <Label htmlFor="import-button">
+                  <FileUp />
+                  {t('import')}
+                </Label>
+              </Button>
+              <input
+                type="file"
+                id="import-button"
+                className="hidden"
+                onChange={handleImport}
+                accept=".json"
+              />
+            </div>
+          </>
+        )}
+        <div className="flex flex-col items-start gap-2 mt-6">
+          <Label>{t('editMode')}</Label>
+          <p className="text-sm text-muted-foreground">
+            {editor ? t('editModeOn') : t('editModeOff')}
+          </p>
+          {editor ? (
+            <Button asChild variant="outline">
+              <a href="/cdn-cgi/access/logout">
+                <LogOut />
+                {t('signOut')}
+              </a>
+            </Button>
+          ) : (
+            <Button asChild>
+              <a href="/auth/login?next=/settings">
+                <LogIn />
+                {t('signIn')}
+              </a>
+            </Button>
+          )}
+        </div>
+      </PageLayout>
+    </PageShell>
   )
 }

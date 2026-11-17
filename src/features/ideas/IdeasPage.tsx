@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { Lightbulb } from 'lucide-react'
-import { AppSidebar } from '@/app/layout/AppSidebar'
+import { PageShell } from '@/app/layout/PageShell'
 import { EditorOnly } from '@/components/layout/EditorOnly'
 import { EmptyState } from '@/components/layout/EmptyState'
 import { IdeaCard } from './IdeaCard'
 import { Loader } from '@/components/layout/Loader'
 import { PageLayout } from '@/components/layout/PageLayout'
-import { TopBar } from '@/components/layout/TopBar'
 import { myToast } from '@/components/feedback/toast'
 import { Input } from '@/components/ui/input'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
@@ -77,73 +76,72 @@ export default function IdeasPage() {
 
   return (
     <EditorOnly>
-      <div className="flex w-full">
-        <TopBar customTopbarContent={<span className="mr-4 font-bold">{t('title')}</span>} />
-        <AppSidebar path="/ideas" />
-        <main className="mx-auto mt-16 w-full">
-          <PageLayout className="gap-3">
-            <form onSubmit={handleAdd}>
-              <Input
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Escape' && !e.nativeEvent.isComposing) e.currentTarget.blur()
-                }}
-                placeholder={t('quickAddPlaceholder')}
-                aria-label={t('quickAddLabel')}
-                autoComplete="off"
-                enterKeyHint="done"
-              />
-            </form>
+      <PageShell
+        sidebarPath="/ideas"
+        topBarContent={<span className="mr-4 font-bold">{t('title')}</span>}
+      >
+        <PageLayout className="gap-3">
+          <form onSubmit={handleAdd}>
+            <Input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && !e.nativeEvent.isComposing) e.currentTarget.blur()
+              }}
+              placeholder={t('quickAddPlaceholder')}
+              aria-label={t('quickAddLabel')}
+              autoComplete="off"
+              enterKeyHint="done"
+            />
+          </form>
 
-            {loading ? (
-              <Loader />
-            ) : ideas.length === 0 ? (
-              <EmptyState
-                icon={Lightbulb}
-                title={t('emptyTitle')}
-                description={t('emptyDescription')}
-              />
-            ) : (
-              <MotionConfig reducedMotion="user">
-                <div className="grid gap-3">
-                  {/* No entrance animation for the ideas already there when the page opens */}
-                  <AnimatePresence initial={false}>
-                    {ideas.map((idea, index) => (
-                      // layout="position" slides cards to their new place without stretching them
-                      <motion.div
-                        key={idea.id}
-                        layout="position"
-                        initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.96 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                      >
-                        <IdeaCard
-                          idea={idea}
-                          rank={index + 1}
-                          isFirst={index === 0}
-                          isLast={index === ideas.length - 1}
-                          busy={developIdea.isPending}
-                          onSave={(data) =>
-                            updateIdea.mutate(
-                              { id: idea.id, ...data },
-                              { onError: () => myToast({ message: t('saveFailed') }) }
-                            )
-                          }
-                          onMove={(direction) => handleMove(idea.id, direction)}
-                          onDelete={() => handleDelete(idea.id, idea.title)}
-                          onDevelop={() => handleDevelop(idea, index)}
-                        />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </MotionConfig>
-            )}
-          </PageLayout>
-        </main>
-      </div>
+          {loading ? (
+            <Loader />
+          ) : ideas.length === 0 ? (
+            <EmptyState
+              icon={Lightbulb}
+              title={t('emptyTitle')}
+              description={t('emptyDescription')}
+            />
+          ) : (
+            <MotionConfig reducedMotion="user">
+              <div className="grid gap-3">
+                {/* No entrance animation for the ideas already there when the page opens */}
+                <AnimatePresence initial={false}>
+                  {ideas.map((idea, index) => (
+                    // layout="position" slides cards to their new place without stretching them
+                    <motion.div
+                      key={idea.id}
+                      layout="position"
+                      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                    >
+                      <IdeaCard
+                        idea={idea}
+                        rank={index + 1}
+                        isFirst={index === 0}
+                        isLast={index === ideas.length - 1}
+                        busy={developIdea.isPending}
+                        onSave={(data) =>
+                          updateIdea.mutate(
+                            { id: idea.id, ...data },
+                            { onError: () => myToast({ message: t('saveFailed') }) }
+                          )
+                        }
+                        onMove={(direction) => handleMove(idea.id, direction)}
+                        onDelete={() => handleDelete(idea.id, idea.title)}
+                        onDevelop={() => handleDevelop(idea, index)}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </MotionConfig>
+          )}
+        </PageLayout>
+      </PageShell>
     </EditorOnly>
   )
 }
