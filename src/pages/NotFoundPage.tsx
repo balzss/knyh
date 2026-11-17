@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { FileQuestion } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { TopBar, AppSidebar, PageLayout, EmptyState } from '@/components/custom'
+import { TopBar } from '@/components/custom/TopBar'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { EmptyState } from '@/components/custom/EmptyState'
 
 export default function NotFoundPage() {
   const t = useTranslations('NotFoundPage')

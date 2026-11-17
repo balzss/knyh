@@ -33,7 +33,9 @@ import {
   Trash2,
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
-import { useTags, useTagMutations, useConfirmDialog } from '@/hooks'
+import { useTags } from '@/hooks/use-tags'
+import { useTagMutations } from '@/hooks/use-tag-mutations'
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { myToast } from './myToast'
 import { RenameTagDialog } from './RenameTagDialog'
 import { SidebarItemRow } from './SidebarItemRow'

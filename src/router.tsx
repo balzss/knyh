@@ -1,4 +1,10 @@
-import { createBrowserRouter, Navigate, Outlet, ScrollRestoration, useParams } from 'react-router-dom'
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  ScrollRestoration,
+  useParams,
+} from 'react-router-dom'
 import Providers from '@/providers'
 import HomePage from '@/pages/HomePage'
 import ArchivePage from '@/pages/ArchivePage'
@@ -6,7 +12,8 @@ import IdeasPage from '@/pages/IdeasPage'
 import RandomPage from '@/pages/RandomPage'
 import SettingsPage from '@/pages/SettingsPage'
 import ShoppingListPage from '@/pages/ShoppingListPage'
-import { EditorOnly, BottomNav } from '@/components/custom'
+import { EditorOnly } from '@/components/custom/EditorOnly'
+import { BottomNav } from '@/components/custom/BottomNav'
 import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
 import NotFoundPage from '@/pages/NotFoundPage'
 

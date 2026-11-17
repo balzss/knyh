@@ -2,7 +2,10 @@ import { useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { X, Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
-import { TopBar, AppSidebar, IconButton, myToast } from '@/components/custom'
+import { TopBar } from '@/components/custom/TopBar'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { IconButton } from '@/components/custom/IconButton'
+import { myToast } from '@/components/custom/myToast'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -17,7 +20,9 @@ import {
 import FormView from './form-view'
 import RawView from './raw-view'
 import type { DraftGetter, SaveAction } from './use-save-action'
-import { useRecipes, useConfirmDialog, useIdeaMutations } from '@/hooks'
+import { useRecipes } from '@/hooks/use-recipes'
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
+import { useIdeaMutations } from '@/hooks/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
 

@@ -3,16 +3,17 @@ import { useTranslations } from 'use-intl'
 import { Archive, ArchiveRestore, Trash2, BookOpenText, ListChecks } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import {
-  AppSidebar,
-  PageLayout,
-  RecipeCard,
-  myToast,
-  EmptyState,
-  TopBar,
-  TopBarSearchSelect,
-} from '@/components/custom'
-import { useRecipes, useRecipeMutations, useConfirmDialog, useViewPreferences } from '@/hooks'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { RecipeCard } from '@/components/custom/RecipeCard'
+import { myToast } from '@/components/custom/myToast'
+import { EmptyState } from '@/components/custom/EmptyState'
+import { TopBar } from '@/components/custom/TopBar'
+import { TopBarSearchSelect } from '@/components/custom/TopBarSearchSelect'
+import { useRecipes } from '@/hooks/use-recipes'
+import { useRecipeMutations } from '@/hooks/use-recipe-mutations'
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
+import { useViewPreferences } from '@/hooks/use-view-preferences'
 import type { Recipe } from '@shared/types'
 import { useEditMode } from '@/providers/EditModeProvider'
 

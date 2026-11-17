@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import { useTranslations } from 'use-intl'
 import { Dices } from 'lucide-react'
-import {
-  TopBar,
-  AppSidebar,
-  PageLayout,
-  RecipeCard,
-  IconButton,
-  TagEditor,
-} from '@/components/custom'
-import { useRecipes } from '@/hooks'
+import { TopBar } from '@/components/custom/TopBar'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { RecipeCard } from '@/components/custom/RecipeCard'
+import { IconButton } from '@/components/custom/IconButton'
+import { TagEditor } from '@/components/custom/TagEditor'
+import { useRecipes } from '@/hooks/use-recipes'
 import type { Tag } from '@shared/types'
 
 export default function RandomPage() {

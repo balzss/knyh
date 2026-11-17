@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenuSubButton } from '@/components/ui/sidebar'
 import { MoreVertical } from 'lucide-react'
-import { useLongPress } from '@/hooks'
+import { useLongPress } from '@/hooks/use-long-press'
 import { useTranslations } from 'use-intl'
 
 interface SidebarAction {

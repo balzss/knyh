@@ -9,8 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { TopBar, AppSidebar, PageLayout } from '@/components/custom'
-import { useConfig, useUpdateConfig, useImportExport } from '@/hooks'
+import { TopBar } from '@/components/custom/TopBar'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { useConfig } from '@/hooks/use-config'
+import { useUpdateConfig } from '@/hooks/use-update-config'
+import { useImportExport } from '@/hooks/use-import-export'
 import { useTheme, type Theme } from '@/providers/ThemeProvider'
 import { useEditMode } from '@/providers/EditModeProvider'
 

@@ -3,18 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { Lightbulb } from 'lucide-react'
-import {
-  AppSidebar,
-  EditorOnly,
-  EmptyState,
-  IdeaCard,
-  Loader,
-  PageLayout,
-  TopBar,
-  myToast,
-} from '@/components/custom'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { EditorOnly } from '@/components/custom/EditorOnly'
+import { EmptyState } from '@/components/custom/EmptyState'
+import { IdeaCard } from '@/components/custom/IdeaCard'
+import { Loader } from '@/components/custom/Loader'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { TopBar } from '@/components/custom/TopBar'
+import { myToast } from '@/components/custom/myToast'
 import { Input } from '@/components/ui/input'
-import { useConfirmDialog, useIdeaMutations, useIdeas } from '@/hooks'
+import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
+import { useIdeaMutations, useIdeas } from '@/hooks/use-ideas'
 import type { FromIdeaState, Idea } from '@shared/types'
 import { getRecipeEditUrl } from '@/lib/urls'
 

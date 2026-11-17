@@ -17,7 +17,9 @@ export function RecipeStatusBadge({ status, variant = 'pill', className }: Recip
 
   if (variant === 'label') {
     return (
-      <span className={cn('inline-flex items-center gap-1 text-xs italic whitespace-nowrap', className)}>
+      <span
+        className={cn('inline-flex items-center gap-1 text-xs italic whitespace-nowrap', className)}
+      >
         <Hammer className="h-3 w-3" aria-hidden />
         {t('development')}
       </span>

@@ -1,15 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
 import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
-import { TopBar, AppSidebar, PageLayout, IconButton, EditorOnly } from '@/components/custom'
-import { SortableList, CheckedItemsList } from '@/components/custom'
+import { TopBar } from '@/components/custom/TopBar'
+import { AppSidebar } from '@/components/custom/AppSidebar'
+import { PageLayout } from '@/components/custom/PageLayout'
+import { IconButton } from '@/components/custom/IconButton'
+import { EditorOnly } from '@/components/custom/EditorOnly'
+import { SortableList } from '@/components/custom/SortableList'
+import { CheckedItemsList } from '@/components/custom/CheckedItemsList'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useShoppingList, useShoppingListMutations } from '@/hooks'
+import { useShoppingList, useShoppingListMutations } from '@/hooks/use-shopping-list'
 import type { ShoppingListItem } from '@shared/types'
 
 export default function ShoppingListPage() {
