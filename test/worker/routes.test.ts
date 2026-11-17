@@ -5,12 +5,12 @@ import { testEnv } from './helpers'
 describe('auth redirect', () => {
   it('sends the visitor back into the app', async () => {
     const response = await app.request(
-      'https://knyh.test/auth/login?next=/recipes/new',
+      'https://knyh.test/auth/login?next=/r/new',
       {},
       testEnv
     )
     expect(response.status).toBe(302)
-    expect(response.headers.get('location')).toBe('/recipes/new')
+    expect(response.headers.get('location')).toBe('/r/new')
   })
 
   it('does not redirect to other sites', async () => {

@@ -1,2 +1,2 @@
-export const getRecipeViewUrl = (recipeId: string): string => `/recipes/${recipeId}`
-export const getRecipeEditUrl = (recipeId: string): string => `/recipes/${recipeId}/edit`
+export const getRecipeViewUrl = (recipeId: string): string => `/r/${recipeId}`
+export const getRecipeEditUrl = (recipeId: string): string => `/r/${recipeId}/edit`

@@ -155,7 +155,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                   disabled={path === '/new'}
                 >
                   {path !== '/new' ? (
-                    <Link to="/recipes/new" onClick={() => setOpenMobile(false)}>
+                    <Link to="/r/new" onClick={() => setOpenMobile(false)}>
                       <FilePlus />
                       <span>{t('new-recipe-button')}</span>
                     </Link>

@@ -183,7 +183,7 @@ export default function HomePage() {
               action={
                 editor && (
                   <Button asChild>
-                    <Link to="/recipes/new" className="inline-flex items-center gap-2">
+                    <Link to="/r/new" className="inline-flex items-center gap-2">
                       <FilePlus /> {tNav('new-recipe-button')}
                     </Link>
                   </Button>

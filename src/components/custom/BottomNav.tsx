@@ -28,10 +28,10 @@ export function BottomNav() {
       isActive: pathname === '/ideas',
     },
     {
-      href: '/recipes/new',
+      href: '/r/new',
       label: t('new-recipe-button'),
       icon: <FilePlus />,
-      isActive: pathname === '/recipes/new',
+      isActive: pathname === '/r/new',
     },
   ]
 

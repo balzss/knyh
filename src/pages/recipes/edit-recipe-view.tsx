@@ -124,7 +124,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               tooltip={t('close')}
               onClick={handleClosePage}
             />
-            <span className="mr-auto sm:mr-4 font-bold">
+            <span className="mr-auto font-bold">
               {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
             </span>
             {saveAction && (

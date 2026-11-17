@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, ScrollRestoration, useParams } from 'react-router-dom'
 import Providers from '@/providers'
 import HomePage from '@/pages/HomePage'
 import ArchivePage from '@/pages/ArchivePage'
@@ -9,6 +9,12 @@ import ShoppingListPage from '@/pages/ShoppingListPage'
 import { EditorOnly, BottomNav } from '@/components/custom'
 import { RecipeRoute, EditRecipeRoute, NewRecipeRoute } from '@/pages/recipes/routes'
 import NotFoundPage from '@/pages/NotFoundPage'
+
+// Old /recipes/... links were shared before the move to /r/...
+function LegacyRecipeRedirect({ suffix = '' }: { suffix?: string }) {
+  const { id } = useParams()
+  return <Navigate to={`/r/${id}${suffix}`} replace />
+}
 
 function Root() {
   return (
@@ -40,9 +46,11 @@ export const router = createBrowserRouter([
       { path: '/random', element: <RandomPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/shopping-list', element: <ShoppingListPage /> },
-      { path: '/recipes/new', element: <NewRecipeRoute /> },
-      { path: '/recipes/:id', element: <RecipeRoute /> },
-      { path: '/recipes/:id/edit', element: <EditRecipeRoute /> },
+      { path: '/r/new', element: <NewRecipeRoute /> },
+      { path: '/r/:id', element: <RecipeRoute /> },
+      { path: '/r/:id/edit', element: <EditRecipeRoute /> },
+      { path: '/recipes/:id', element: <LegacyRecipeRedirect /> },
+      { path: '/recipes/:id/edit', element: <LegacyRecipeRedirect suffix="/edit" /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
