@@ -20,7 +20,6 @@ import {
   Lightbulb,
   ShoppingCart,
   BookOpenText,
-  Dices,
   ExternalLink,
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
@@ -73,12 +72,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
                 isActive={path === '/' && selectedTagIds.length === 0}
               />
               <SidebarTagList selectedTagIds={selectedTagIds} />
-              <SidebarNavLink
-                href="/random"
-                icon={<Dices />}
-                label={t('random')}
-                isActive={path === '/random'}
-              />
               {/* The ideas, the shopping list and the archive are private to the editor */}
               {editor && (
                 <>

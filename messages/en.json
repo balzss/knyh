@@ -2,7 +2,6 @@
   "Navigation": {
     "recipes": "Recipes",
     "tags": "Tags",
-    "random": "Random recipe",
     "shopping-list": "Shopping list",
     "groceries": "Groceries",
     "archive": "Archive",
@@ -80,12 +79,6 @@
     "emptyTitle": "No archived recipes",
     "emptyDescription": "Archived recipes will appear here.",
     "emptyCta": "Browse recipes"
-  },
-  "RandomRecipePage": {
-    "title": "Random recipe",
-    "rollNew": "Roll new recipe",
-    "filter": "Filter",
-    "selectTag": "Select tag"
   },
   "EditRecipeView": {
     "editRecipe": "Edit recipe",

@@ -17,10 +17,13 @@ export function TopBar({
 }: TopBarProps) {
   const t = useTranslations('TopBar')
   const tNav = useTranslations('Navigation')
-  const { editor } = useEditMode()
+  const { editor, loading } = useEditMode()
   const { pathname } = useLocation()
   // The editor has its own bar with Save and Close
-  const showNewRecipe = editor && pathname !== '/r/new' && !pathname.endsWith('/edit')
+  const newRecipeFitsPage = pathname !== '/r/new' && !pathname.endsWith('/edit')
+  const showNewRecipe = editor && newRecipeFitsPage
+  // Holds the button's space until the session is known, so the content next to it doesn't resize
+  const reserveNewRecipe = loading && newRecipeFitsPage
   const { toggleSidebar } = useSidebar()
   return (
     <nav className="fixed top-0 right-0 z-50 flex h-14 w-full items-center gap-2 overflow-hidden border-0 border-b bg-background p-3">
@@ -40,6 +43,18 @@ export function TopBar({
       </Link>
 
       <div className="flex-1 items-center">{customTopbarContent}</div>
+
+      {reserveNewRecipe && (
+        <Button
+          aria-hidden
+          tabIndex={-1}
+          className="pointer-events-none invisible hidden font-bold sm:inline-flex"
+          variant="secondary"
+        >
+          <FilePlus />
+          <span>{tNav('new-recipe-button')}</span>
+        </Button>
+      )}
 
       {showNewRecipe && (
         <Button asChild className="hidden font-bold sm:inline-flex" variant="secondary">

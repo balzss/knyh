@@ -2,7 +2,6 @@
   "Navigation": {
     "recipes": "Receptek",
     "tags": "Címkék",
-    "random": "Random recept",
     "shopping-list": "Bevásárló lista",
     "groceries": "Bevásárlás",
     "archive": "Archívum",
@@ -80,12 +79,6 @@
     "emptyTitle": "Nincsenek archivált receptek",
     "emptyDescription": "Az archivált receptek itt fognak megjelenni.",
     "emptyCta": "Receptek megtekintése"
-  },
-  "RandomRecipePage": {
-    "title": "Random recept",
-    "rollNew": "Másik recept",
-    "filter": "Szűrő",
-    "selectTag": "Címke kiválasztása"
   },
   "EditRecipeView": {
     "editRecipe": "Recept szerkesztése",

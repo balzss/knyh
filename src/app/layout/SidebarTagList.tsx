@@ -18,6 +18,9 @@ import { getErrorMessage } from '@/lib/utils'
 import { SidebarItemRow } from './SidebarItemRow'
 import type { Tag } from '@shared/types'
 
+// Every page mounts its own sidebar, so the open state has to outlive the component
+let tagsOpenAcrossPages = false
+
 /** The collapsible list of tags, which the editor can rename and delete */
 export function SidebarTagList({ selectedTagIds }: { selectedTagIds: string[] }) {
   const t = useTranslations('Navigation')
@@ -29,6 +32,13 @@ export function SidebarTagList({ selectedTagIds }: { selectedTagIds: string[] })
   const { confirmDelete } = useConfirmDialog()
   const [menuOpenForTag, setMenuOpenForTag] = useState<string | null>(null)
   const [renamingTag, setRenamingTag] = useState<Tag | null>(null)
+  // Starts collapsed, unless it was left open or a tag filter is active and its tag should be visible
+  const [tagsOpen, setTagsOpen] = useState(tagsOpenAcrossPages || selectedTagIds.length > 0)
+
+  const handleTagsOpenChange = (open: boolean) => {
+    tagsOpenAcrossPages = open
+    setTagsOpen(open)
+  }
 
   const handleDeleteTag = async ({ id, displayName }: Tag) => {
     setMenuOpenForTag(null)
@@ -46,8 +56,12 @@ export function SidebarTagList({ selectedTagIds }: { selectedTagIds: string[] })
 
   return (
     <>
-      {/* Starts collapsed, unless a tag filter is active and its tag should be visible */}
-      <Collapsible asChild defaultOpen={selectedTagIds.length > 0} className="group/collapsible">
+      <Collapsible
+        asChild
+        open={tagsOpen}
+        onOpenChange={handleTagsOpenChange}
+        className="group/collapsible"
+      >
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             <SidebarMenuButton>

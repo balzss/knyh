@@ -9,7 +9,6 @@ import Providers from '@/app/providers/index'
 import HomePage from '@/features/recipes/pages/HomePage'
 import ArchivePage from '@/features/recipes/pages/ArchivePage'
 import IdeasPage from '@/features/ideas/IdeasPage'
-import RandomPage from '@/features/recipes/pages/RandomPage'
 import SettingsPage from '@/features/settings/SettingsPage'
 import ShoppingListPage from '@/features/shopping-list/ShoppingListPage'
 import { EditorOnly } from '@/components/layout/EditorOnly'
@@ -50,7 +49,6 @@ export const router = createBrowserRouter([
         ),
       },
       { path: '/ideas', element: <IdeasPage /> },
-      { path: '/random', element: <RandomPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/shopping-list', element: <ShoppingListPage /> },
       { path: '/r/new', element: <NewRecipeRoute /> },
