@@ -5,6 +5,8 @@ export function InstructionList({ instructions }: { instructions: string[] }) {
   const t = useTranslations('RecipeView')
   const [selectedInstruction, setSelectedInstruction] = useState<number>(-1)
 
+  if (instructions.length === 0) return null
+
   return (
     <div className="flex flex-col gap-1">
       <h2 className="text-xl text-muted-foreground mt-4">{t('instructions')}</h2>

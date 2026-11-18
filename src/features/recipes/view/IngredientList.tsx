@@ -38,24 +38,28 @@ export function IngredientList({
     })
   }
 
+  const hasIngredients = groups.some((group) => group.items.length > 0)
+
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between mt-4">
-        <h2 className="text-xl text-muted-foreground">{t('ingredients')}</h2>
-        <div className="flex items-center gap-1">
-          {factor !== 1 && (
-            <button
-              type="button"
-              onClick={() => onFactorChange(1)}
-              aria-label={t('resetAmounts')}
-              title={t('resetAmounts')}
-              className="text-primary text-sm font-medium px-1"
-            >
-              ×{formatAmount(factor, separator)}
-            </button>
-          )}
+      {hasIngredients && (
+        <div className="flex items-center justify-between mt-4">
+          <h2 className="text-xl text-muted-foreground">{t('ingredients')}</h2>
+          <div className="flex items-center gap-1">
+            {factor !== 1 && (
+              <button
+                type="button"
+                onClick={() => onFactorChange(1)}
+                aria-label={t('resetAmounts')}
+                title={t('resetAmounts')}
+                className="text-primary text-sm font-medium px-1"
+              >
+                ×{formatAmount(factor, separator)}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <ScaleDialog
         open={scaleOpen}
         onOpenChange={onScaleOpenChange}

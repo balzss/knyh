@@ -15,6 +15,10 @@ import { LinkifiedText } from './LinkifiedText'
 import { RecipeHeader } from './RecipeHeader'
 import { RecipeTopBar } from './RecipeTopBar'
 
+// Timestamps written moments apart (e.g. create then save) read the same as relative times
+const isSameMinute = (a: Date | string, b: Date | string) =>
+  Math.abs(new Date(a).getTime() - new Date(b).getTime()) < 60_000
+
 type RecipePageProps = {
   recipeId: string
 }
@@ -127,7 +131,7 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
         )}
         {editor && (
           <div className="mt-8 text-xs italic text-muted-foreground">
-            {recipe.updatedAt && (
+            {recipe.updatedAt && !isSameMinute(recipe.createdAt, recipe.updatedAt) && (
               <p>
                 {t('modified')}: <RelativeTime date={recipe.updatedAt} />
               </p>

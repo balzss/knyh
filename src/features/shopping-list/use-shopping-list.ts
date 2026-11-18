@@ -16,6 +16,8 @@ export const useShoppingList = () => {
     queryKey: ['shoppingList'],
     queryFn: () => api<ShoppingListItem[]>('/api/shopping-list'),
     enabled: editor,
+    // Pick up changes made on another device while this one stays open
+    refetchInterval: 5_000,
   })
 
   return { shoppingList: shoppingList || [], loading, error }

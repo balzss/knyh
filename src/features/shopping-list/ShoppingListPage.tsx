@@ -178,6 +178,7 @@ export default function ShoppingListPage() {
             items={uncheckedItems}
             onItemsChange={handleUncheckedItemsChange}
             onItemBlur={handleUncheckedItemsBlur}
+            removeEmptyOnBlur
             showCheckboxes={true}
             onItemChecked={handleItemChecked}
           />
