@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
 import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
 import { PageShell } from '@/app/layout/PageShell'
-import { ListSkeleton } from '@/components/layout/ListSkeleton'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { IconButton } from '@/components/inputs/IconButton'
 import { EditorOnly } from '@/components/layout/EditorOnly'
@@ -172,7 +171,7 @@ export default function ShoppingListPage() {
         </div>
       }
     >
-      <PageLayout loading={loading} skeleton={<ListSkeleton />}>
+      <PageLayout loading={loading}>
         <div className="space-y-4">
           <SortableList
             addItemLabel={t('addItem')}

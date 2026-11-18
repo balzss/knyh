@@ -17,7 +17,6 @@ import {
   X,
   Settings,
   Archive,
-  FilePlus,
   Lightbulb,
   ShoppingCart,
   BookOpenText,
@@ -64,28 +63,6 @@ export function AppSidebar({ path }: AppSidebarProps) {
       )}
       <SidebarContent className={isMobile ? '' : 'mt-16'}>
         <SidebarGroup>
-          {editor && !isMobile && (
-            <div className="mb-4">
-              <Button
-                variant={path === '/new' ? 'outline' : 'default'}
-                className="font-bold py-4 px-3"
-                asChild={path !== '/new'}
-                disabled={path === '/new'}
-              >
-                {path !== '/new' ? (
-                  <Link to="/r/new" onClick={() => setOpenMobile(false)}>
-                    <FilePlus />
-                    <span>{t('new-recipe-button')}</span>
-                  </Link>
-                ) : (
-                  <>
-                    <FilePlus />
-                    <span>{t('new-recipe-button')}</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarNavLink

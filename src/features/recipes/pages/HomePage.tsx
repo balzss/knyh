@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { PageShell } from '@/app/layout/PageShell'
 import { RecipeCard } from '@/features/recipes/components/RecipeCard'
-import { RecipeCardSkeleton } from '@/features/recipes/components/RecipeCardSkeleton'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { myToast } from '@/components/feedback/toast'
 import { TagEditor } from '@/features/tags/TagEditor'
@@ -19,8 +18,6 @@ import { useViewPreferences } from '@/hooks/use-view-preferences'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/app/providers/EditModeProvider'
 import type { RecipeStatus, Tag } from '@shared/types'
-
-const recipeSkeleton = Array.from({ length: 6 }, (_, i) => <RecipeCardSkeleton key={i} />)
 
 export default function HomePage() {
   const t = useTranslations('HomePage')
@@ -148,12 +145,7 @@ export default function HomePage() {
           className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
         />
       )}
-      <PageLayout
-        variant={selectedLayout}
-        maxCols={layoutGridCols}
-        loading={recipesLoading}
-        skeleton={recipeSkeleton}
-      >
+      <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
         {filteredRecipes.length > 0 ? (
           filteredRecipes.map((recipe) => (
             <RecipeCard

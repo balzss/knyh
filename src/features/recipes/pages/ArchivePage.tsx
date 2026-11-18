@@ -4,7 +4,6 @@ import { Archive, ArchiveRestore, Trash2, BookOpenText, ListChecks } from 'lucid
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { PageShell } from '@/app/layout/PageShell'
-import { RecipeCardSkeleton } from '@/features/recipes/components/RecipeCardSkeleton'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { RecipeCard } from '@/features/recipes/components/RecipeCard'
 import { myToast } from '@/components/feedback/toast'
@@ -17,8 +16,6 @@ import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
 import type { Recipe } from '@shared/types'
 import { useEditMode } from '@/app/providers/EditModeProvider'
-
-const recipeSkeleton = Array.from({ length: 6 }, (_, i) => <RecipeCardSkeleton key={i} />)
 
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
@@ -93,7 +90,7 @@ export default function ArchivePage() {
         />
       }
     >
-      <PageLayout variant={selectedLayout} loading={recipesLoading} skeleton={recipeSkeleton}>
+      <PageLayout variant={selectedLayout} loading={recipesLoading}>
         {recipes.length === 0 && (
           <EmptyState
             title={t('emptyTitle')}

@@ -46,7 +46,8 @@ export function SidebarTagList({ selectedTagIds }: { selectedTagIds: string[] })
 
   return (
     <>
-      <Collapsible asChild defaultOpen={true} className="group/collapsible">
+      {/* Starts collapsed, unless a tag filter is active and its tag should be visible */}
+      <Collapsible asChild defaultOpen={selectedTagIds.length > 0} className="group/collapsible">
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             <SidebarMenuButton>

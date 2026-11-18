@@ -1,5 +1,3 @@
-import { Loader } from './Loader'
-
 type LayoutVariant = 'list' | 'grid'
 type PageLayoutProps = {
   title?: string
@@ -8,7 +6,6 @@ type PageLayoutProps = {
   children: React.ReactNode
   className?: string
   loading?: boolean
-  skeleton?: React.ReactNode
 }
 
 function getLayout(variant: LayoutVariant, maxCols: number) {
@@ -41,9 +38,9 @@ export function PageLayout({
   maxCols = 5,
   className = '',
   loading = false,
-  skeleton,
 }: PageLayoutProps) {
-  if (loading && !skeleton) return <Loader />
+  // Render nothing while loading: a placeholder would only guess at the final size and shift the page
+  if (loading) return null
 
   return (
     <div className={`gap-3 p-3 w-full mx-auto grid ${getLayout(variant, maxCols)} ${className}`}>
@@ -52,7 +49,7 @@ export function PageLayout({
           {title}
         </h1>
       )}
-      {loading ? skeleton : children}
+      {children}
     </div>
   )
 }
