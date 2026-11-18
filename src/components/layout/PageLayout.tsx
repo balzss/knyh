@@ -8,6 +8,7 @@ type PageLayoutProps = {
   children: React.ReactNode
   className?: string
   loading?: boolean
+  skeleton?: React.ReactNode
 }
 
 function getLayout(variant: LayoutVariant, maxCols: number) {
@@ -40,8 +41,9 @@ export function PageLayout({
   maxCols = 5,
   className = '',
   loading = false,
+  skeleton,
 }: PageLayoutProps) {
-  if (loading) return <Loader />
+  if (loading && !skeleton) return <Loader />
 
   return (
     <div className={`gap-3 p-3 w-full mx-auto grid ${getLayout(variant, maxCols)} ${className}`}>
@@ -50,7 +52,7 @@ export function PageLayout({
           {title}
         </h1>
       )}
-      {children}
+      {loading ? skeleton : children}
     </div>
   )
 }

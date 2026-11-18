@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
 import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
 import { PageShell } from '@/app/layout/PageShell'
+import { ListSkeleton } from '@/components/layout/ListSkeleton'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { IconButton } from '@/components/inputs/IconButton'
 import { EditorOnly } from '@/components/layout/EditorOnly'
@@ -171,33 +172,27 @@ export default function ShoppingListPage() {
         </div>
       }
     >
-      <PageLayout>
-        {loading ? (
-          <div className="flex items-center justify-center p-8">
-            <div className="text-muted-foreground">Loading...</div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <SortableList
-              addItemLabel={t('addItem')}
-              items={uncheckedItems}
-              onItemsChange={handleUncheckedItemsChange}
-              onItemBlur={handleUncheckedItemsBlur}
-              showCheckboxes={true}
-              onItemChecked={handleItemChecked}
-            />
+      <PageLayout loading={loading} skeleton={<ListSkeleton />}>
+        <div className="space-y-4">
+          <SortableList
+            addItemLabel={t('addItem')}
+            items={uncheckedItems}
+            onItemsChange={handleUncheckedItemsChange}
+            onItemBlur={handleUncheckedItemsBlur}
+            showCheckboxes={true}
+            onItemChecked={handleItemChecked}
+          />
 
-            {checkedItems.length > 0 && (
-              <CheckedItemsList
-                items={checkedItems}
-                onItemUnchecked={handleItemUnchecked}
-                onItemRemoved={handleCheckedItemRemoved}
-                checkedItemsLabel={t('checkedItems')}
-                removeItemTooltip={t('removeItem')}
-              />
-            )}
-          </div>
-        )}
+          {checkedItems.length > 0 && (
+            <CheckedItemsList
+              items={checkedItems}
+              onItemUnchecked={handleItemUnchecked}
+              onItemRemoved={handleCheckedItemRemoved}
+              checkedItemsLabel={t('checkedItems')}
+              removeItemTooltip={t('removeItem')}
+            />
+          )}
+        </div>
       </PageLayout>
     </PageShell>
   )
