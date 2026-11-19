@@ -9,6 +9,7 @@ import { PageLayout } from '@/components/layout/PageLayout'
 import { myToast } from '@/components/feedback/toast'
 import { TagEditor } from '@/features/tags/TagEditor'
 import { EmptyState } from '@/components/layout/EmptyState'
+import { NewRecipeButton } from '@/features/recipes/components/NewRecipeButton'
 import { TopBarSearchSelect } from '@/features/recipes/components/TopBarSearchSelect'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useRecipeSelection } from '@/features/recipes/hooks/use-recipe-selection'
@@ -102,38 +103,43 @@ export default function HomePage() {
       sidebarPath="/"
       mainClassName="w-full mt-14"
       topBarContent={
-        <TopBarSearchSelect
-          mode={topBarMode}
-          searchQuery={searchQuery}
-          onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
-          onClearSelection={() => clear()}
-          selectionLength={selection.length}
-          selectActions={[
-            {
-              icon: <ListChecks />,
-              tooltip: 'Select all',
-              onClick: () => selectAll(filteredRecipes.map((r) => r.id)),
-              disabled: selection.length === filteredRecipes.length,
-            },
-          ]}
-          moreActions={[
-            {
-              icon: <Hammer />,
-              label: t('markDevelopment'),
-              onClick: () => handleSetStatusSelectedRecipes('development'),
-            },
-            {
-              icon: <CircleCheck />,
-              label: t('markReady'),
-              onClick: () => handleSetStatusSelectedRecipes('ready'),
-            },
-            {
-              icon: <Archive />,
-              label: t('archive'),
-              onClick: handleArchiveSelectedRecipes,
-            },
-          ]}
-        />
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <TopBarSearchSelect
+              mode={topBarMode}
+              searchQuery={searchQuery}
+              onSearchQueryChange={(newValue) => setSearchQuery(newValue)}
+              onClearSelection={() => clear()}
+              selectionLength={selection.length}
+              selectActions={[
+                {
+                  icon: <ListChecks />,
+                  tooltip: 'Select all',
+                  onClick: () => selectAll(filteredRecipes.map((r) => r.id)),
+                  disabled: selection.length === filteredRecipes.length,
+                },
+              ]}
+              moreActions={[
+                {
+                  icon: <Hammer />,
+                  label: t('markDevelopment'),
+                  onClick: () => handleSetStatusSelectedRecipes('development'),
+                },
+                {
+                  icon: <CircleCheck />,
+                  label: t('markReady'),
+                  onClick: () => handleSetStatusSelectedRecipes('ready'),
+                },
+                {
+                  icon: <Archive />,
+                  label: t('archive'),
+                  onClick: handleArchiveSelectedRecipes,
+                },
+              ]}
+            />
+          </div>
+          {topBarMode === 'search' && <NewRecipeButton />}
+        </div>
       }
     >
       {tagParam && (
