@@ -373,3 +373,42 @@ describe('import and export', () => {
     expect(duplicate.status).toBe(400)
   })
 })
+
+describe('single recipe', () => {
+  it('gives visitors the recipe as JSON without its notes', async () => {
+    const created = await createRecipe({ notes: ['secret'] })
+    const response = await call(`/api/recipes/${created.id}`)
+    expect(response.status).toBe(200)
+    const recipe = (await response.json()) as Recipe
+    expect(recipe.title).toBe('Pancakes')
+    expect(recipe.notes).toEqual([])
+  })
+
+  it('gives the editor the notes', async () => {
+    const created = await createRecipe({ notes: ['secret'] })
+    const recipe = (await (await asEditor(`/api/recipes/${created.id}`)).json()) as Recipe
+    expect(recipe.notes).toEqual(['secret'])
+  })
+
+  it('serves markdown when the id ends in .md', async () => {
+    const created = await createRecipe({ notes: ['secret'] })
+    const response = await call(`/api/recipes/${created.id}.md`)
+    expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Type')).toContain('text/markdown')
+    const text = await response.text()
+    expect(text).toContain('# Pancakes')
+    expect(text).toContain('- flour')
+    expect(text).not.toContain('secret')
+  })
+
+  it('hides archived recipes from visitors but not the editor', async () => {
+    const created = await createRecipe({ archived: true })
+    expect((await call(`/api/recipes/${created.id}`)).status).toBe(404)
+    expect((await call(`/api/recipes/${created.id}.md`)).status).toBe(404)
+    expect((await asEditor(`/api/recipes/${created.id}`)).status).toBe(200)
+  })
+
+  it('returns 404 for an unknown id', async () => {
+    expect((await call('/api/recipes/nope')).status).toBe(404)
+  })
+})

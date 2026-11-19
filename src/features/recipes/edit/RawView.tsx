@@ -15,11 +15,8 @@ import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutation
 import { getErrorMessage } from '@/lib/utils'
 import { getRecipeEditUrl } from '@/lib/urls'
 import type { Recipe, RecipeDraft } from '@shared/types'
-import {
-  parseMarkdown,
-  recipeToMarkdown,
-  mergeIngredientGroups,
-} from '@/features/recipes/lib/recipe-utils'
+import { parseMarkdown, mergeIngredientGroups } from '@/features/recipes/lib/recipe-utils'
+import { recipeToMarkdown } from '@shared/recipe-markdown'
 import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 

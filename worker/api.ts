@@ -9,6 +9,7 @@ import {
   normalizeImportData,
   validateUniqueIds,
 } from '../shared/import-validation'
+import { recipeToMarkdown } from '../shared/recipe-markdown'
 
 const groupSchema = z.object({ label: z.string(), items: z.array(z.string()) })
 
@@ -103,6 +104,20 @@ api.get('/recipes', async (c) => {
   }
 
   return c.json(await db.listRecipes(c.env.DB, wantsArchived))
+})
+
+// One recipe as JSON, or as markdown when the id ends in .md. Archived recipes and notes are
+// private, so visitors get a 404 for archived ones and no notes.
+api.get('/recipes/:id', async (c) => {
+  const param = c.req.param('id')
+  const asMarkdown = param.endsWith('.md')
+  const recipe = await db.getRecipe(c.env.DB, asMarkdown ? param.slice(0, -3) : param)
+  const editor = await isEditor(c.env, c.req.raw)
+  if (!recipe || (recipe.archived && !editor)) return c.json({ message: 'Recipe not found' }, 404)
+
+  const visible = editor ? recipe : { ...recipe, notes: [] }
+  if (!asMarkdown) return c.json(visible)
+  return c.text(recipeToMarkdown(visible), 200, { 'Content-Type': 'text/markdown; charset=utf-8' })
 })
 
 api.post('/recipes', async (c) => {
