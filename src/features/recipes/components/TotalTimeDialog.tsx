@@ -71,6 +71,8 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
                 onChange={(e) => setHours(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 type="number"
+                inputMode="numeric"
+                min={0}
               />
             </div>
             <div className="flex flex-col gap-2 flex-grow">
@@ -80,6 +82,8 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
                 onChange={(e) => setMinutes(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 type="number"
+                inputMode="numeric"
+                min={0}
               />
             </div>
           </>

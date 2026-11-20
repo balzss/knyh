@@ -1,12 +1,13 @@
 import { Clipboard, Share } from 'lucide-react'
 import { useTranslations } from 'use-intl'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/layout/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { myToast } from '@/components/feedback/toast'
@@ -38,41 +39,42 @@ export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
       })
   }
 
+  const content = (
+    <>
+      <Input
+        defaultValue={recipeUrl}
+        readOnly
+        inputMode="none"
+        className="min-w-0 truncate text-base sm:text-sm selection:bg-primary selection:text-black focus-visible:ring-0"
+      />
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
+        <Button variant="outline" onClick={handleCopyUrl}>
+          <Clipboard />
+          {t('copy')}
+        </Button>
+        {canShare && (
+          <Button onClick={handleShare} variant="outline">
+            <Share />
+            {t('shareViaDevice')}
+          </Button>
+        )}
+      </div>
+    </>
+  )
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      {/* The dialog is portaled, but React events still bubble to the trigger's ancestors (e.g. the
-          recipe card's long-press and selection handlers), so stop them here. */}
-      <DialogContent
-        className="w-[calc(100%-2rem)] sm:max-w-lg rounded-lg gap-4"
+    <ResponsiveDialog>
+      <ResponsiveDialogTrigger asChild>{trigger}</ResponsiveDialogTrigger>
+      <ResponsiveDialogContent
+        className="gap-4"
         // Autofocusing the input makes iOS zoom the page, which pushes the fixed dialog partly off screen.
         onOpenAutoFocus={(e) => e.preventDefault()}
-        onClick={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-        onPointerDown={(e) => e.stopPropagation()}
       >
-        <DialogHeader>
-          <DialogTitle>{t('title')}</DialogTitle>
-        </DialogHeader>
-        <Input
-          defaultValue={recipeUrl}
-          readOnly
-          inputMode="none"
-          className="min-w-0 truncate text-base sm:text-sm selection:bg-primary selection:text-black focus-visible:ring-0"
-        />
-        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-3">
-          <Button variant="outline" onClick={handleCopyUrl}>
-            <Clipboard />
-            {t('copy')}
-          </Button>
-          {canShare && (
-            <Button onClick={handleShare} variant="outline">
-              <Share />
-              {t('shareViaDevice')}
-            </Button>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody className="flex flex-col gap-4">{content}</ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

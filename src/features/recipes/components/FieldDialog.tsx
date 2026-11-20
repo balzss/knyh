@@ -1,13 +1,14 @@
 import { useState, type ReactNode } from 'react'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogClose,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/layout/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 
 type FieldDialogProps = {
@@ -49,25 +50,25 @@ export function FieldDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
+      <ResponsiveDialogTrigger asChild>
         <Button variant="outline">{trigger}</Button>
-      </DialogTrigger>
-      <DialogContent className="w-11/12 sm:max-w-lg rounded-lg">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-6 py-3">
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{title}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>{description}</ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody className="grid gap-6 py-3">
           <div className="flex gap-3">{children(submit)}</div>
           <div className="flex gap-3 justify-end">
-            <DialogClose asChild>
+            <ResponsiveDialogClose asChild>
               <Button variant="outline">{cancelLabel}</Button>
-            </DialogClose>
+            </ResponsiveDialogClose>
             <Button onClick={submit}>{submitLabel}</Button>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
