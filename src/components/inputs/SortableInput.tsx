@@ -67,11 +67,15 @@ export function SortableInput({
     >
       <div className={`relative flex items-center max-w-2xl w-full`}>
         <span className="p-2 absolute left-0 top-0 bottom-0 flex items-center gap-2">
-          <span className="touch-none flex items-center cursor-move" {...listeners}>
+          <span
+            className="touch-none flex items-center cursor-move relative after:absolute after:content-[''] after:-inset-x-2 after:-inset-y-3"
+            {...listeners}
+          >
             <GripVertical size={16} className="w-6" />
           </span>
           {showCheckbox && (
             <Checkbox
+              className="relative after:absolute after:content-[''] after:-inset-x-1 after:-inset-y-3"
               checked={false}
               onCheckedChange={() => onItemChecked?.()}
               id={`check-${id}`}
