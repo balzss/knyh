@@ -99,7 +99,7 @@ export function RawView({ initialRecipe, draft, draftGetter, onSaveActionChange 
       createRecipe.mutate(payloads, {
         onError: showSaveError,
         onSuccess: (created) => {
-          navigate('/')
+          navigate('/', { replace: true })
           myToast({
             message: `${created.length} ${created.length === 1 ? tForm('recipeCreated') : 'recipes created!'}`,
           })

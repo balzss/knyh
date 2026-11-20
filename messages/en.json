@@ -225,6 +225,7 @@
     "totalTime": "Total time:"
   },
   "TopBar": {
+    "close": "Close",
     "searchRecipes": "Search recipes",
     "selectedItems": "selected",
     "moreActions": "More actions",

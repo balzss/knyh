@@ -21,7 +21,7 @@ export function EditorOnly({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex w-full">
-      <TopBar hideSidebarToggleMobile />
+      <TopBar />
       <AppSidebar />
       <main className="w-full mt-16 mx-auto">
         <PageLayout>

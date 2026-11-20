@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useLocale, useTranslations } from 'use-intl'
-import { X } from 'lucide-react'
 import { PageShell } from '@/app/layout/PageShell'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { Loader } from '@/components/layout/Loader'
-import { IconButton } from '@/components/inputs/IconButton'
+import { CloseButton } from '@/components/layout/CloseButton'
 import { RelativeTime } from '@/components/feedback/RelativeTime'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useEditMode } from '@/app/providers/EditModeProvider'
+import { useClosePage } from '@/hooks/use-close-page'
 import { InstructionList } from './InstructionList'
 import { IngredientList } from './IngredientList'
 import { LinkifiedText } from './LinkifiedText'
@@ -29,7 +29,7 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
   const [titleEl, setTitleEl] = useState<HTMLHeadingElement | null>(null)
   const [titleOffscreen, setTitleOffscreen] = useState(false)
 
-  const navigate = useNavigate()
+  const handleClosePage = useClosePage()
   const t = useTranslations('RecipeView')
   const separator = useLocale() === 'hu' ? ',' : '.'
 
@@ -49,13 +49,9 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
     return () => observer.disconnect()
   }, [titleEl])
 
-  const handleClosePage = () => {
-    navigate('/', { replace: true })
-  }
-
   if (loading) {
     return (
-      <PageShell hideSidebarToggleMobile>
+      <PageShell hideSidebarToggleMobile topBarContent={<CloseButton onClick={handleClosePage} />}>
         <PageLayout>
           <Loader />
         </PageLayout>
@@ -69,12 +65,7 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
         hideSidebarToggleMobile
         topBarContent={
           <div className="flex items-center gap-2">
-            <IconButton
-              icon={<X />}
-              tooltip={t('closeRecipe')}
-              onClick={handleClosePage}
-              className="mr-auto sm:mr-4 "
-            />
+            <CloseButton onClick={handleClosePage} />
           </div>
         }
       >

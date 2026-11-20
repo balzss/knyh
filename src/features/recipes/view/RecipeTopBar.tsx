@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import {
-  X,
   Pen,
   EllipsisVertical,
   Share2,
@@ -18,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconButton } from '@/components/inputs/IconButton'
+import { CloseButton } from '@/components/layout/CloseButton'
 import { myToast } from '@/components/feedback/toast'
 import { ShareDialog } from '@/features/recipes/components/ShareDialog'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
@@ -47,7 +47,7 @@ export function RecipeTopBar({ recipe, titleOffscreen, onClose, onOpenScale }: R
 
     deleteRecipe.mutate(recipe.id, {
       onSuccess: () => {
-        navigate('/')
+        navigate('/', { replace: true })
         myToast({
           message: t('recipeDeleted'),
         })
@@ -61,7 +61,7 @@ export function RecipeTopBar({ recipe, titleOffscreen, onClose, onOpenScale }: R
       { id, data: { ...data, archived: true } },
       {
         onSuccess: () => {
-          navigate('/')
+          navigate('/', { replace: true })
           myToast({
             message: t('recipeArchived'),
           })
@@ -92,7 +92,7 @@ export function RecipeTopBar({ recipe, titleOffscreen, onClose, onOpenScale }: R
 
   return (
     <div className="flex items-center gap-2">
-      <IconButton icon={<X />} tooltip={t('closeRecipe')} onClick={onClose} className="mr-2" />
+      <CloseButton onClick={onClose} />
       <span
         className={`mr-auto font-bold truncate transition-opacity duration-150 ${titleOffscreen ? 'opacity-100' : 'opacity-0'}`}
         aria-hidden={!titleOffscreen}

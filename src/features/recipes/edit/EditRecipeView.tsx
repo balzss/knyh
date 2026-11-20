@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
-import { X, Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
-import { TopBar } from '@/components/layout/TopBar'
-import { AppSidebar } from '@/app/layout/AppSidebar'
+import { Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
+import { PageShell } from '@/app/layout/PageShell'
+import { CloseButton } from '@/components/layout/CloseButton'
 import { IconButton } from '@/components/inputs/IconButton'
 import { myToast } from '@/components/feedback/toast'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,7 @@ import { RawView } from './RawView'
 import type { DraftGetter, SaveAction } from './use-save-action'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
+import { useClosePage } from '@/hooks/use-close-page'
 import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
@@ -84,13 +85,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
     setMode(target)
   }
 
-  const leavePage = () => {
-    if (window.history.length > 1 && document.referrer === '') {
-      navigate(-1)
-    } else {
-      navigate('/', { replace: true })
-    }
-  }
+  const leavePage = useClosePage()
 
   // A recipe made from an idea goes back to being an idea when closed. The server refuses once
   // the recipe has been saved with changes. Then it stays, and Close just leaves.
@@ -115,70 +110,60 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   }
 
   return (
-    <div className="flex w-full">
-      <TopBar
-        hideSidebarToggleMobile
-        customTopbarContent={
-          <div className="flex items-center gap-2">
-            <IconButton
-              iconSize="normal"
-              variant="ghost"
-              icon={<X />}
-              className={inNewRecipeMode ? 'hidden sm:flex' : ''}
-              tooltip={t('close')}
-              onClick={handleClosePage}
-            />
-            <span className="mr-auto font-bold">
-              {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
-            </span>
-            {saveAction && (
-              <Button
-                type="button"
-                size="sm"
-                variant={saveAction.disabled ? 'ghost' : 'default'}
-                aria-label={saveAction.label}
-                disabled={saveAction.disabled}
-                onClick={saveAction.onSave}
+    <PageShell
+      hideSidebarToggleMobile
+      topBarContent={
+        <div className="flex items-center gap-2">
+          <CloseButton onClick={handleClosePage} />
+          <span className="mr-auto font-bold">
+            {t(recipes[0]?.id ? 'editRecipe' : 'newRecipe')}
+          </span>
+          {saveAction && (
+            <Button
+              type="button"
+              size="sm"
+              variant={saveAction.disabled ? 'ghost' : 'default'}
+              aria-label={saveAction.label}
+              disabled={saveAction.disabled}
+              onClick={saveAction.onSave}
+            >
+              <Save className="h-4 w-4" />
+              <span className="hidden sm:inline">{saveAction.label}</span>
+            </Button>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <IconButton
+                iconSize="normal"
+                variant="ghost"
+                icon={<Ellipsis />}
+                tooltip={t('moreOptions')}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>{t('editorMode')}</DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={mode}
+                onValueChange={(value) => handleSwitchMode(value as typeof mode)}
               >
-                <Save className="h-4 w-4" />
-                <span className="hidden sm:inline">{saveAction.label}</span>
-              </Button>
-            )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <IconButton
-                  iconSize="normal"
-                  variant="ghost"
-                  icon={<Ellipsis />}
-                  tooltip={t('moreOptions')}
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>{t('editorMode')}</DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={mode}
-                  onValueChange={(value) => handleSwitchMode(value as typeof mode)}
-                >
-                  {MODES.map(({ value, icon: Icon, labelKey }) => (
-                    <DropdownMenuRadioItem key={value} value={value} className="gap-2">
-                      <Icon className="h-4 w-4" />
-                      {t(labelKey)}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
-                  {t('resetChanges')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        }
-      />
-      <AppSidebar path="/new" />
-
+                {MODES.map(({ value, icon: Icon, labelKey }) => (
+                  <DropdownMenuRadioItem key={value} value={value} className="gap-2">
+                    <Icon className="h-4 w-4" />
+                    {t(labelKey)}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
+                {t('resetChanges')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      }
+    >
       {(inNewRecipeMode || recipeToEdit) && (
-        <main className="w-full mt-16 mx-auto">
+        <>
           {mode === 'raw' ? (
             <RawView
               initialRecipe={recipeToEdit}
@@ -195,8 +180,8 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               onSaveActionChange={setSaveAction}
             />
           )}
-        </main>
+        </>
       )}
-    </div>
+    </PageShell>
   )
 }

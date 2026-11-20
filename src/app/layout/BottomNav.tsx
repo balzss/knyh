@@ -10,8 +10,9 @@ export function BottomNav() {
   const { editor } = useEditMode()
   const { pathname } = useLocation()
 
-  // Groceries, ideas and new recipe are private to the editor
-  if (!isMobile || !editor) return null
+  // Groceries, ideas and new recipe are private to the editor. Recipe pages are detail pages:
+  // they close with the X in the top bar instead.
+  if (!isMobile || !editor || pathname.startsWith('/r/')) return null
 
   const items = [
     { href: '/', label: t('recipes'), icon: <BookOpenText />, isActive: pathname === '/' },
@@ -19,19 +20,19 @@ export function BottomNav() {
       href: '/shopping-list',
       label: t('groceries'),
       icon: <ShoppingCart />,
-      isActive: pathname === '/shopping-list',
+      isActive: pathname.startsWith('/shopping-list'),
     },
     {
       href: '/ideas',
       label: t('ideas'),
       icon: <Lightbulb />,
-      isActive: pathname === '/ideas',
+      isActive: pathname.startsWith('/ideas'),
     },
     {
       href: '/r/new',
       label: t('new-recipe-button'),
       icon: <FilePlus />,
-      isActive: pathname === '/r/new',
+      isActive: false,
     },
   ]
 

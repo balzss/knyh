@@ -225,6 +225,7 @@
     "totalTime": "Teljes idő:"
   },
   "TopBar": {
+    "close": "Bezárás",
     "searchRecipes": "Receptek keresése",
     "selectedItems": "kijelölve",
     "moreActions": "További műveletek",
