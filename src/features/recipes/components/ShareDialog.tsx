@@ -4,6 +4,7 @@ import {
   ResponsiveDialog,
   ResponsiveDialogBody,
   ResponsiveDialogContent,
+  ResponsiveDialogDescription,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
@@ -72,6 +73,9 @@ export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
       >
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription className="font-medium text-foreground">
+            {title}
+          </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody className="flex flex-col gap-4">{content}</ResponsiveDialogBody>
       </ResponsiveDialogContent>

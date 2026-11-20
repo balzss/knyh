@@ -1,5 +1,6 @@
 export type Env = {
   DB: D1Database
+  ASSETS: Fetcher
   /** Cloudflare Access team domain, e.g. myteam.cloudflareaccess.com */
   TEAM_DOMAIN: string
   /** Audience (AUD) tag of the Access application */

@@ -6,9 +6,10 @@
   // Serves the site on this domain. The zone must be on the same Cloudflare account.
   "routes": [{ "pattern": "konyha.bazsi.org", "custom_domain": true }],
   "assets": {
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    // The Worker handles these first; everything else is served as a static asset.
-    "run_worker_first": ["/api/*", "/auth/*"]
+    // The Worker handles these first (/r/* adds link preview tags to the recipe page); everything else is served as a static asset.
+    "run_worker_first": ["/api/*", "/auth/*", "/r/*"]
   },
   "d1_databases": [
     {

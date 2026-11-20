@@ -15,9 +15,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useShoppingList, useShoppingListMutations } from './use-shopping-list'
 import type { ShoppingListItem } from '@shared/types'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 export default function ShoppingListPage() {
   const t = useTranslations('ShoppingListPage')
+  usePageTitle(t('title'))
   const { shoppingList, loading } = useShoppingList()
   const { updateShoppingList } = useShoppingListMutations()
 

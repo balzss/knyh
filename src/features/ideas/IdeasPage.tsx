@@ -15,9 +15,11 @@ import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useIdeaMutations, useIdeas } from './use-ideas'
 import type { FromIdeaState, Idea } from '@shared/types'
 import { getRecipeEditUrl } from '@/lib/urls'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 export default function IdeasPage() {
   const t = useTranslations('IdeasPage')
+  usePageTitle(t('title'))
   const tConfirm = useTranslations('ConfirmDialog')
   const navigate = useNavigate()
   const { ideas, loading } = useIdeas()

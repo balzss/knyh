@@ -74,6 +74,7 @@
     "emptyFilteredDescription": "Change the status filter in the view options to see more."
   },
   "ArchivePage": {
+    "title": "Archive",
     "restore": "Restore",
     "delete": "Delete",
     "emptyTitle": "No archived recipes",

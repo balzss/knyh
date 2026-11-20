@@ -26,6 +26,7 @@ import { useClosePage } from '@/hooks/use-close-page'
 import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 /**
  * Reads what the user has entered in the current view. `null` means nothing to carry over,
@@ -64,6 +65,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   })
 
   const recipeToEdit = recipeId ? recipes[0] : undefined
+  usePageTitle(recipeToEdit ? `${t('editRecipe')}: ${recipeToEdit.title}` : t('newRecipe'))
   const inNewRecipeMode = !recipeId // if there is no recipe id, this is a new recipe
 
   const handleSwitchMode = async (target: 'form' | 'raw') => {

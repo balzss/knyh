@@ -16,11 +16,13 @@ import { useUpdateConfig } from './use-update-config'
 import { useImportExport } from './use-import-export'
 import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
 import { useEditMode } from '@/app/providers/EditModeProvider'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 type Language = 'hu' | 'en'
 
 export default function SettingsPage() {
   const t = useTranslations('SettingsPage')
+  usePageTitle(t('settings'))
   const { theme, setTheme } = useTheme()
   const { editor } = useEditMode()
   const { data: config, isLoading: configLoading } = useConfig()

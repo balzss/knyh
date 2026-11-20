@@ -16,9 +16,11 @@ import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
 import type { Recipe } from '@shared/types'
 import { useEditMode } from '@/app/providers/EditModeProvider'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 export default function ArchivePage() {
   const t = useTranslations('ArchivePage')
+  usePageTitle(t('title'))
   const { editor } = useEditMode()
   const { layout: selectedLayout, status: statusFilter } = useViewPreferences()
   const { recipes, loading: recipesLoading } = useRecipes({

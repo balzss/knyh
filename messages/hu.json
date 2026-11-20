@@ -74,6 +74,7 @@
     "emptyFilteredDescription": "A nézetbeállításokban módosíthatod az állapotszűrőt."
   },
   "ArchivePage": {
+    "title": "Archívum",
     "restore": "Visszaállítás",
     "delete": "Törlés",
     "emptyTitle": "Nincsenek archivált receptek",

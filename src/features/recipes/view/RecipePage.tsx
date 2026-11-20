@@ -14,6 +14,7 @@ import { IngredientList } from './IngredientList'
 import { LinkifiedText } from './LinkifiedText'
 import { RecipeHeader } from './RecipeHeader'
 import { RecipeTopBar } from './RecipeTopBar'
+import { usePageTitle } from '@/hooks/use-page-title'
 
 // Timestamps written moments apart (e.g. create then save) read the same as relative times
 const isSameMinute = (a: Date | string, b: Date | string) =>
@@ -35,6 +36,7 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
 
   const { recipes, loading } = useRecipes({ ids: [recipeId], sort: 'random' })
   const recipe = recipes?.[0]
+  usePageTitle(recipe?.title)
 
   const { editor } = useEditMode()
 

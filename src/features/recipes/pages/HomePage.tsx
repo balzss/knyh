@@ -15,6 +15,7 @@ import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useRecipeSelection } from '@/features/recipes/hooks/use-recipe-selection'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
 import { useTags } from '@/features/tags/use-tags'
+import { usePageTitle } from '@/hooks/use-page-title'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
 import { queryRecipes } from '@/lib/utils'
 import { useEditMode } from '@/app/providers/EditModeProvider'
@@ -42,6 +43,11 @@ export default function HomePage() {
     status: !editor ? 'ready' : statusFilter === 'all' ? undefined : statusFilter,
   })
   const { tags: filterTags } = useTags({ ids: tagParam })
+  usePageTitle(
+    tagParam && filterTags?.length
+      ? `${tNav('recipes')}: ${filterTags.map((tag) => tag.displayName).join(', ')}`
+      : tNav('recipes')
+  )
   const { updateRecipes } = useRecipeMutations()
 
   const { selection, select, selectAll, clear, topBarMode } = useRecipeSelection()
