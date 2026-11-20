@@ -100,8 +100,21 @@ body {
   * {
     @apply border-border;
   }
+  html {
+    /* Keep vertical overscroll so Android pull-to-refresh still works. */
+    overscroll-behavior-x: none;
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
     @apply bg-background text-foreground;
+    /* Removes the double-tap zoom delay; pinch zoom still works. */
+    touch-action: manipulation;
+  }
+  button,
+  [role='button'],
+  nav {
+    -webkit-touch-callout: none;
+    user-select: none;
   }
 }
 
