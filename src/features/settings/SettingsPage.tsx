@@ -16,6 +16,7 @@ import { useUpdateConfig } from './use-update-config'
 import { useImportExport } from './use-import-export'
 import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
 import { useEditMode } from '@/app/providers/EditModeProvider'
+import { clearPersistedCache } from '@/app/providers'
 import { usePageTitle } from '@/hooks/use-page-title'
 
 type Language = 'hu' | 'en'
@@ -103,7 +104,7 @@ export default function SettingsPage() {
           </p>
           {editor ? (
             <Button asChild variant="outline">
-              <a href="/cdn-cgi/access/logout">
+              <a href="/cdn-cgi/access/logout" onClick={() => void clearPersistedCache()}>
                 <LogOut />
                 {t('signOut')}
               </a>
