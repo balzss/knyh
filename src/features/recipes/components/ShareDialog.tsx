@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Clipboard, Share } from 'lucide-react'
 import { useTranslations } from 'use-intl'
 import {
@@ -21,9 +22,11 @@ type ShareDialogProps = {
 
 export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
   const t = useTranslations('ShareDialog')
+  const [open, setOpen] = useState(false)
   const handleCopyUrl = () => {
     myToast({ message: t('urlCopied') })
     navigator.clipboard.writeText(recipeUrl || '')
+    setOpen(false)
   }
 
   const canShare = typeof navigator !== 'undefined' && !!navigator.share
@@ -34,6 +37,7 @@ export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
         title,
         url: recipeUrl,
       })
+      .then(() => setOpen(false))
       .catch((error) => {
         // Dismissing the share sheet rejects with AbortError, which isn't a failure.
         if (error?.name !== 'AbortError') console.error('Error sharing:', error)
@@ -64,7 +68,7 @@ export function ShareDialog({ trigger, title, recipeUrl }: ShareDialogProps) {
   )
 
   return (
-    <ResponsiveDialog>
+    <ResponsiveDialog open={open} onOpenChange={setOpen}>
       <ResponsiveDialogTrigger asChild>{trigger}</ResponsiveDialogTrigger>
       <ResponsiveDialogContent
         className="gap-4"
