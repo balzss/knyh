@@ -24,6 +24,7 @@ import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutation
 import { useTags } from '@/features/tags/use-tags'
 import { useFormNavigationGuard } from '@/hooks/use-form-navigation-guard'
 import { RECIPE_STATUSES, type Tag, type Recipe, type RecipeDraft } from '@shared/types'
+import { clearRecipeDraft } from '@/features/recipes/lib/recipe-draft-cache'
 import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 
@@ -148,6 +149,7 @@ export function FormView({
       createRecipe.mutate(submitData, {
         onError: showSaveError,
         onSuccess: (newlyCreatedRecipes) => {
+          clearRecipeDraft()
           navigate(getRecipeEditUrl(newlyCreatedRecipes[0].id), { replace: true })
           myToast({
             message: t('recipeCreated'),

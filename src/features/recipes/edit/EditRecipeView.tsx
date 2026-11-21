@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslations } from 'use-intl'
 import { Ellipsis, Save, TextCursorInput, FileText } from 'lucide-react'
@@ -27,6 +27,13 @@ import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
 import { usePageTitle } from '@/hooks/use-page-title'
+import {
+  clearRecipeDraft,
+  loadRecipeDraft,
+  saveRecipeDraft,
+} from '@/features/recipes/lib/recipe-draft-cache'
+
+const DRAFT_SAVE_INTERVAL_MS = 1000
 
 /**
  * Reads what the user has entered in the current view. `null` means nothing to carry over,
@@ -46,7 +53,10 @@ type NewRecipeViewProps = {
 export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const [formResetTrigger, setFormResetTrigger] = useState<number>(0)
   // What the user entered, handed from one mode to the other when switching
-  const [draft, setDraft] = useState<RecipeDraft | null>(null)
+  // A new recipe starts from the draft left on this device, if there is one
+  const [draft, setDraft] = useState<RecipeDraft | null>(() =>
+    recipeId ? null : loadRecipeDraft()
+  )
   const draftGetter = useRef<DraftGetter | null>(null)
   const [saveAction, setSaveAction] = useState<SaveAction | null>(null)
   const { confirm } = useConfirmDialog()
@@ -67,6 +77,26 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
   const recipeToEdit = recipeId ? recipes[0] : undefined
   usePageTitle(recipeToEdit ? `${t('editRecipe')}: ${recipeToEdit.title}` : t('newRecipe'))
   const inNewRecipeMode = !recipeId // if there is no recipe id, this is a new recipe
+
+  // Keep what the user has entered so an accidental exit or reload doesn't lose a new recipe
+  useEffect(() => {
+    if (!inNewRecipeMode) return
+    if (draft) myToast({ message: t('draftRestored') })
+    let lastSaved = ''
+    const timer = setInterval(() => {
+      const current = draftGetter.current?.()
+      // undefined: no view mounted, or markdown that isn't a single recipe yet
+      if (current === undefined) return
+      if (current === null) return clearRecipeDraft()
+      const serialized = JSON.stringify(current)
+      if (serialized === lastSaved) return
+      lastSaved = serialized
+      saveRecipeDraft(current)
+    }, DRAFT_SAVE_INTERVAL_MS)
+    return () => clearInterval(timer)
+    // The restore notice only matters for the draft the page opened with
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inNewRecipeMode])
 
   const handleSwitchMode = async (target: 'form' | 'raw') => {
     if (target === mode) return
@@ -157,7 +187,7 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
               </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setFormResetTrigger((n) => n + 1)}>
-                {t('resetChanges')}
+                {t(inNewRecipeMode ? 'clearRecipe' : 'resetChanges')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

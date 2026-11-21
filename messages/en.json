@@ -86,6 +86,8 @@
     "editRecipe": "Edit recipe",
     "newRecipe": "New recipe",
     "moreOptions": "More options",
+    "draftRestored": "Restored your unsaved draft",
+    "clearRecipe": "Clear",
     "resetChanges": "Reset changes",
     "close": "Close",
     "cannotConvertTitle": "Discard the markdown?",

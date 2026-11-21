@@ -17,6 +17,7 @@ import { getRecipeEditUrl } from '@/lib/urls'
 import type { Recipe, RecipeDraft } from '@shared/types'
 import { parseMarkdown, mergeIngredientGroups } from '@/features/recipes/lib/recipe-utils'
 import { recipeToMarkdown } from '@shared/recipe-markdown'
+import { clearRecipeDraft } from '@/features/recipes/lib/recipe-draft-cache'
 import type { DraftGetter } from './use-save-action'
 import { useSaveAction, type SaveAction } from './use-save-action'
 
@@ -99,6 +100,7 @@ export function RawView({ initialRecipe, draft, draftGetter, onSaveActionChange 
       createRecipe.mutate(payloads, {
         onError: showSaveError,
         onSuccess: (created) => {
+          clearRecipeDraft()
           navigate('/', { replace: true })
           myToast({
             message: `${created.length} ${created.length === 1 ? tForm('recipeCreated') : 'recipes created!'}`,
@@ -136,6 +138,7 @@ export function RawView({ initialRecipe, draft, draftGetter, onSaveActionChange 
         createRecipe.mutate(payload, {
           onError: showSaveError,
           onSuccess: (created) => {
+            clearRecipeDraft()
             navigate(getRecipeEditUrl(created[0].id), { replace: true })
             myToast({ message: tForm('recipeCreated') })
           },

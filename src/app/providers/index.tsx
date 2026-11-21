@@ -3,6 +3,7 @@ import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { del, get, set } from 'idb-keyval'
+import { clearRecipeDraft } from '@/features/recipes/lib/recipe-draft-cache'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { ApiError } from '@/lib/api'
@@ -38,7 +39,10 @@ const persister = createAsyncStoragePersister({
 })
 
 // Drops the persisted cache so the next user on this device doesn't see it (call on sign-out).
-export const clearPersistedCache = () => del(CACHE_KEY)
+export const clearPersistedCache = () => {
+  clearRecipeDraft()
+  return del(CACHE_KEY)
+}
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (

@@ -86,6 +86,8 @@
     "editRecipe": "Recept szerkesztése",
     "newRecipe": "Új recept",
     "moreOptions": "További lehetőségek",
+    "draftRestored": "Mentetlen piszkozat visszaállítva",
+    "clearRecipe": "Törlés",
     "resetChanges": "Változtatások visszavonása",
     "close": "Bezárás",
     "cannotConvertTitle": "Elveted a markdownt?",
