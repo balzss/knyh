@@ -44,6 +44,7 @@ export function useLongPress(
       if (!enabled) return
       if (e && 'pointerType' in e) isTouchRef.current = e.pointerType === 'touch'
       else if (e) isTouchRef.current = true
+      if (e && !isTouchRef.current) return
       if (e?.target instanceof Element && e.target.closest(IGNORED_TARGETS)) return
       activatedRef.current = false
       startTimeRef.current = Date.now()

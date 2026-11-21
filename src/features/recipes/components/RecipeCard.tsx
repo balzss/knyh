@@ -70,9 +70,12 @@ export function RecipeCard({
       <div
         className={cn(
           'flex absolute top-2 right-2 transition-all duration-100 ease-in-out',
-          (isHovered || selectionMode) && !isDropdownOpen
+          // On phones the check button only shows in selection mode, since a long tap enters it
+          selectionMode && !isDropdownOpen
             ? 'opacity-100'
-            : 'sm:opacity-0 sm:invisible'
+            : isHovered && !isDropdownOpen
+              ? 'max-sm:opacity-0 max-sm:invisible'
+              : 'opacity-0 invisible'
         )}
       >
         {onSelect && (
@@ -156,6 +159,7 @@ export function RecipeCard({
             recipeData={recipeData}
             archivedMode={archivedMode}
             onMenuOpenChange={setIsDropdownOpen}
+            onSelect={onSelect && (() => onSelect(true))}
           />
         </div>
       </CardFooter>

@@ -9,6 +9,7 @@ import {
   Copy,
   Hammer,
   CircleCheck,
+  CircleCheckBig,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -29,6 +30,8 @@ type RecipeCardActionsProps = {
   archivedMode: boolean
   /** Lets the card keep its actions visible while the menu is open */
   onMenuOpenChange: (open: boolean) => void
+  /** Puts the card into selection mode, selecting it */
+  onSelect?: () => void
 }
 
 /** The buttons in the bottom corner of a recipe card. Which ones show depends on the mode. */
@@ -36,6 +39,7 @@ export function RecipeCardActions({
   recipeData,
   archivedMode,
   onMenuOpenChange,
+  onSelect,
 }: RecipeCardActionsProps) {
   const t = useTranslations('RecipeCard')
   const { editor } = useEditMode()
@@ -137,6 +141,12 @@ export function RecipeCardActions({
             <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} iconSize="small" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {onSelect && (
+              <DropdownMenuItem onClick={onSelect}>
+                <CircleCheckBig className="mr-2 h-4 w-4" />
+                {t('select')}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={handleDuplicateRecipe}>
               <Copy className="mr-2 h-4 w-4" />
               {t('duplicate')}

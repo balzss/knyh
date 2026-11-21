@@ -87,7 +87,7 @@ export default function ShoppingListPage() {
   const handleItemChecked = useCallback(
     (item: string) => {
       const newUncheckedItems = uncheckedItems.filter((i) => i !== item)
-      const newCheckedItems = [...checkedItems, item]
+      const newCheckedItems = [item, ...checkedItems]
 
       setUncheckedItems(newUncheckedItems)
       setCheckedItems(newCheckedItems)
