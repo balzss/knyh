@@ -69,6 +69,8 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
               <Input
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
+                autoFocus
+                onFocus={(e) => e.currentTarget.select()}
                 onKeyDown={handleInputKeyDown}
                 type="number"
                 inputMode="numeric"
@@ -80,6 +82,7 @@ export function TotalTimeDialog({ totalTimeValue, onTotalTimeValueChange }: Tota
               <Input
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
+                onFocus={(e) => e.currentTarget.select()}
                 onKeyDown={handleInputKeyDown}
                 type="number"
                 inputMode="numeric"

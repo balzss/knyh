@@ -41,6 +41,8 @@ export function YieldDialog({ yieldValue, onYieldValueChange }: YieldDialogProps
           value={value}
           onValueChange={(_e, newValue) => setValue(newValue)}
           clearable
+          autoFocus
+          onFocus={(e) => e.currentTarget.select()}
           onKeyDown={(e) => {
             if (e.key === 'Enter') submit()
           }}
