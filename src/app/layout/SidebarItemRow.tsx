@@ -44,7 +44,7 @@ export function SidebarItemRow({
   isActive = false,
 }: SidebarItemRowProps) {
   const tTag = useTranslations('TagActions')
-  const { bind, wasLongPress } = useLongPress(() => onOpenChange(true), { enabled: isMobile })
+  const { bind, wasLongPress } = useLongPress(() => onOpenChange(true), { enabled: true })
   const dialogOpenedRef = useRef(false)
 
   return (
@@ -52,6 +52,7 @@ export function SidebarItemRow({
       <SidebarMenuSubButton asChild isActive={isActive} className="flex-1">
         <Link
           to={href}
+          draggable={false}
           onClick={(e) => {
             if (wasLongPress()) {
               e.preventDefault()

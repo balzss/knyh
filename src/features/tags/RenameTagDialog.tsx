@@ -1,13 +1,14 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslations } from 'use-intl'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/layout/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,10 +25,10 @@ type RenameTagDialogProps = {
 
 export function RenameTagDialog({ tag, onClose }: RenameTagDialogProps) {
   return (
-    <Dialog open={tag !== null} onOpenChange={(open) => !open && onClose()}>
+    <ResponsiveDialog open={tag !== null} onOpenChange={(open) => !open && onClose()}>
       {/* Keyed by tag, so the field starts from that tag's name every time it opens */}
       {tag && <RenameTagForm key={tag.id} tag={tag} onClose={onClose} />}
-    </Dialog>
+    </ResponsiveDialog>
   )
 }
 
@@ -61,45 +62,47 @@ function RenameTagForm({ tag, onClose }: { tag: Tag; onClose: () => void }) {
   }
 
   return (
-    <DialogContent className="w-11/12 sm:max-w-md rounded-lg">
-      <DialogHeader>
-        <DialogTitle>{t('renameTag')}</DialogTitle>
-        <DialogDescription>{t('renameDescription')}</DialogDescription>
-      </DialogHeader>
-      <form onSubmit={handleSubmit} className="grid gap-4 py-3">
-        <div className="grid gap-2">
-          <Label htmlFor="rename-tag-input">{t('tagNameLabel')}</Label>
-          <Input
-            id="rename-tag-input"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value)
-              setError(null)
-            }}
-            onFocus={(e) => e.currentTarget.select()}
-            maxLength={100}
-            autoComplete="off"
-            autoFocus
-            aria-invalid={error !== null}
-            aria-describedby={error ? 'rename-tag-error' : undefined}
-          />
-          {error && (
-            <p id="rename-tag-error" role="alert" className="text-sm text-red-500">
-              {error}
-            </p>
-          )}
-        </div>
-        <div className="flex justify-end gap-3">
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              {t('cancel')}
+    <ResponsiveDialogContent className="sm:max-w-md">
+      <ResponsiveDialogHeader>
+        <ResponsiveDialogTitle>{t('renameTag')}</ResponsiveDialogTitle>
+        <ResponsiveDialogDescription>{t('renameDescription')}</ResponsiveDialogDescription>
+      </ResponsiveDialogHeader>
+      <ResponsiveDialogBody>
+        <form onSubmit={handleSubmit} className="grid gap-4 py-3">
+          <div className="grid gap-2">
+            <Label htmlFor="rename-tag-input">{t('tagNameLabel')}</Label>
+            <Input
+              id="rename-tag-input"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value)
+                setError(null)
+              }}
+              onFocus={(e) => e.currentTarget.select()}
+              maxLength={100}
+              autoComplete="off"
+              autoFocus
+              aria-invalid={error !== null}
+              aria-describedby={error ? 'rename-tag-error' : undefined}
+            />
+            {error && (
+              <p id="rename-tag-error" role="alert" className="text-sm text-red-500">
+                {error}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-end gap-3">
+            <ResponsiveDialogClose asChild>
+              <Button type="button" variant="outline">
+                {t('cancel')}
+              </Button>
+            </ResponsiveDialogClose>
+            <Button type="submit" disabled={!canSubmit}>
+              {t('rename')}
             </Button>
-          </DialogClose>
-          <Button type="submit" disabled={!canSubmit}>
-            {t('rename')}
-          </Button>
-        </div>
-      </form>
-    </DialogContent>
+          </div>
+        </form>
+      </ResponsiveDialogBody>
+    </ResponsiveDialogContent>
   )
 }

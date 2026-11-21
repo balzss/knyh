@@ -24,6 +24,9 @@ import {
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import { useEditMode } from '@/app/providers/EditModeProvider'
+import { useRecipes } from '@/features/recipes/hooks/use-recipes'
+import { useIdeas } from '@/features/ideas/use-ideas'
+import { useShoppingList } from '@/features/shopping-list/use-shopping-list'
 import { SidebarBuildInfo } from './SidebarBuildInfo'
 import { SidebarNavLink } from './SidebarNavLink'
 import { SidebarTagList } from './SidebarTagList'
@@ -37,6 +40,11 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const t = useTranslations('Navigation')
   const { isMobile, setOpenMobile } = useSidebar()
   const { editor } = useEditMode()
+  const { recipes } = useRecipes()
+  const { ideas } = useIdeas()
+  const { shoppingList } = useShoppingList()
+  const readyCount = recipes.filter((recipe) => recipe.status === 'ready').length
+  const toBuyCount = shoppingList.filter((item) => !item.checked).length
 
   // Tags are only filtered on the recipe list
   const [searchParams] = useSearchParams()
@@ -68,6 +76,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
                 href="/"
                 icon={<BookOpenText />}
                 label={t('recipes')}
+                badge={`${readyCount}/${recipes.length}`}
                 // Only highlight recipes when on root path without tag filter
                 isActive={path === '/' && selectedTagIds.length === 0}
               />
@@ -79,12 +88,14 @@ export function AppSidebar({ path }: AppSidebarProps) {
                     href="/ideas"
                     icon={<Lightbulb />}
                     label={t('ideas')}
+                    badge={String(ideas.length)}
                     isActive={path === '/ideas'}
                   />
                   <SidebarNavLink
                     href="/shopping-list"
                     icon={<ShoppingCart />}
                     label={t('shopping-list')}
+                    badge={String(toBuyCount)}
                     isActive={path === '/shopping-list'}
                   />
                   <SidebarNavLink
