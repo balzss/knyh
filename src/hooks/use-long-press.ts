@@ -22,6 +22,7 @@ interface UseLongPressReturn {
 
 // A press that starts on a control, or inside a menu rendered through a portal, is not a long press on the
 // container. Opening a menu also swallows the pointer-up, so the timer would otherwise fire and select the card.
+// Only matches inside the container count: the container itself may live in a dialog, like the mobile sidebar.
 const IGNORED_TARGETS = 'button, [role="menu"], [role="menuitem"], [role="dialog"]'
 
 export function useLongPress(
@@ -45,7 +46,13 @@ export function useLongPress(
       if (e && 'pointerType' in e) isTouchRef.current = e.pointerType === 'touch'
       else if (e) isTouchRef.current = true
       if (e && !isTouchRef.current) return
-      if (e?.target instanceof Element && e.target.closest(IGNORED_TARGETS)) return
+      if (e?.target instanceof Element) {
+        const container = e.currentTarget
+        // Portaled content bubbles through React but sits outside the container in the DOM
+        if (!container.contains(e.target)) return
+        const ignored = e.target.closest(IGNORED_TARGETS)
+        if (ignored && container.contains(ignored)) return
+      }
       activatedRef.current = false
       startTimeRef.current = Date.now()
       clear()

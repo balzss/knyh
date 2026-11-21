@@ -140,7 +140,8 @@ export function RecipeCardActions({
           <DropdownMenuTrigger asChild>
             <IconButton icon={<EllipsisVertical />} tooltip={t('moreOptions')} iconSize="small" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          {/* The menu is portaled, but React clicks still bubble to the card, which would toggle the selection back off */}
+          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
             {onSelect && (
               <DropdownMenuItem onClick={onSelect}>
                 <CircleCheckBig className="mr-2 h-4 w-4" />
