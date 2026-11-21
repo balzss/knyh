@@ -10,7 +10,7 @@ type UseTagsProps = {
 export const useTags = ({ ids }: UseTagsProps = {}) => {
   const {
     data: tags,
-    isLoading: loading,
+    isPending: loading,
     error,
   } = useQuery({
     queryKey: ['tags'],

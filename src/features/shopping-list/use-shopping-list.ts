@@ -10,7 +10,7 @@ export const useShoppingList = () => {
   const { editor } = useEditMode()
   const {
     data: shoppingList,
-    isLoading: loading,
+    isPending: loading,
     error,
   } = useQuery({
     queryKey: ['shoppingList'],

@@ -24,7 +24,7 @@ type UseRecipesOptions = {
 export const useRecipes = (options?: UseRecipesOptions) => {
   const {
     data: recipes,
-    isLoading: loading,
+    isPending: loading,
     error,
   } = useQuery({
     // The query key uniquely identifies this data and includes filters for proper caching

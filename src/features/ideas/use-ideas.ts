@@ -12,7 +12,7 @@ export const useIdeas = () => {
   const { editor } = useEditMode()
   const {
     data: ideas,
-    isLoading: loading,
+    isPending: loading,
     error,
   } = useQuery({
     queryKey: ['ideas'],
