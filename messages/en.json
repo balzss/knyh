@@ -145,6 +145,7 @@
     "closeRecipe": "Close recipe",
     "editRecipe": "Edit recipe",
     "shareRecipe": "Share recipe",
+    "shareTitle": "Recipe | {title}",
     "deleteRecipe": "Delete recipe",
     "archiveRecipe": "Archive recipe",
     "moreOptions": "More options",

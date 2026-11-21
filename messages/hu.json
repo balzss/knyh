@@ -145,6 +145,7 @@
     "closeRecipe": "Recept bezárása",
     "editRecipe": "Recept szerkesztése",
     "shareRecipe": "Recept megosztása",
+    "shareTitle": "Recept | {title}",
     "deleteRecipe": "Recept törlése",
     "archiveRecipe": "Recept archiválása",
     "moreOptions": "További lehetőségek",

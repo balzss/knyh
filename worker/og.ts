@@ -2,9 +2,6 @@ import { render } from '@cf-wasm/og/workerd'
 import type { Env } from './env'
 import { formatTotalTime } from '../shared/time'
 
-// The card has no viewer locale, so it uses the language the recipes are written in.
-const TIME_LABELS = { hours: 'óra', minutes: 'perc' }
-
 type Card = {
   id: string
   title: string
@@ -62,12 +59,18 @@ function titleSize(title: string) {
   return 68
 }
 
-export async function renderCard(env: Env, origin: string, recipe: Card) {
+// The card has no viewer locale, so the caller passes labels in the site language.
+export async function renderCard(
+  env: Env,
+  origin: string,
+  recipe: Card,
+  timeLabels: { hours: string; minutes: string }
+) {
   const { regular, bold, logo } = await loadAssets(env, origin)
   const colors = COLORS
 
   // Same order as the recipe page: yield first, then time.
-  const time = formatTotalTime(recipe.totalTime, TIME_LABELS)
+  const time = formatTotalTime(recipe.totalTime, timeLabels)
   const facts = [
     recipe.yield ? { icon: icon('yield', colors.muted), text: recipe.yield } : null,
     time ? { icon: icon('time', colors.muted), text: time } : null,

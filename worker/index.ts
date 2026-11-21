@@ -1,8 +1,13 @@
 import { Hono } from 'hono'
 import { api } from './api'
 import type { Env } from './env'
+import { getConfig } from './db/config'
 import { getRecipe } from './db/recipes'
 import { renderCard } from './og'
+import en from '../messages/en.json'
+import hu from '../messages/hu.json'
+
+const MESSAGES = { en, hu }
 
 const app = new Hono<{ Bindings: Env }>()
 
@@ -23,7 +28,9 @@ app.get('/auth/login', (c) => {
 app.get('/r/:id/og.png', async (c) => {
   const recipe = await getRecipe(c.env.DB, c.req.param('id'))
   if (!recipe || recipe.archived) return c.notFound()
-  const png = await renderCard(c.env, new URL(c.req.url).origin, recipe)
+  const { language } = await getConfig(c.env.DB)
+  const timeLabels = (language === 'hu' ? MESSAGES.hu : MESSAGES.en).Time
+  const png = await renderCard(c.env, new URL(c.req.url).origin, recipe, timeLabels)
   return new Response(png, {
     headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
   })
@@ -34,12 +41,13 @@ app.get('/r/:id', async (c) => {
   const recipe = await getRecipe(c.env.DB, c.req.param('id'))
   if (!recipe || recipe.archived) return page
 
-  const description = recipeDescription(recipe)
+  // The site language is stored in the config, so crawlers get it too.
+  const { language } = await getConfig(c.env.DB)
+  const template = (language === 'hu' ? MESSAGES.hu : MESSAGES.en).RecipeView.shareTitle
+  const title = template.replace('{title}', recipe.title)
   const tags = [
     ['og:type', 'article'],
-    ['og:site_name', 'KONYHA'],
-    ['og:title', recipe.title],
-    ['og:description', description],
+    ['og:title', title],
     ['og:url', c.req.url],
     [
       'og:image',
@@ -50,10 +58,8 @@ app.get('/r/:id', async (c) => {
     ['twitter:card', 'summary_large_image'],
   ]
   const html = new HTMLRewriter()
-    .on('title', { element: (el) => void el.setInnerContent(`${recipe.title} | KONYHA`) })
-    .on('meta[name="description"]', {
-      element: (el) => void el.setAttribute('content', description),
-    })
+    .on('title', { element: (el) => void el.setInnerContent(title) })
+    .on('meta[name="description"]', { element: (el) => void el.remove() })
     .on('head', {
       element: (el) => {
         const markup = tags
@@ -76,16 +82,4 @@ function escapeAttr(value: string) {
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-}
-
-function recipeDescription(recipe: {
-  ingredients: { items: string[] }[]
-  totalTime: string | null
-  yield: string | null
-}) {
-  const facts = [recipe.totalTime, recipe.yield].filter(Boolean).join(' · ')
-  const items = recipe.ingredients.flatMap((group) => group.items)
-  const more = items.length > 4 ? `, +${items.length - 4}` : ''
-  const ingredients = items.length ? `${items.slice(0, 4).join(', ')}${more}` : ''
-  return [facts, ingredients].filter(Boolean).join('\n') || 'Recipe'
 }

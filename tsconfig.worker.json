@@ -9,6 +9,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "resolveJsonModule": true,
     "types": ["@cloudflare/workers-types", "@cloudflare/vitest-plugin/types"]
   },
   "include": [
@@ -17,6 +18,7 @@
     "shared/types.ts",
     "shared/time.ts",
     "shared/import-validation.ts",
+    "messages/*.json",
     "test/worker"
   ]
 }
