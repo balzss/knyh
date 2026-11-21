@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { api } from './api'
 import type { Env } from './env'
 import { getRecipe } from './db/recipes'
+import { renderCard } from './og'
 
 const app = new Hono<{ Bindings: Env }>()
 
@@ -18,6 +19,16 @@ app.get('/auth/login', (c) => {
 // Chat apps read the link preview from the HTML they get, without running the app, so the
 // recipe page needs its title and description in the served markup. Archived recipes are
 // private and keep the generic tags.
+// The share card image. The ?v= query only exists to bust chat apps' preview caches.
+app.get('/r/:id/og.png', async (c) => {
+  const recipe = await getRecipe(c.env.DB, c.req.param('id'))
+  if (!recipe || recipe.archived) return c.notFound()
+  const png = await renderCard(c.env, new URL(c.req.url).origin, recipe)
+  return new Response(png, {
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
+  })
+})
+
 app.get('/r/:id', async (c) => {
   const page = await c.env.ASSETS.fetch(new URL('/', c.req.url))
   const recipe = await getRecipe(c.env.DB, c.req.param('id'))
@@ -30,8 +41,13 @@ app.get('/r/:id', async (c) => {
     ['og:title', recipe.title],
     ['og:description', description],
     ['og:url', c.req.url],
-    ['og:image', new URL('/cooking-pot-512.png', c.req.url).href],
-    ['twitter:card', 'summary'],
+    [
+      'og:image',
+      new URL(`/r/${recipe.id}/og.png?v=${encodeURIComponent(recipe.updatedAt)}`, c.req.url).href,
+    ],
+    ['og:image:width', '1200'],
+    ['og:image:height', '630'],
+    ['twitter:card', 'summary_large_image'],
   ]
   const html = new HTMLRewriter()
     .on('title', { element: (el) => void el.setInnerContent(`${recipe.title} | KONYHA`) })
@@ -68,7 +84,8 @@ function recipeDescription(recipe: {
   yield: string | null
 }) {
   const facts = [recipe.totalTime, recipe.yield].filter(Boolean).join(' · ')
-  const ingredients = recipe.ingredients.flatMap((group) => group.items).join(', ')
-  const text = [facts, ingredients].filter(Boolean).join(' | ')
-  return text.length > 200 ? `${text.slice(0, 197)}...` : text || 'Recipe'
+  const items = recipe.ingredients.flatMap((group) => group.items)
+  const more = items.length > 4 ? `, +${items.length - 4}` : ''
+  const ingredients = items.length ? `${items.slice(0, 4).join(', ')}${more}` : ''
+  return [facts, ingredients].filter(Boolean).join('\n') || 'Recipe'
 }
