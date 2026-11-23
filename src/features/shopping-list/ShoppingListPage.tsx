@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'use-intl'
+import { motion, AnimatePresence } from 'motion/react'
 import { MoreVertical, Trash2, RotateCcw, CheckCheck } from 'lucide-react'
 import { PageShell } from '@/app/layout/PageShell'
 import { PageLayout } from '@/components/layout/PageLayout'
@@ -185,15 +186,25 @@ export default function ShoppingListPage() {
             onItemChecked={handleItemChecked}
           />
 
-          {checkedItems.length > 0 && (
-            <CheckedItemsList
-              items={checkedItems}
-              onItemUnchecked={handleItemUnchecked}
-              onItemRemoved={handleCheckedItemRemoved}
-              checkedItemsLabel={t('checkedItems')}
-              removeItemTooltip={t('removeItem')}
-            />
-          )}
+          <AnimatePresence>
+            {checkedItems.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="overflow-hidden"
+              >
+                <CheckedItemsList
+                  items={checkedItems}
+                  onItemUnchecked={handleItemUnchecked}
+                  onItemRemoved={handleCheckedItemRemoved}
+                  checkedItemsLabel={t('checkedItems')}
+                  removeItemTooltip={t('removeItem')}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </PageLayout>
     </PageShell>

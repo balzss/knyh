@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X, GripVertical } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useSortable } from '@dnd-kit/sortable'
@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { IconButton } from './IconButton'
+
+const CHECK_DELAY_MS = 80
 
 interface SortableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
@@ -33,6 +35,15 @@ export function SortableInput({
 }: SortableInputProps) {
   const [hovered, setHovered] = useState<boolean>(false)
   const [focused, setFocused] = useState<boolean>(false)
+  const [checking, setChecking] = useState<boolean>(false)
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  // Show the box filled before the row leaves
+  const handleCheck = () => {
+    setChecking(true)
+    timer.current = setTimeout(() => onItemChecked?.(), CHECK_DELAY_MS)
+  }
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
   })
@@ -65,7 +76,7 @@ export function SortableInput({
       ref={setNodeRef}
       {...attributes}
     >
-      <div className={`relative flex items-center max-w-2xl w-full`}>
+      <div className="relative flex items-center max-w-2xl w-full mb-2">
         <span className="p-2 absolute left-0 top-0 bottom-0 flex items-center gap-2">
           <span
             className="touch-none flex items-center cursor-move relative after:absolute after:content-[''] after:-inset-x-2 after:-inset-y-3"
@@ -76,8 +87,8 @@ export function SortableInput({
           {showCheckbox && (
             <Checkbox
               className="relative after:absolute after:content-[''] after:-inset-x-1 after:-inset-y-3"
-              checked={false}
-              onCheckedChange={() => onItemChecked?.()}
+              checked={checking}
+              onCheckedChange={handleCheck}
               id={`check-${id}`}
             />
           )}

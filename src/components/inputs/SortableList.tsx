@@ -195,7 +195,7 @@ export function SortableList({
         modifiers={[restrictToParentElement]}
         id="dnd-context"
       >
-        <ul className={`grid gap-2 ${internalItems.length > 0 ? 'mb-2' : ''}`}>
+        <ul className="grid">
           <SortableContext
             items={internalItems.map((i) => i.id)}
             strategy={verticalListSortingStrategy}
