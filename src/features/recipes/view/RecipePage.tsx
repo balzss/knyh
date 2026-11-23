@@ -123,16 +123,17 @@ export default function RecipePage({ recipeId }: RecipePageProps) {
           </div>
         )}
         {editor && (
-          <div className="mt-8 text-xs italic text-muted-foreground">
+          <div className="mt-6 text-xs italic text-muted-foreground">
             {recipe.updatedAt && !isSameMinute(recipe.createdAt, recipe.updatedAt) && (
-              <p>
+              <span>
                 {t('modified')}: <RelativeTime date={recipe.updatedAt} />
-              </p>
+                &nbsp;·&nbsp;
+              </span>
             )}
             {recipe.createdAt && (
-              <p className="mt-1">
+              <span className="mt-1">
                 {t('created')}: <RelativeTime date={recipe.createdAt} />
-              </p>
+              </span>
             )}
           </div>
         )}
