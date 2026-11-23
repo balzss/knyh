@@ -52,7 +52,10 @@ export function ResponsiveDialog(props: ComponentProps<typeof Dialog>) {
   const Root = isMobile ? Drawer : Dialog
   return (
     <MobileContext.Provider value={isMobile}>
-      <Root {...props} {...(isMobile && { shouldScaleBackground: false, repositionInputs: false })} />
+      <Root
+        {...props}
+        {...(isMobile && { shouldScaleBackground: false, repositionInputs: false })}
+      />
     </MobileContext.Provider>
   )
 }

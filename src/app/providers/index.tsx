@@ -22,6 +22,8 @@ const queryClient = new QueryClient({
       // Serve cached data offline instead of pausing the query
       networkMode: 'offlineFirst',
       gcTime: CACHE_MAX_AGE,
+      // Navigating between pages reuses the cache instead of refetching on every mount
+      staleTime: 1000 * 30,
       // Retrying a 4xx response cannot succeed
       retry: (failureCount, error) =>
         !(error instanceof ApiError && error.status < 500) && failureCount < 2,

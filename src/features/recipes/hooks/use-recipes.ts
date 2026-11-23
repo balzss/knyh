@@ -27,18 +27,10 @@ export const useRecipes = (options?: UseRecipesOptions) => {
     isPending: loading,
     error,
   } = useQuery({
-    // The query key uniquely identifies this data and includes filters for proper caching
-    queryKey: ['recipes', { tags: options?.tags, archived: options?.archived }],
+    // Every filter runs in `select`, so the home page, sidebar and recipe page share one cached list
+    queryKey: ['recipes'],
 
-    // The query function handles the actual data fetching.
-    queryFn: (): Promise<Recipe[]> => {
-      const searchParams = new URLSearchParams()
-      if (options?.archived !== undefined) {
-        searchParams.set('archived', String(options.archived))
-      }
-      const query = searchParams.toString()
-      return api<Recipe[]>(`/api/recipes${query ? `?${query}` : ''}`)
-    },
+    queryFn: () => api<Recipe[]>('/api/recipes'),
 
     // The 'select' option transforms or selects a part of the data.
     // TanStack Query will memoize the result of this function, re-running it
@@ -49,6 +41,12 @@ export const useRecipes = (options?: UseRecipesOptions) => {
       }
 
       let filteredRecipes = recipes
+
+      if (options?.archived !== undefined) {
+        filteredRecipes = filteredRecipes.filter(
+          (recipe) => Boolean(recipe.archived) === options.archived
+        )
+      }
 
       // Filter by specific IDs if provided
       if (options?.ids && options.ids.length > 0) {
