@@ -34,7 +34,7 @@ export const useIdeaMutations = () => {
 
   const createIdea = useMutation({
     mutationFn: (input: IdeaInput) => api<Idea>('/api/ideas', { method: 'POST', json: input }),
-    onSuccess: (idea) => setIdeas((ideas) => [...ideas, idea]),
+    onSuccess: (idea) => setIdeas((ideas) => [idea, ...ideas]),
   })
 
   const updateIdea = useMutation({

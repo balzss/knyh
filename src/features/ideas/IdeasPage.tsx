@@ -31,6 +31,9 @@ export default function IdeasPage() {
     event.preventDefault()
     const title = draft.trim()
     if (title === '') return
+    // Closes the mobile keyboard
+    const input = event.currentTarget.elements[0]
+    if (input instanceof HTMLElement) input.blur()
     // Clear right away so the next idea can be typed. Put the text back if it fails.
     setDraft('')
     createIdea.mutate(

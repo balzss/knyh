@@ -27,7 +27,7 @@ async function getIdea(db: D1Database, id: string): Promise<Idea | null> {
   return row ? toIdea(row) : null
 }
 
-/** New ideas go to the bottom of the list. */
+/** New ideas go to the top of the list. */
 export async function createIdea(
   db: D1Database,
   input: { title: string; notes?: string[] }
@@ -36,7 +36,7 @@ export async function createIdea(
   await db
     .prepare(
       `INSERT INTO ideas (id, position, title, notes, created_at)
-       VALUES (?, (SELECT COALESCE(MAX(position), -1) + 1 FROM ideas), ?, ?, ?)`
+       VALUES (?, (SELECT COALESCE(MIN(position), 1) - 1 FROM ideas), ?, ?, ?)`
     )
     .bind(id, input.title, JSON.stringify(input.notes ?? []), new Date().toISOString())
     .run()

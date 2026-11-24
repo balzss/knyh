@@ -23,6 +23,7 @@ import type { DraftGetter, SaveAction } from './use-save-action'
 import { useRecipes } from '@/features/recipes/hooks/use-recipes'
 import { useConfirmDialog } from '@/hooks/use-confirm-dialog'
 import { useClosePage } from '@/hooks/use-close-page'
+import { getRecipeViewUrl } from '@/lib/urls'
 import { useIdeaMutations } from '@/features/ideas/use-ideas'
 import { ApiError } from '@/lib/api'
 import type { FromIdeaState, RecipeDraft } from '@shared/types'
@@ -117,7 +118,10 @@ export default function EditRecipeView({ recipeId }: NewRecipeViewProps) {
     setMode(target)
   }
 
-  const leavePage = useClosePage()
+  const closePage = useClosePage()
+  // An existing recipe closes to its view page, wherever the editor was opened from
+  const leavePage = () =>
+    recipeId ? navigate(getRecipeViewUrl(recipeId), { replace: true }) : closePage()
 
   // A recipe made from an idea goes back to being an idea when closed. The server refuses once
   // the recipe has been saved with changes. Then it stays, and Close just leaves.
