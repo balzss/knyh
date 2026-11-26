@@ -33,7 +33,7 @@ function DisplayOptionsMenu() {
   const [open, setOpen] = useState<boolean>(false)
 
   return (
-    <Popover open={open} onOpenChange={(newValue) => setOpen(newValue)}>
+    <Popover modal open={open} onOpenChange={(newValue) => setOpen(newValue)}>
       <PopoverTrigger asChild>
         <span>
           <IconButton
@@ -46,14 +46,19 @@ function DisplayOptionsMenu() {
             aria-label={
               statusFilterActive ? t('filterAndViewOptionsActive') : t('filterAndViewOptions')
             }
-            onClick={() => setOpen((oldValue) => !oldValue)}
           />
         </span>
       </PopoverTrigger>
       <PopoverContent className="w-80 mx-2 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <Label htmlFor="sortSelect">{t('sortBy')}</Label>
-          <Select onValueChange={(newSort: SortOption) => update({ sort: newSort })} value={sort}>
+          <Select
+            onValueChange={(newSort: SortOption) => {
+              update({ sort: newSort })
+              setOpen(false)
+            }}
+            value={sort}
+          >
             <SelectTrigger className="w-[180px]" id="sortSelect">
               <SelectValue />
             </SelectTrigger>
@@ -70,7 +75,10 @@ function DisplayOptionsMenu() {
           <div className="flex items-center justify-between">
             <Label htmlFor="statusSelect">{t('showRecipes')}</Label>
             <Select
-              onValueChange={(newStatus: RecipeStatus | 'all') => update({ status: newStatus })}
+              onValueChange={(newStatus: RecipeStatus | 'all') => {
+                update({ status: newStatus })
+                setOpen(false)
+              }}
               value={status}
             >
               <SelectTrigger className="w-[180px]" id="statusSelect">
