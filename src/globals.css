@@ -101,8 +101,6 @@ body {
     @apply border-border;
   }
   html {
-    /* Keep vertical overscroll so Android pull-to-refresh still works. */
-    overscroll-behavior-x: none;
     -webkit-tap-highlight-color: transparent;
   }
   body {

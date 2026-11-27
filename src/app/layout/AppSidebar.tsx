@@ -40,7 +40,7 @@ export function AppSidebar({ path }: AppSidebarProps) {
   const t = useTranslations('Navigation')
   const { isMobile, setOpenMobile } = useSidebar()
   const { editor } = useEditMode()
-  const { recipes } = useRecipes()
+  const { recipes } = useRecipes({ archived: false })
   const { ideas } = useIdeas()
   const { shoppingList } = useShoppingList()
   const readyCount = recipes.filter((recipe) => recipe.status === 'ready').length

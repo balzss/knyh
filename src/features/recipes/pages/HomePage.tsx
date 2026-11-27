@@ -38,7 +38,12 @@ export default function HomePage() {
   const tagParam = searchParams.get('tag')?.split(',')
   const { tags: filterTags, loading: tagsLoading } = useTags({ ids: tagParam })
   // Ids of deleted tags would match no recipe and show no chip to remove, so only filter by known tags.
-  const activeTagIds = tagsLoading ? tagParam : filterTags.map((tag) => tag.id)
+  // useTags returns every tag when no ids are given, so skip it when the URL has no tag filter.
+  const activeTagIds = !tagParam
+    ? undefined
+    : tagsLoading
+      ? tagParam
+      : filterTags.map((tag) => tag.id)
   const { recipes, loading: recipesLoading } = useRecipes({
     sort: sortOption,
     archived: false,
