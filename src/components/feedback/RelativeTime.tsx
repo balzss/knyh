@@ -14,7 +14,7 @@ export function RelativeTime({ date }: RelativeTimeProps) {
     <Popover>
       <PopoverTrigger asChild>
         <button type="button" className="italic" title={exact}>
-          {format.relativeTime(value)}
+          {format.relativeTime(value, new Date())}
         </button>
       </PopoverTrigger>
       <PopoverContent side="top" className="w-auto px-3 py-2 text-xs not-italic">
