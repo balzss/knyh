@@ -33,9 +33,8 @@ export function SortableInput({
   onItemChecked,
   ...rest
 }: SortableInputProps) {
-  const [hovered, setHovered] = useState<boolean>(false)
-  const [focused, setFocused] = useState<boolean>(false)
   const [checking, setChecking] = useState<boolean>(false)
+  const rowRef = useRef<HTMLDivElement>(null)
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
   useEffect(() => () => clearTimeout(timer.current), [])
 
@@ -44,9 +43,10 @@ export function SortableInput({
     setChecking(true)
     timer.current = setTimeout(() => onItemChecked?.(), CHECK_DELAY_MS)
   }
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id,
-  })
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition } =
+    useSortable({
+      id,
+    })
 
   const style: React.CSSProperties = {}
   if (transform) {
@@ -58,32 +58,32 @@ export function SortableInput({
   }
 
   const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
-    if (!e.currentTarget.parentNode?.contains(e.relatedTarget)) {
-      setFocused(false)
+    if (!rowRef.current?.contains(e.relatedTarget)) {
       onInputBlur?.()
     }
   }
 
   return (
     <motion.li
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className="group/row"
       initial={noAnimate ? false : { opacity: 0, height: 0, overflow: 'hidden' }}
       animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
       exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
       transition={{ duration: 0.12, ease: 'easeOut' }}
       style={style}
       ref={setNodeRef}
-      {...attributes}
     >
-      <div className="relative flex items-center max-w-2xl w-full mb-2">
+      <div ref={rowRef} className="relative flex items-center max-w-2xl w-full mb-2">
         <span className="p-2 absolute left-0 top-0 bottom-0 flex items-center gap-2">
-          <span
+          <button
+            type="button"
+            ref={setActivatorNodeRef}
             className="touch-none flex items-center cursor-move relative after:absolute after:content-[''] after:-inset-x-2 after:-inset-y-3"
+            {...attributes}
             {...listeners}
           >
             <GripVertical size={16} className="w-6" />
-          </span>
+          </button>
           {showCheckbox && (
             <Checkbox
               className="relative after:absolute after:content-[''] after:-inset-x-1 after:-inset-y-3"
@@ -96,7 +96,6 @@ export function SortableInput({
         {multiLine ? (
           <Textarea
             {...rest}
-            onFocus={() => setFocused(true)}
             onBlur={handleBlur}
             className="px-9 resize-none h-auto min-h-9 sortable-input-multiline"
             onChange={(e) => {
@@ -108,25 +107,23 @@ export function SortableInput({
           <Input
             {...rest}
             autoComplete="off"
-            onFocus={() => setFocused(true)}
             onBlur={handleBlur}
             className={showCheckbox ? 'pl-[4.25rem] pr-3 border-0' : 'px-9'}
             ref={inputRef}
           />
         )}
-        {(focused || hovered) && (
-          <span className="right-2 absolute">
-            <IconButton
-              iconSize="small"
-              variant="ghost"
-              icon={<X />}
-              tooltip="Remove item"
-              onClick={onRemoveSelf}
-              onBlur={handleBlur}
-              type="button"
-            />
-          </span>
-        )}
+        {/* invisible also drops the button from the tab order until the row is hovered or focused */}
+        <span className="right-2 absolute invisible group-hover/row:visible group-focus-within/row:visible">
+          <IconButton
+            iconSize="small"
+            variant="ghost"
+            icon={<X />}
+            tooltip="Remove item"
+            onClick={onRemoveSelf}
+            onBlur={handleBlur}
+            type="button"
+          />
+        </span>
       </div>
     </motion.li>
   )

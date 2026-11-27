@@ -13,13 +13,13 @@ type SortableGroupsProps = {
   defaultLabel: string
 }
 
-const defaultGroupData: GroupData[] = [{ label: '', items: [] }]
+const defaultGroupData = (): GroupData[] => [{ label: '', items: [] }]
 
 export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGroupsProps) {
   const [groupData, setGroupData] = useState<GroupData[]>(() => {
     // Always ensure at least one group is present
     if (!data || data.length === 0) {
-      return defaultGroupData
+      return defaultGroupData()
     }
     return data
   })
@@ -34,7 +34,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
     // Always ensure at least one group is present
     if (data) {
       if (data.length === 0) {
-        setGroupData(defaultGroupData)
+        setGroupData(defaultGroupData())
       } else {
         setGroupData(data)
       }
@@ -73,7 +73,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
     const updatedData = [...groupData]
     if (updatedData.length === 1 && updatedData[0].label === '') {
       // When adding the second group, give the first one a default label
-      updatedData[0].label = defaultLabel
+      updatedData[0] = { ...updatedData[0], label: defaultLabel }
     }
     const newData = [...updatedData, { label: 'New Group', items: [] }]
     setGroupData(newData)

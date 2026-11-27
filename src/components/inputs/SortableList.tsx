@@ -1,11 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useId, useState, useEffect, useRef } from 'react'
 import { AnimatePresence } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { SortableInput } from './SortableInput'
 
@@ -42,6 +54,7 @@ export function SortableList({
   showCheckboxes = false,
   onItemChecked,
 }: SortableListProps) {
+  const dndId = useId()
   const [internalItems, setInternalItems] = useState<ListItem[]>([])
   const inputRefs = useRef<{
     [key: string]: HTMLInputElement | HTMLTextAreaElement | null
@@ -53,7 +66,8 @@ export function SortableList({
       activationConstraint: {
         distance: 8, // Require 8px of movement before dragging starts
       },
-    })
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
   // sync external prop changes to our internal state without breaking animations or focus
@@ -172,15 +186,23 @@ export function SortableList({
       updateItems(internalItems.filter((item) => item.id !== itemId))
     }
 
-    if (e.key === 'ArrowDown') {
-      if (currentIndex < internalItems.length - 1) {
+    // In multi-line lists the arrows move the caret between lines first and only
+    // jump to the neighbouring item from the first or last line
+    const { value, selectionStart, selectionEnd } = e.currentTarget
+    const plainArrow = !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey
+
+    if (e.key === 'ArrowDown' && plainArrow) {
+      const onLastLine = !multiLine || !value.slice(selectionEnd ?? 0).includes('\n')
+      if (onLastLine && currentIndex < internalItems.length - 1) {
+        e.preventDefault()
         inputRefs.current[internalItems[currentIndex + 1].id]?.focus()
       }
     }
 
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (currentIndex > 0) {
+    if (e.key === 'ArrowUp' && plainArrow) {
+      const onFirstLine = !multiLine || !value.slice(0, selectionStart ?? 0).includes('\n')
+      if (onFirstLine && currentIndex > 0) {
+        e.preventDefault()
         inputRefs.current[internalItems[currentIndex - 1].id]?.focus()
       }
     }
@@ -193,7 +215,7 @@ export function SortableList({
         sensors={sensors}
         onDragEnd={handleDragEnd}
         modifiers={[restrictToParentElement]}
-        id="dnd-context"
+        id={dndId}
       >
         <ul className="grid">
           <SortableContext
