@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { nanoid } from 'nanoid'
 import { ArrowUp, ArrowDown, ListX, ListPlus } from 'lucide-react'
@@ -8,56 +8,37 @@ import { GroupLabelEdit } from './GroupLabelEdit'
 import type { GroupData } from '@shared/types'
 
 type SortableGroupsProps = {
-  data?: GroupData[]
-  onDataChange?: (newData: GroupData[]) => void
+  data: GroupData[]
+  onDataChange: (newData: GroupData[]) => void
   defaultLabel: string
 }
 
-const defaultGroupData = (): GroupData[] => [{ label: '', items: [] }]
+// Shown while the form has no groups yet. Never mutated, the handlers below always copy.
+const emptyGroups: GroupData[] = [{ label: '', items: [] }]
 
 export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGroupsProps) {
-  const [groupData, setGroupData] = useState<GroupData[]>(() => {
-    // Always ensure at least one group is present
-    if (!data || data.length === 0) {
-      return defaultGroupData()
-    }
-    return data
-  })
+  // Always ensure at least one group is present
+  const groupData = data.length === 0 ? emptyGroups : data
 
   // Stable ids so motion can animate groups to their new position when reordered.
   const idsRef = useRef<string[]>([])
   while (idsRef.current.length < groupData.length) idsRef.current.push(nanoid())
   idsRef.current.length = groupData.length
 
-  useEffect(() => {
-    // This effect syncs the component if the parent passes down a new `data` prop.
-    // Always ensure at least one group is present
-    if (data) {
-      if (data.length === 0) {
-        setGroupData(defaultGroupData())
-      } else {
-        setGroupData(data)
-      }
-    }
-  }, [data])
-
-  // --- Event Handlers using Functional Updates ---
-  // Each handler now passes a function to setGroupData to avoid stale state.
+  // Handlers build the next array from `data` and hand it to the parent, which owns the state.
 
   const handleGroupLabelChange = (index: number, newLabel: string) => {
     const newData = groupData.map((group, i) =>
       i === index ? { ...group, label: newLabel } : group
     )
-    setGroupData(newData)
-    onDataChange?.(newData)
+    onDataChange(newData)
   }
 
   const handleItemsChange = (index: number, newItems: string[]) => {
     const newData = groupData.map((group, i) =>
       i === index ? { ...group, items: newItems } : group
     )
-    setGroupData(newData)
-    onDataChange?.(newData)
+    onDataChange(newData)
   }
 
   const handleMoveGroup = (currentIndex: number, newIndex: number) => {
@@ -65,8 +46,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
     const [itemToMove] = reorderedData.splice(currentIndex, 1)
     reorderedData.splice(newIndex, 0, itemToMove)
     idsRef.current.splice(newIndex, 0, idsRef.current.splice(currentIndex, 1)[0])
-    setGroupData(reorderedData)
-    onDataChange?.(reorderedData)
+    onDataChange(reorderedData)
   }
 
   const handleAddGroup = () => {
@@ -76,8 +56,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
       updatedData[0] = { ...updatedData[0], label: defaultLabel }
     }
     const newData = [...updatedData, { label: 'New Group', items: [] }]
-    setGroupData(newData)
-    onDataChange?.(newData)
+    onDataChange(newData)
   }
 
   const handleRemoveGroup = (index: number) => {
@@ -87,11 +66,9 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
     }
     idsRef.current.splice(index, 1)
     const newData = groupData.filter((_, i) => i !== index)
-    setGroupData(newData)
-    onDataChange?.(newData)
+    onDataChange(newData)
   }
 
-  // This value is correctly derived from state on each render.
   const isAddGroupDisabled = groupData.at(-1)?.items.length === 0
 
   return (
