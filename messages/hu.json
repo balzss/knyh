@@ -46,6 +46,9 @@
     "system": "Rendszer"
   },
   "RecipeCard": {
+    "match_ingredient": "Hozzávaló",
+    "match_instruction": "Lépés",
+    "match_note": "Megjegyzés",
     "yield": "1 adag",
     "totalTime": "00:30",
     "restore": "Visszaállítás",
@@ -65,6 +68,9 @@
     "undo": "Visszavonás"
   },
   "HomePage": {
+    "searchingAll": "Keresés az összes receptben, a címke- és állapotszűrőt figyelmen kívül hagyva.",
+    "noSearchResults": "Nincs a keresésnek megfelelő recept",
+    "noSearchResultsDescription": "Próbálj másik szót.",
     "markDevelopment": "Megjelölés fejlesztés alattiként",
     "markReady": "Megjelölés késznek",
     "statusChanged": "{count, plural, one {# recept} other {# recept}} megjelölve: {status, select, ready {kész} other {fejlesztés alatt}}",

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslations } from 'use-intl'
 import { cn } from '@/lib/utils'
 import { Link } from 'react-router-dom'
 import { Circle, CircleCheckBig, Timer } from 'lucide-react'
@@ -9,6 +10,7 @@ import { RecipeCardActions } from './RecipeCardActions'
 import { Highlight } from './Highlight'
 import { RecipeStatusBadge } from './RecipeStatusBadge'
 import type { Recipe, Tag } from '@shared/types'
+import type { ContentMatch } from '@/features/recipes/lib/search'
 import { useLongPress } from '@/hooks/use-long-press'
 import { useFormatTotalTime } from '@/features/recipes/hooks/use-format-total-time'
 import { getRecipeViewUrl } from '@/lib/urls'
@@ -21,6 +23,8 @@ type RecipeCardProps = {
   archivedMode?: boolean
   recipeData: Recipe
   highlight?: string
+  /** The ingredient, step or note that made this recipe match the search */
+  contentMatch?: ContentMatch
 }
 
 export function RecipeCard({
@@ -31,7 +35,9 @@ export function RecipeCard({
   archivedMode = false,
   recipeData,
   highlight,
+  contentMatch,
 }: RecipeCardProps) {
+  const t = useTranslations('RecipeCard')
   const formatTotalTime = useFormatTotalTime()
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
@@ -67,6 +73,12 @@ export function RecipeCard({
           </div>
         )}
       </CardDescription>
+      {contentMatch && (
+        <p className="line-clamp-2 text-sm text-muted-foreground">
+          <span className="font-medium">{t(`match_${contentMatch.kind}`)}: </span>
+          <Highlight text={contentMatch.text} term={highlight} />
+        </p>
+      )}
       <div
         className={cn(
           'flex absolute top-2 right-2 transition-all duration-100 ease-in-out',

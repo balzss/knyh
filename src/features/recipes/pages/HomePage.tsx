@@ -17,9 +17,9 @@ import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutation
 import { useTags } from '@/features/tags/use-tags'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { useViewPreferences } from '@/hooks/use-view-preferences'
-import { queryRecipes } from '@/lib/utils'
+import { searchRecipes, type ContentMatch } from '@/features/recipes/lib/search'
 import { useEditMode } from '@/app/providers/EditModeProvider'
-import type { RecipeStatus, Tag } from '@shared/types'
+import type { Recipe, RecipeStatus, Tag } from '@shared/types'
 
 export default function HomePage() {
   const t = useTranslations('HomePage')
@@ -44,12 +44,18 @@ export default function HomePage() {
     : tagsLoading
       ? tagParam
       : filterTags.map((tag) => tag.id)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const searchTerm = deferredSearchQuery.trim()
+  const searching = searchTerm !== ''
+  // A search looks through every recipe the visitor may see, so the tag and status filters step aside
   const { recipes, loading: recipesLoading } = useRecipes({
     sort: sortOption,
     archived: false,
-    tags: activeTagIds,
-    status: !editor ? 'ready' : statusFilter === 'all' ? undefined : statusFilter,
+    tags: searching ? undefined : activeTagIds,
+    status: !editor ? 'ready' : searching || statusFilter === 'all' ? undefined : statusFilter,
   })
+  const filtersActive = Boolean(tagParam) || (editor && statusFilter !== 'all')
   usePageTitle(
     tagParam && filterTags?.length
       ? `${tNav('recipes')}: ${filterTags.map((tag) => tag.displayName).join(', ')}`
@@ -58,13 +64,33 @@ export default function HomePage() {
   const { updateRecipes } = useRecipeMutations()
 
   const { selection, select, selectAll, clear, topBarMode } = useRecipeSelection()
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const searchResults = useMemo(() => searchRecipes(recipes, searchTerm), [recipes, searchTerm])
+  const { readyTitleMatches, developmentTitleMatches, contentMatches } = searchResults
 
-  // Debounced and memoized filter by search query (accent-insensitive title match)
-  const filteredRecipes = useMemo(() => {
-    return queryRecipes(recipes, deferredSearchQuery)
-  }, [recipes, deferredSearchQuery])
+  const filteredRecipes = useMemo(
+    () =>
+      searching
+        ? [
+            ...readyTitleMatches,
+            ...developmentTitleMatches,
+            ...contentMatches.map(({ recipe }) => recipe),
+          ]
+        : recipes,
+    [searching, recipes, readyTitleMatches, developmentTitleMatches, contentMatches]
+  )
+
+  const renderCard = (recipe: Recipe, contentMatch?: ContentMatch) => (
+    <RecipeCard
+      key={recipe.id}
+      highlight={searchTerm}
+      contentMatch={contentMatch}
+      selectionMode={selection.length > 0}
+      tags={recipe.tags}
+      recipeData={recipe}
+      isSelected={selection.includes(recipe.id)}
+      onSelect={editor ? (selected) => select(recipe.id, selected) : undefined}
+    />
+  )
 
   const handleTagFilterChange = (newTags: Tag[]) => {
     if (!newTags.length) {
@@ -164,28 +190,40 @@ export default function HomePage() {
           className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
         />
       )}
+      {searching && filtersActive && (
+        <p
+          className={`m-auto px-3 pt-3 w-full text-sm text-muted-foreground ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+        >
+          {t('searchingAll')}
+        </p>
+      )}
       <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
         {filteredRecipes.length > 0 ? (
-          filteredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              highlight={searchQuery}
-              selectionMode={selection.length > 0}
-              tags={recipe.tags}
-              recipeData={recipe}
-              isSelected={selection.includes(recipe.id)}
-              onSelect={editor ? (selected) => select(recipe.id, selected) : undefined}
-            />
-          ))
+          <>
+            {searching
+              ? [
+                  ...readyTitleMatches.map((recipe) => renderCard(recipe)),
+                  ...developmentTitleMatches.map((recipe) => renderCard(recipe)),
+                  ...contentMatches.map(({ recipe, match }) => renderCard(recipe, match)),
+                ]
+              : recipes.map((recipe) => renderCard(recipe))}
+          </>
         ) : (
           <EmptyState
-            title={t(statusFilter === 'all' ? 'emptyTitle' : 'emptyFilteredTitle')}
-            description={t(
-              statusFilter === 'all' ? 'emptyDescription' : 'emptyFilteredDescription'
-            )}
+            title={
+              searching
+                ? t('noSearchResults')
+                : t(statusFilter === 'all' ? 'emptyTitle' : 'emptyFilteredTitle')
+            }
+            description={
+              searching
+                ? t('noSearchResultsDescription')
+                : t(statusFilter === 'all' ? 'emptyDescription' : 'emptyFilteredDescription')
+            }
             icon={BookOpenText}
             action={
-              editor && (
+              editor &&
+              !searching && (
                 <Button asChild>
                   <Link to="/r/new" className="inline-flex items-center gap-2">
                     <FilePlus /> {tNav('new-recipe-button')}
