@@ -55,6 +55,8 @@ export default function HomePage() {
     tags: searching ? undefined : activeTagIds,
     status: !editor ? 'ready' : searching || statusFilter === 'all' ? undefined : statusFilter,
   })
+  // Search results read best as a single column, whatever layout the visitor picked for browsing
+  const layout = searching ? 'list' : selectedLayout
   const filtersActive = Boolean(tagParam) || (editor && statusFilter !== 'all')
   usePageTitle(
     tagParam && filterTags?.length
@@ -187,17 +189,17 @@ export default function HomePage() {
           buttonLabel={t('selectTag')}
           tags={filterTags}
           onTagChange={handleTagFilterChange}
-          className={`m-auto p-3 pb-0 w-full ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+          className={`m-auto p-3 pb-0 w-full ${layout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
         />
       )}
       {searching && filtersActive && (
         <p
-          className={`m-auto px-3 pt-3 w-full text-sm text-muted-foreground ${selectedLayout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
+          className={`m-auto px-3 pt-3 w-full text-sm text-muted-foreground ${layout === 'list' ? 'max-w-2xl' : 'max-w-7xl'}`}
         >
           {t('searchingAll')}
         </p>
       )}
-      <PageLayout variant={selectedLayout} maxCols={layoutGridCols} loading={recipesLoading}>
+      <PageLayout variant={layout} maxCols={layoutGridCols} loading={recipesLoading}>
         {filteredRecipes.length > 0 ? (
           <>
             {searching
