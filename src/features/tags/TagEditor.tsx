@@ -18,7 +18,7 @@ import { useTags } from './use-tags'
 import { useTagMutations } from './use-tag-mutations'
 import { myToast } from '@/components/feedback/toast'
 import { getErrorMessage } from '@/lib/utils'
-import type { Tag } from '@shared/types'
+import { sortTags, type Tag } from '@shared/types'
 
 type TagEditorProps = {
   tags: Tag[]
@@ -63,7 +63,7 @@ export function TagEditor({
     if (!canCreate) return
     try {
       const newTag = await createTag.mutateAsync({ displayName: trimmedSearch })
-      onTagChange([...tags, newTag])
+      onTagChange(sortTags([...tags, newTag]))
       setSearchTerm('')
       setOpen(false)
     } catch (e: unknown) {
@@ -122,7 +122,7 @@ export function TagEditor({
                         onSelect={() => {
                           setOpen(false)
                           setSearchTerm('')
-                          onTagChange([...tags, tag])
+                          onTagChange(sortTags([...tags, tag]))
                           // Clear the input
                           setSearchTerm('')
                         }}

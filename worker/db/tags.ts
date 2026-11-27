@@ -1,11 +1,11 @@
-import type { Tag } from '../../shared/types'
+import { sortTags, type Tag } from '../../shared/types'
 import { generateId } from '../../shared/id'
 
 export async function listTags(db: D1Database): Promise<Tag[]> {
   const { results } = await db
     .prepare('SELECT id, display_name FROM tags ORDER BY display_name')
     .all<{ id: string; display_name: string }>()
-  return results.map((row) => ({ id: row.id, displayName: row.display_name }))
+  return sortTags(results.map((row) => ({ id: row.id, displayName: row.display_name })))
 }
 
 export async function createTag(db: D1Database, displayName: string): Promise<Tag> {

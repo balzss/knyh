@@ -33,6 +33,13 @@ export type Tag = {
   displayName: string
 }
 
+// SQLite's NOCASE only folds ASCII, so accented names (á, é, ő) would sort after z
+const tagCollator = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true })
+
+/** Tags in display order: alphabetical, ignoring case and accents. Returns a new array. */
+export const sortTags = (tags: Tag[]): Tag[] =>
+  [...tags].sort((a, b) => tagCollator.compare(a.displayName, b.displayName))
+
 export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' | 'updated-desc'
 
 export type UserConfig = {

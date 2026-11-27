@@ -1,4 +1,4 @@
-import type { GroupData, RecipeStatus, Tag } from '../../shared/types'
+import { sortTags, type GroupData, type RecipeStatus, type Tag } from '../../shared/types'
 import { generateId } from '../../shared/id'
 
 /** A recipe as sent over the wire: dates are ISO strings. */
@@ -46,8 +46,7 @@ type RecipeRow = {
 async function tagsByRecipe(db: D1Database, recipeId?: string): Promise<Map<string, Tag[]>> {
   const sql = `SELECT rt.recipe_id AS recipe_id, t.id AS id, t.display_name AS display_name
     FROM recipe_tags rt JOIN tags t ON t.id = rt.tag_id
-    ${recipeId ? 'WHERE rt.recipe_id = ?' : ''}
-    ORDER BY t.display_name`
+    ${recipeId ? 'WHERE rt.recipe_id = ?' : ''}`
   const stmt = db.prepare(sql)
   const { results } = await (recipeId ? stmt.bind(recipeId) : stmt).all<{
     recipe_id: string
@@ -61,6 +60,7 @@ async function tagsByRecipe(db: D1Database, recipeId?: string): Promise<Map<stri
     list.push({ id: row.id, displayName: row.display_name })
     map.set(row.recipe_id, list)
   }
+  for (const [id, list] of map) map.set(id, sortTags(list))
   return map
 }
 
