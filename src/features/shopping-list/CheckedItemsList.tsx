@@ -9,9 +9,11 @@ type CheckedItemsListProps = {
   items: string[]
   onItemUnchecked: (item: string) => void
   onItemRemoved: (item: string) => void
+  onClearAll: () => void
   className?: string
   checkedItemsLabel?: string
   removeItemTooltip?: string
+  clearAllLabel?: string
 }
 
 const UNCHECK_DELAY_MS = 80
@@ -30,9 +32,11 @@ export function CheckedItemsList({
   items,
   onItemUnchecked,
   onItemRemoved,
+  onClearAll,
   className = '',
   checkedItemsLabel = 'Checked items',
   removeItemTooltip = 'Remove item',
+  clearAllLabel = 'Clear',
 }: CheckedItemsListProps) {
   const [isOpen, setIsOpen] = useState(true)
   const [unchecking, setUnchecking] = useState<string | null>(null)
@@ -56,17 +60,28 @@ export function CheckedItemsList({
 
   return (
     <div className={`grid w-full items-center ${className}`}>
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-normal justify-start hover:bg-transparent"
-        type="button"
-        variant="ghost"
-      >
-        {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-        <span>
-          {checkedItemsLabel} ({items.length})
-        </span>
-      </Button>
+      <div className="flex items-center justify-between max-w-2xl">
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-foreground transition-colors font-normal justify-start hover:bg-transparent"
+          type="button"
+          variant="ghost"
+        >
+          {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          <span>
+            {checkedItemsLabel} ({items.length})
+          </span>
+        </Button>
+        <Button
+          onClick={onClearAll}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors font-normal hover:bg-transparent"
+          type="button"
+          variant="ghost"
+          size="sm"
+        >
+          {clearAllLabel}
+        </Button>
+      </div>
 
       <AnimatePresence>
         {isOpen && (

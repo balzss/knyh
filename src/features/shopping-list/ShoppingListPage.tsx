@@ -199,8 +199,10 @@ export default function ShoppingListPage() {
                   items={checkedItems}
                   onItemUnchecked={handleItemUnchecked}
                   onItemRemoved={handleCheckedItemRemoved}
+                  onClearAll={handleRemoveChecked}
                   checkedItemsLabel={t('checkedItems')}
                   removeItemTooltip={t('removeItem')}
+                  clearAllLabel={t('clearChecked')}
                 />
               </motion.div>
             )}

@@ -194,7 +194,8 @@
     "moreOptions": "További lehetőségek",
     "clearList": "Lista törlése",
     "uncheckAll": "Összes tétel kipálás megszüntetése",
-    "removeChecked": "Kipipált tételek eltávolítása"
+    "removeChecked": "Kipipált tételek eltávolítása",
+    "clearChecked": "Törlés"
   },
   "IdeasPage": {
     "title": "Ötletek",
