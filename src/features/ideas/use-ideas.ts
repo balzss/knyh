@@ -66,6 +66,7 @@ export const useIdeaMutations = () => {
     onSuccess: (_recipe, id) => {
       setIdeas((ideas) => ideas.filter((i) => i.id !== id))
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
 
@@ -75,6 +76,7 @@ export const useIdeaMutations = () => {
     onSuccess: (ideas) => {
       queryClient.setQueryData(['ideas'], ideas)
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
 

@@ -19,9 +19,10 @@ type UpdateRecipesPayload = {
 export const useRecipeMutations = () => {
   const queryClient = useQueryClient()
 
-  // A helper to invalidate the recipes query after any successful mutation
+  // A helper to invalidate the recipes query after any successful mutation. Tag counts follow the recipes.
   const invalidateRecipesQuery = () => {
     queryClient.invalidateQueries({ queryKey: ['recipes'] })
+    queryClient.invalidateQueries({ queryKey: ['tags'] })
   }
 
   const createRecipe = useMutation({

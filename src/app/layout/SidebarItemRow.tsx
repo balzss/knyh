@@ -30,6 +30,7 @@ interface SidebarItemRowProps {
   actions: SidebarAction[]
   alwaysShowActionsOnMobile?: boolean
   isActive?: boolean
+  count?: number
 }
 
 export function SidebarItemRow({
@@ -42,6 +43,7 @@ export function SidebarItemRow({
   actions,
   alwaysShowActionsOnMobile = true,
   isActive = false,
+  count,
 }: SidebarItemRowProps) {
   const tTag = useTranslations('TagActions')
   const { bind, wasLongPress } = useLongPress(() => onOpenChange(true), { enabled: true })
@@ -74,6 +76,9 @@ export function SidebarItemRow({
           }}
         >
           <span>{displayName}</span>
+          {count !== undefined && (
+            <span className="ml-auto text-xs tabular-nums text-muted-foreground">{count}</span>
+          )}
         </Link>
       </SidebarMenuSubButton>
       {actions.length > 0 && (

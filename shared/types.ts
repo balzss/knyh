@@ -33,11 +33,14 @@ export type Tag = {
   displayName: string
 }
 
+/** A tag with the number of active (not archived) recipes that carry it */
+export type TagWithCount = Tag & { recipeCount: number }
+
 // SQLite's NOCASE only folds ASCII, so accented names (á, é, ő) would sort after z
 const tagCollator = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true })
 
 /** Tags in display order: alphabetical, ignoring case and accents. Returns a new array. */
-export const sortTags = (tags: Tag[]): Tag[] =>
+export const sortTags = <T extends Tag>(tags: T[]): T[] =>
   [...tags].sort((a, b) => tagCollator.compare(a.displayName, b.displayName))
 
 export type SortOption = 'random' | 'title-asc' | 'title-desc' | 'updated-asc' | 'updated-desc'

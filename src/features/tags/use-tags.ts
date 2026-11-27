@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import type { Tag } from '@shared/types'
+import type { TagWithCount } from '@shared/types'
 
 type UseTagsProps = {
   ids?: string[]
 }
 
-const NO_TAGS: Tag[] = []
+const NO_TAGS: TagWithCount[] = []
 
 export const useTags = ({ ids }: UseTagsProps = {}) => {
   const {
@@ -16,7 +16,7 @@ export const useTags = ({ ids }: UseTagsProps = {}) => {
     error,
   } = useQuery({
     queryKey: ['tags'],
-    queryFn: () => api<Tag[]>('/api/tags'),
+    queryFn: () => api<TagWithCount[]>('/api/tags'),
   })
 
   // Callers pass a fresh array every render, so key the filter on its contents.

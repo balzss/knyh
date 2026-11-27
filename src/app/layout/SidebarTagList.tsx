@@ -78,6 +78,7 @@ export function SidebarTagList({ selectedTagIds }: { selectedTagIds: string[] })
                   key={tag.id}
                   href={`/?tag=${tag.id}`}
                   displayName={tag.displayName}
+                  count={tag.recipeCount}
                   isMobile={isMobile}
                   open={menuOpenForTag === tag.id}
                   onOpenChange={(open) => setMenuOpenForTag(open ? tag.id : null)}

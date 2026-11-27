@@ -1,11 +1,24 @@
-import { sortTags, type Tag } from '../../shared/types'
+import { sortTags, type Tag, type TagWithCount } from '../../shared/types'
 import { generateId } from '../../shared/id'
 
-export async function listTags(db: D1Database): Promise<Tag[]> {
+export async function listTags(db: D1Database): Promise<TagWithCount[]> {
   const { results } = await db
-    .prepare('SELECT id, display_name FROM tags ORDER BY display_name')
-    .all<{ id: string; display_name: string }>()
-  return sortTags(results.map((row) => ({ id: row.id, displayName: row.display_name })))
+    .prepare(
+      `SELECT t.id, t.display_name, COUNT(r.id) AS recipe_count
+       FROM tags t
+       LEFT JOIN recipe_tags rt ON rt.tag_id = t.id
+       LEFT JOIN recipes r ON r.id = rt.recipe_id AND r.archived = 0
+       GROUP BY t.id
+       ORDER BY t.display_name`
+    )
+    .all<{ id: string; display_name: string; recipe_count: number }>()
+  return sortTags(
+    results.map((row) => ({
+      id: row.id,
+      displayName: row.display_name,
+      recipeCount: row.recipe_count,
+    }))
+  )
 }
 
 export async function createTag(db: D1Database, displayName: string): Promise<Tag> {
