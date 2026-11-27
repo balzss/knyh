@@ -100,9 +100,6 @@ export function SortableInput({
             {...rest}
             onBlur={handleBlur}
             className="px-9 resize-none h-auto min-h-9 sortable-input-multiline"
-            onChange={(e) => {
-              rest.onChange?.(e)
-            }}
             ref={inputRef}
           />
         ) : (
