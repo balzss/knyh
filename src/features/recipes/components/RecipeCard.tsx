@@ -105,13 +105,29 @@ export function RecipeCard({
           setIsHovered(false)
         }
       }}
-      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${isSelected ? 'border-primary' : ''} ${inDevelopment ? 'border-dashed' : ''} ${selectionMode ? 'cursor-pointer select-none' : ''}`}
+      className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-md relative flex flex-col gap-3 p-3 sm:p-4 ${inDevelopment ? 'border-transparent' : isSelected ? 'border-primary' : ''} ${selectionMode ? 'cursor-pointer select-none' : ''}`}
       tabIndex={0}
       onClick={selectionMode ? () => onSelect?.(!isSelected) : undefined}
       {...longPressBind}
       role="article"
       aria-label={`Recipe: ${title}`}
     >
+      {inDevelopment && (
+        // CSS dashed borders can't set the gap, so the border is drawn as an SVG stroke
+        <svg
+          aria-hidden
+          className="pointer-events-none absolute -inset-px h-[calc(100%+2px)] w-[calc(100%+2px)]"
+        >
+          <rect
+            x="0.5"
+            y="0.5"
+            rx="8"
+            strokeDasharray="6 5"
+            className={`fill-none ${isSelected ? 'stroke-primary' : 'stroke-border'}`}
+            style={{ width: 'calc(100% - 1px)', height: 'calc(100% - 1px)' }}
+          />
+        </svg>
+      )}
       <CardHeader className="p-0">
         {selectionMode ? (
           <div className="flex flex-col gap-1">{headerContent}</div>

@@ -22,8 +22,8 @@ export function RecipeHeader({ recipe, factor, separator, titleRef }: RecipeHead
       <h1 ref={titleRef} className="font-bold text-3xl md:text-4xl">
         {recipe.title}
       </h1>
-      <RecipeStatusBadge status={recipe.status} className="self-start my-1" />
       <div className="text-muted-foreground flex gap-4">
+        <RecipeStatusBadge status={recipe.status} />
         {recipe.yield && (
           <div className="flex gap-1 items-center">
             <Users size="1rem" />{' '}
