@@ -244,6 +244,42 @@ describe('tags', () => {
     expect(await response.json()).toEqual({ id: tag.id, displayName: 'Soup' })
   })
 
+  it('normalizes whitespace in names before saving and comparing', async () => {
+    const tag = await createTag('  slow   cooker ')
+    expect(tag.displayName).toBe('slow cooker')
+
+    const response = await asEditor('/api/tags', {
+      method: 'POST',
+      json: { displayName: 'Slow cooker' },
+    })
+    expect(response.status).toBe(409)
+  })
+
+  it('rejects empty and over-long names', async () => {
+    for (const displayName of ['   ', 'x'.repeat(101)]) {
+      const response = await asEditor('/api/tags', { method: 'POST', json: { displayName } })
+      expect(response.status).toBe(400)
+    }
+  })
+
+  it('refuses to rename a tag to a name that is taken', async () => {
+    await createTag('Lunch')
+    const other = await createTag('Dinner')
+    const response = await asEditor(`/api/tags/${other.id}`, {
+      method: 'PATCH',
+      json: { displayName: 'lunch' },
+    })
+    expect(response.status).toBe(409)
+  })
+
+  it('returns 404 when renaming a missing tag', async () => {
+    const response = await asEditor('/api/tags/missing', {
+      method: 'PATCH',
+      json: { displayName: 'Anything' },
+    })
+    expect(response.status).toBe(404)
+  })
+
   it('removes a deleted tag from its recipes', async () => {
     const tag = await createTag('temporary')
     const recipe = await createRecipe({ tags: [{ id: tag.id }] })

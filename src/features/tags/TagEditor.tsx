@@ -1,24 +1,12 @@
-import { useState, useMemo } from 'react'
-import { TagIcon, X, Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useMemo, useRef } from 'react'
+import { useTranslations } from 'use-intl'
+import { X } from 'lucide-react'
 import { Label } from '@/components/ui/label'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from '@/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
 import { IconButton } from '@/components/inputs/IconButton'
-import { useTags } from './use-tags'
-import { useTagMutations } from './use-tag-mutations'
-import { myToast } from '@/components/feedback/toast'
-import { getErrorMessage } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { sortTags, type Tag } from '@shared/types'
+import { TagPicker } from './TagPicker'
 
 type TagEditorProps = {
   tags: Tag[]
@@ -38,42 +26,16 @@ export function TagEditor({
   className,
   allowCreate = false,
 }: TagEditorProps) {
-  const [open, setOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
+  const t = useTranslations('TagActions')
 
-  const { tags: tagsData } = useTags()
-  const { createTag } = useTagMutations()
+  // A tag can be created while another change lands, so add to the latest list, not a captured one.
+  const tagsRef = useRef(tags)
+  tagsRef.current = tags
 
-  const tagList = useMemo(
-    () => tagsData?.filter((tag) => !tags.find((t) => t.id === tag.id)),
-    [tagsData, tags]
-  )
-
-  const normalizedExisting = useMemo(
-    () => new Set(tagsData.map((t) => t.displayName.toLowerCase())),
-    [tagsData]
-  )
-
-  const trimmedSearch = searchTerm.trim()
-  const isDuplicate = normalizedExisting.has(trimmedSearch.toLowerCase())
-  // Show create only when trimmed value is non-empty and not already existing (ignores trailing spaces)
-  const canCreate = allowCreate && trimmedSearch.length > 0 && !isDuplicate
-
-  const handleCreate = async () => {
-    if (!canCreate) return
-    try {
-      const newTag = await createTag.mutateAsync({ displayName: trimmedSearch })
-      onTagChange(sortTags([...tags, newTag]))
-      setSearchTerm('')
-      setOpen(false)
-    } catch (e: unknown) {
-      console.error(e)
-      myToast?.({ message: getErrorMessage(e) })
-    }
-  }
+  const selectedIds = useMemo(() => new Set(tags.map((tag) => tag.id)), [tags])
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={cn('flex flex-col gap-2', className)}>
       <Label>{label}</Label>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -85,72 +47,18 @@ export function TagEditor({
             {tag.displayName}
             <IconButton
               icon={<X />}
-              tooltip="Remove tag"
+              tooltip={t('removeFromRecipe')}
               iconSize="small"
-              onClick={() => onTagChange(tags.filter((t) => t.id !== tag.id))}
+              onClick={() => onTagChange(tags.filter((other) => other.id !== tag.id))}
             />
           </Badge>
         ))}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" role="combobox" aria-expanded={open}>
-              <TagIcon />
-              {buttonLabel}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0" align="start">
-            <Command>
-              <CommandInput
-                placeholder={allowCreate ? 'Find or create tag' : 'Find tag'}
-                value={searchTerm}
-                onValueChange={setSearchTerm}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && canCreate) {
-                    e.preventDefault()
-                    void handleCreate()
-                  }
-                }}
-              />
-              <CommandList>
-                <CommandEmpty>No tag found.</CommandEmpty>
-                {tagList && tagList.length > 0 && (
-                  <CommandGroup>
-                    {tagList.map((tag) => (
-                      <CommandItem
-                        key={tag.id}
-                        value={tag.displayName}
-                        onSelect={() => {
-                          setOpen(false)
-                          setSearchTerm('')
-                          onTagChange(sortTags([...tags, tag]))
-                          // Clear the input
-                          setSearchTerm('')
-                        }}
-                        className="cursor-pointer pl-8"
-                      >
-                        {tag.displayName}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                )}
-                <CommandSeparator />
-                {canCreate && (
-                  <CommandGroup>
-                    <CommandItem
-                      disabled={createTag.isPending}
-                      onSelect={handleCreate}
-                      value={`__create__${trimmedSearch}`}
-                      className="cursor-pointer"
-                    >
-                      <Plus />
-                      {`Create tag "${trimmedSearch}"`}
-                    </CommandItem>
-                  </CommandGroup>
-                )}
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <TagPicker
+          selectedIds={selectedIds}
+          onPick={(tag) => onTagChange(sortTags([...tagsRef.current, tag]))}
+          buttonLabel={buttonLabel}
+          allowCreate={allowCreate}
+        />
       </div>
     </div>
   )

@@ -22,7 +22,12 @@
     "tagNameLabel": "Tag name",
     "rename": "Rename",
     "tagNameTaken": "A tag with this name already exists.",
-    "renameFailed": "Could not rename the tag. Try again."
+    "renameFailed": "Could not rename the tag. Try again.",
+    "findTag": "Find tag",
+    "findOrCreateTag": "Find or create tag",
+    "noTagFound": "No tag found.",
+    "createTagOption": "Create tag \"{name}\"",
+    "removeFromRecipe": "Remove tag"
   },
   "SettingsPage": {
     "settings": "Settings",

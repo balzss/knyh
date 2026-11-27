@@ -37,6 +37,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            type={href ? undefined : 'button'}
             {...rest}
             ref={ref}
             variant={variant}

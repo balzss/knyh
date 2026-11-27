@@ -10,6 +10,7 @@ import {
   validateUniqueIds,
 } from '../shared/import-validation'
 import { recipeToMarkdown } from '../shared/recipe-markdown'
+import { MAX_TAG_NAME_LENGTH, normalizeTagName } from '../shared/tag-name'
 
 const groupSchema = z.object({ label: z.string(), items: z.array(z.string()) })
 
@@ -28,7 +29,12 @@ const recipeSchema = z.object({
 
 const recipePatchSchema = recipeSchema.partial()
 const bulkPatchSchema = z.object({ ids: z.array(z.string()).min(1), data: recipePatchSchema })
-const tagNameSchema = z.object({ displayName: z.string().trim().min(1).max(100) })
+const tagNameSchema = z.object({
+  displayName: z
+    .string()
+    .transform(normalizeTagName)
+    .pipe(z.string().min(1).max(MAX_TAG_NAME_LENGTH)),
+})
 const configSchema = z
   .object({
     name: z.string().max(100),
@@ -81,6 +87,9 @@ api.onError((error, c) => {
   }
   if (error instanceof Error && /FOREIGN KEY/i.test(error.message)) {
     return c.json({ message: 'Unknown tag reference' }, 400)
+  }
+  if (error instanceof Error && /UNIQUE constraint failed: tags\./i.test(error.message)) {
+    return c.json({ message: 'A tag with that name already exists' }, 409)
   }
   console.error(error)
   return c.json({ message: 'Internal Server Error' }, 500)

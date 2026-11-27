@@ -36,13 +36,15 @@ export default function HomePage() {
   } = useViewPreferences()
 
   const tagParam = searchParams.get('tag')?.split(',')
+  const { tags: filterTags, loading: tagsLoading } = useTags({ ids: tagParam })
+  // Ids of deleted tags would match no recipe and show no chip to remove, so only filter by known tags.
+  const activeTagIds = tagsLoading ? tagParam : filterTags.map((tag) => tag.id)
   const { recipes, loading: recipesLoading } = useRecipes({
     sort: sortOption,
     archived: false,
-    tags: tagParam,
+    tags: activeTagIds,
     status: !editor ? 'ready' : statusFilter === 'all' ? undefined : statusFilter,
   })
-  const { tags: filterTags } = useTags({ ids: tagParam })
   usePageTitle(
     tagParam && filterTags?.length
       ? `${tNav('recipes')}: ${filterTags.map((tag) => tag.displayName).join(', ')}`
@@ -61,12 +63,12 @@ export default function HomePage() {
 
   const handleTagFilterChange = (newTags: Tag[]) => {
     if (!newTags.length) {
-      navigate('/')
+      navigate('/', { replace: true })
       return
     }
 
     const tagIdList = newTags.map((t) => t.id).join(',')
-    navigate(`/?tag=${tagIdList}`)
+    navigate(`/?tag=${tagIdList}`, { replace: true })
   }
 
   const handleArchiveSelectedRecipes = () => {

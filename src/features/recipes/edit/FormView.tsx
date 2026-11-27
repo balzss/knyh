@@ -21,7 +21,6 @@ import { myToast } from '@/components/feedback/toast'
 import { getRecipeEditUrl } from '@/lib/urls'
 import { getErrorMessage } from '@/lib/utils'
 import { useRecipeMutations } from '@/features/recipes/hooks/use-recipe-mutations'
-import { useTags } from '@/features/tags/use-tags'
 import { useFormNavigationGuard } from '@/hooks/use-form-navigation-guard'
 import { RECIPE_STATUSES, type Tag, type Recipe, type RecipeDraft } from '@shared/types'
 import { clearRecipeDraft } from '@/features/recipes/lib/recipe-draft-cache'
@@ -51,9 +50,6 @@ export function FormView({
   const t = useTranslations('FormView')
   const navigate = useNavigate()
   const { createRecipe, updateRecipe } = useRecipeMutations()
-  const { tags: initialTags } = useTags({
-    ids: initialRecipe?.tags.map((t) => t.id) || [],
-  })
 
   const {
     register,
@@ -69,7 +65,7 @@ export function FormView({
       notes: [],
       status: 'development',
       ...initialRecipe,
-      tags: initialTags,
+      tags: initialRecipe?.tags ?? [],
     },
     mode: 'onChange',
   })

@@ -22,7 +22,12 @@
     "tagNameLabel": "Címke neve",
     "rename": "Átnevezés",
     "tagNameTaken": "Már van ilyen nevű címke.",
-    "renameFailed": "A címke átnevezése nem sikerült. Próbáld újra."
+    "renameFailed": "A címke átnevezése nem sikerült. Próbáld újra.",
+    "findTag": "Címke keresése",
+    "findOrCreateTag": "Címke keresése vagy létrehozása",
+    "noTagFound": "Nincs ilyen címke.",
+    "createTagOption": "Címke létrehozása: \"{name}\"",
+    "removeFromRecipe": "Címke eltávolítása"
   },
   "SettingsPage": {
     "settings": "Beállítások",
