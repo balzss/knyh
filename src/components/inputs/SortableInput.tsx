@@ -39,7 +39,9 @@ export function SortableInput({
   useEffect(() => () => clearTimeout(timer.current), [])
 
   // Show the box filled before the row leaves
-  const handleCheck = () => {
+  const handleCheck = (checked: boolean | 'indeterminate') => {
+    // Ignore unchecking and repeat clicks while the row is already on its way out
+    if (checked !== true || checking) return
     setChecking(true)
     timer.current = setTimeout(() => onItemChecked?.(), CHECK_DELAY_MS)
   }

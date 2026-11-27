@@ -1,6 +1,7 @@
 import { Fragment, useRef } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { nanoid } from 'nanoid'
+import { useTranslations } from 'use-intl'
 import { ArrowUp, ArrowDown, ListX, ListPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SortableList } from '@/components/inputs/SortableList'
@@ -17,6 +18,8 @@ type SortableGroupsProps = {
 const emptyGroups: GroupData[] = [{ label: '', items: [] }]
 
 export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGroupsProps) {
+  const t = useTranslations('FormView')
+
   // Always ensure at least one group is present
   const groupData = data.length === 0 ? emptyGroups : data
 
@@ -55,7 +58,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
       // When adding the second group, give the first one a default label
       updatedData[0] = { ...updatedData[0], label: defaultLabel }
     }
-    const newData = [...updatedData, { label: 'New Group', items: [] }]
+    const newData = [...updatedData, { label: t('newIngredientGroup'), items: [] }]
     onDataChange(newData)
   }
 
@@ -115,7 +118,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
                 )}
                 <SortableList
                   label={groupData.length === 1 ? defaultLabel : ''}
-                  addItemLabel="New ingredient"
+                  addItemLabel={t('addIngredient')}
                   items={group.items}
                   onItemsChange={(newItems) => handleItemsChange(index, newItems)}
                 />
@@ -127,7 +130,7 @@ export function SortableGroups({ data, onDataChange, defaultLabel }: SortableGro
       <div className="mb-4">
         <Button variant="outline" onClick={handleAddGroup} disabled={isAddGroupDisabled}>
           <ListPlus />
-          Add ingredient group
+          {t('addIngredientGroup')}
         </Button>
       </div>
     </Fragment>

@@ -55,7 +55,10 @@ export function SortableList({
   onItemChecked,
 }: SortableListProps) {
   const dndId = useId()
-  const [internalItems, setInternalItems] = useState<ListItem[]>([])
+  // Start with the given items so the first paint isn't empty
+  const [internalItems, setInternalItems] = useState<ListItem[]>(() =>
+    (items ?? []).map((value) => ({ id: nanoid(), value, noAnimate: true }))
+  )
   const inputRefs = useRef<{
     [key: string]: HTMLInputElement | HTMLTextAreaElement | null
   }>({})
