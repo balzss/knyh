@@ -27,7 +27,7 @@ export default function IdeasPage() {
   const { confirm, confirmDelete } = useConfirmDialog()
   const [draft, setDraft] = useState('')
 
-  const handleAdd = (event: React.FormEvent) => {
+  const handleAdd = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const title = draft.trim()
     if (title === '') return
