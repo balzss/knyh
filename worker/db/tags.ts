@@ -7,7 +7,7 @@ export async function listTags(db: D1Database): Promise<TagWithCount[]> {
       `SELECT t.id, t.display_name, COUNT(r.id) AS recipe_count
        FROM tags t
        LEFT JOIN recipe_tags rt ON rt.tag_id = t.id
-       LEFT JOIN recipes r ON r.id = rt.recipe_id AND r.archived = 0
+       LEFT JOIN recipes r ON r.id = rt.recipe_id AND r.archived = 0 AND r.status = 'ready'
        GROUP BY t.id
        ORDER BY t.display_name`
     )
