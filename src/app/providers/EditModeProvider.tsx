@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useIsRestoring, useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
 type EditModeContextType = {
@@ -11,6 +11,8 @@ type EditModeContextType = {
 const EditModeContext = createContext<EditModeContextType | undefined>(undefined)
 
 export function EditModeProvider({ children }: { children: ReactNode }) {
+  // The persisted cache restores asynchronously, and until it has, the query reports neither data nor loading
+  const isRestoring = useIsRestoring()
   const { data, isLoading } = useQuery({
     queryKey: ['session'],
     queryFn: () => api<{ editor: boolean }>('/api/session'),
@@ -19,8 +21,8 @@ export function EditModeProvider({ children }: { children: ReactNode }) {
   })
 
   const value = useMemo(
-    () => ({ editor: data?.editor ?? false, loading: isLoading }),
-    [data, isLoading]
+    () => ({ editor: data?.editor ?? false, loading: isLoading || isRestoring }),
+    [data, isLoading, isRestoring]
   )
 
   return <EditModeContext.Provider value={value}>{children}</EditModeContext.Provider>
